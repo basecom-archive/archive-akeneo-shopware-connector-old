@@ -1,0 +1,9 @@
+Basecom\Bundle\ShopwareConnectorBundle\Entity\FileInfo:
+    type: entity
+    table: akeneo_file_storage_file_info
+    repositoryClass: Akeneo\Bundle\FileStorageBundle\Doctrine\ORM\Repository\FileInfoRepository
+    fields:
+        swMediaId:
+            type: integer
+            nullable: true
+            unique: true

@@ -1,0 +1,50 @@
+parameters:
+    basecom_shopware_connector.reader.shopware_product.class:           Basecom\Bundle\ShopwareConnectorBundle\Reader\ShopwareProductReader
+    basecom_shopware_connector.reader.shopware_category.class:          Basecom\Bundle\ShopwareConnectorBundle\Reader\ShopwareCategoryReader
+    basecom_shopware_connector.reader.shopware_attribute.class:         Basecom\Bundle\ShopwareConnectorBundle\Reader\ShopwareAttributeReader
+    basecom_shopware_connector.reader.shopware_attribute_group.class:   Basecom\Bundle\ShopwareConnectorBundle\Reader\ShopwareAttributeGroupReader
+    basecom_shopware_connector.reader.shopware_attribute_option.class:  Basecom\Bundle\ShopwareConnectorBundle\Reader\ShopwareAttributeOptionReader
+    basecom_shopware_connector.reader.shopware_association.class:       Basecom\Bundle\ShopwareConnectorBundle\Reader\ShopwareAssociationReader
+    basecom_shopware_connector.reader.shopware_family.class:            Basecom\Bundle\ShopwareConnectorBundle\Reader\ShopwareFamilyReader
+    basecom_shopware_connector.reader.shopware_family_export.class:     Basecom\Bundle\ShopwareConnectorBundle\Reader\ShopwareFamilyExportReader
+    basecom_shopware_connector.reader.shopware_product_export.class:    Basecom\Bundle\ShopwareConnectorBundle\Reader\ShopwareProductExportReader
+    basecom_shopware_connector.reader.shopware_category_export.class:   Basecom\Bundle\ShopwareConnectorBundle\Reader\ShopwareCategoryExportReader
+    basecom_shopware_connector.reader.shopware_product_image.class:     Basecom\Bundle\ShopwareConnectorBundle\Reader\ShopwareProductImageReader
+services:
+    basecom_shopware_connector.reader.shopware_product:
+        class: %basecom_shopware_connector.reader.shopware_product.class%
+    basecom_shopware_connector.reader.shopware_category:
+        class: %basecom_shopware_connector.reader.shopware_category.class%
+        arguments:
+            - '@pim_catalog.repository.category'
+    basecom_shopware_connector.reader.shopware_attribute:
+        class: %basecom_shopware_connector.reader.shopware_attribute.class%
+        arguments:
+            - '@pim_catalog.repository.attribute'
+    basecom_shopware_connector.reader.shopware_attribute_group:
+        class: %basecom_shopware_connector.reader.shopware_attribute_group.class%
+    basecom_shopware_connector.reader.shopware_attribute_option:
+        class: %basecom_shopware_connector.reader.shopware_attribute_option.class%
+    basecom_shopware_connector.reader.shopware_association:
+        class: %basecom_shopware_connector.reader.shopware_association.class%
+    basecom_shopware_connector.reader.shopware_family:
+        class: %basecom_shopware_connector.reader.shopware_family.class%
+    basecom_shopware_connector.reader.shopware_family_export:
+        class: %basecom_shopware_connector.reader.shopware_family_export.class%
+        arguments:
+            - '@pim_catalog.repository.family'
+    basecom_shopware_connector.reader.shopware_product_export:
+        class: %basecom_shopware_connector.reader.shopware_product_export.class%
+        arguments:
+            - '@pim_catalog.repository.product'
+            - '@pim_catalog.repository.category'
+            - '@pim_catalog.manager.channel'
+    basecom_shopware_connector.reader.shopware_category_export:
+        class: %basecom_shopware_connector.reader.shopware_category_export.class%
+        arguments:
+            - '@pim_catalog.repository.category'
+    basecom_shopware_connector.reader.shopware_product_image:
+        class: %basecom_shopware_connector.reader.shopware_product_image.class%
+        arguments:
+            - '@pim_catalog.repository.product'
+            - '@pim_catalog.repository.category'

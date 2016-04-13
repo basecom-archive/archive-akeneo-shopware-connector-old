@@ -1,0 +1,23 @@
+parameters:
+    basecom_shopware_connector.writer.shopware_category.class:      Basecom\Bundle\ShopwareConnectorBundle\Writer\ShopwareCategoryWriter
+    basecom_shopware_connector.writer.shopware_family.class:        Basecom\Bundle\ShopwareConnectorBundle\Writer\ShopwareFamilyWriter
+    basecom_shopware_connector.writer.shopware_product.class:       Basecom\Bundle\ShopwareConnectorBundle\Writer\ShopwareProductWriter
+    basecom_shopware_connector.writer.shopware_product_image.class: Basecom\Bundle\ShopwareConnectorBundle\Writer\ShopwareProductImageWriter
+services:
+    basecom_shopware_connector.writer.shopware_category:
+        class: %basecom_shopware_connector.writer.shopware_category.class%
+        arguments:
+            - '@pim_catalog.repository.category'
+            - '@doctrine.orm.entity_manager'
+            - '@pim_catalog.manager.locale'
+    basecom_shopware_connector.writer.shopware_family:
+        class: %basecom_shopware_connector.writer.shopware_family.class%
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@pim_catalog.manager.locale'
+    basecom_shopware_connector.writer.shopware_product:
+        class: %basecom_shopware_connector.writer.shopware_product.class%
+    basecom_shopware_connector.writer.shopware_product_image:
+        class: %basecom_shopware_connector.writer.shopware_product_image.class%
+        arguments:
+            - '@pim_catalog.repository.attribute'
