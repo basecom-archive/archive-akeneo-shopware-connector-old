@@ -2,8 +2,6 @@
 
 namespace Basecom\Bundle\ShopwareConnectorBundle\Processor;
 
-
-
 use Akeneo\Component\Batch\Item\AbstractConfigurableStepElement;
 use Akeneo\Component\Batch\Item\ItemProcessorInterface;
 use Akeneo\Component\Batch\Model\StepExecution;
@@ -15,19 +13,6 @@ class ShopwareFamilyProcessor extends AbstractConfigurableStepElement implements
     /** @var StepExecution */
     protected $stepExecution;
 
-    /** @var LocaleRepositoryInterface */
-    protected $localeManager;
-
-    protected $locale;
-
-    /**
-     * ShopwareFamilyProcessor constructor.
-     */
-    public function __construct(LocaleRepositoryInterface $localeManager)
-    {
-        $this->localeManager = $localeManager;
-    }
-
     public function process($item)
     {
         return $item;
@@ -36,22 +21,6 @@ class ShopwareFamilyProcessor extends AbstractConfigurableStepElement implements
     public function setStepExecution(StepExecution $stepExecution)
     {
         $this->stepExecution = $stepExecution;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getLocale()
-    {
-        return $this->locale;
-    }
-
-    /**
-     * @param mixed $locale
-     */
-    public function setLocale($locale)
-    {
-        $this->locale = $locale;
     }
 
     public function getConfigurationFields()

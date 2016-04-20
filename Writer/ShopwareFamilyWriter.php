@@ -47,8 +47,6 @@ class ShopwareFamilyWriter extends AbstractConfigurableStepElement implements It
 
     public function write(array $items)
     {
-        $start = time();
-        echo "Family export writer...";
         $apiClient = new ApiClient($this->url, $this->userName, $this->apiKey);
         /** @var Family $item */
         foreach($items as $item) {
@@ -72,9 +70,6 @@ class ShopwareFamilyWriter extends AbstractConfigurableStepElement implements It
             }
         }
         $this->entityManager->flush();
-        $end = time();
-        $runtime = $end-$start;
-        echo "Laufzeit: ".$runtime." Sekunden!\n";
     }
 
     /**

@@ -10,8 +10,9 @@
                     $(".btn-submit").click(function(){
                         var attrInput = "";
                         {% for attribute in attributes %}
-                        var attrName = "{{ attribute }}";
-                        attrInput += attrName+":" + $("#{{ attribute }}").val()+";";
+                            var attrName = "{{ attribute[0] }}".split(';')[0];
+                            console.log(attrName);
+                            attrInput += attrName+":" + $("#{{ attribute[0] }}".split(";")[0]).val()+";";
                         {% endfor %}
                         $("#pim_import_export_jobInstance_job_steps_0_processor_attr").val(attrInput);
                     });
@@ -77,11 +78,13 @@
                                         {% for attribute in attributes %}
                                         console.log("Start|||"+values[attributeIterator]+"|||Stop");
                                         var value = values[attributeIterator].split(':');
+                                        var attrName = "{{ attribute[0] }}".split(';')[0];
+                                        var attrLabel = "{{ attribute[0] }}".split(';')[1];
                                         console.log("Value: "+value[1]);
                                         var text = '<div class="control-group">'+
-                                                '<label class="control-label" for="{{ attribute }}">{{ attribute }}</label>'+
+                                                '<label class="control-label" for="'+attrName+'">'+attrLabel+'</label>'+
                                                 '<div class="controls">'+
-                                                '<input type="text" id="{{ attribute }}" class="input-large" value="'+value[1]+'"/>'+
+                                                '<input type="text" id="'+attrName+'" class="input-large" value="'+value[1]+'"/>'+
                                                 '<div class="icons-container">'+
                                                 '<i class="icon-info-sign" data-toggle="tooltip" data-placement="right" data-original-title="help"></i>'+
                                                 '</div>'+
@@ -92,6 +95,7 @@
                                         {% endfor %}
                                     </script>
                                     {% endblock %}
+
                                 {% else %}
                                     {{ form_row(childChild) }}
                                 {% endif %}

@@ -14,7 +14,6 @@ class ShopwareCategoryProcessor extends AbstractConfigurableStepElement implemen
 
     public function process($item)
     {
-        echo "\nCategory Processor...\n";
         return $item;
     }
 

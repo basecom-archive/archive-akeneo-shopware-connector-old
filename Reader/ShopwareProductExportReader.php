@@ -46,13 +46,11 @@ class ShopwareProductExportReader extends AbstractConfigurableStepElement implem
     {
         $this->productRepository  = $productRepository;
         $this->categoryRepository = $categoryRepository;
-        $this->channelManager = $channelManager;
+        $this->channelManager     = $channelManager;
     }
 
     public function read()
     {
-        $start = time();
-        //echo "ProductReader...";
         if (!$this->isExecuted) {
             $this->isExecuted = true;
             $this->results = $this->getResults();
@@ -63,9 +61,6 @@ class ShopwareProductExportReader extends AbstractConfigurableStepElement implem
             $this->stepExecution->incrementSummaryInfo('read');
         }
 
-        $end = time();
-        $runtime = $end - $start;
-        echo "read: $runtime Sek. ";
         return $result;
     }
 

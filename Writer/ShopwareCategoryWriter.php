@@ -52,9 +52,7 @@ class ShopwareCategoryWriter extends AbstractConfigurableStepElement implements 
 
     public function write(array $items)
     {
-        $start = time();
         $apiClient = new ApiClient($this->url, $this->userName, $this->apiKey);
-        echo "Category export writer...\n";
 
         /** @var Category $item */
         foreach($items as $item) {
@@ -84,9 +82,6 @@ class ShopwareCategoryWriter extends AbstractConfigurableStepElement implements 
             echo $item->getLabel()."\n";
         }
         $this->entityManager->flush();
-        $end = time();
-        $runtime = $end-$start;
-        echo "Laufzeit: ".$runtime." Sekunden!\n";
     }
 
     /**

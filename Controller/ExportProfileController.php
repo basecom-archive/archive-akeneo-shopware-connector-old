@@ -52,13 +52,13 @@ class ExportProfileController extends BaseController
         if (null === $template = $jobInstance->getJob()->getEditTemplate()) {
             $template = sprintf('PimImportExportBundle:%sProfile:edit.html.twig', ucfirst($this->getJobType()));
         }
-        $attrArray = array("attr1", "attr2", "attr3", "attr4", "attr5", "attr6"); // SW_con
+        $attrArray = array_map('str_getcsv', file(__DIR__.'/../Resources/config/additional_attributes.csv'));
         return $this->templating->renderResponse(
             $template,
             [
                 'jobInstance' => $jobInstance,
                 'form'        => $form->createView(),
-                'attributes'  => $attrArray, // SW_con
+                'attributes' => $attrArray,
             ]
         );
     }

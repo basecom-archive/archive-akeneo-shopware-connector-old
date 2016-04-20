@@ -29,15 +29,17 @@ class ShopwareProductProcessor extends AbstractConfigurableStepElement implement
 
     /** @var string */
     protected $url;
-//
-//    protected $related;
-//
-//    protected $similar;
+
+    protected $related;
+
+    protected $similar;
 
     protected $filterAttributes;
 
     protected $locale;
+    protected $currency;
     protected $articleNumber;
+    protected $tax;
     protected $name;
     protected $description;
     protected $descriptionLong;
@@ -47,21 +49,15 @@ class ShopwareProductProcessor extends AbstractConfigurableStepElement implement
     protected $metaTitle;
     protected $priceGroupActive;
     protected $lastStock;
-    protected $crossBundleLook;
     protected $notification;
     protected $template;
-    protected $mode;
-    protected $availableFrom;
-    protected $availableTo;
     protected $supplier;
-    protected $additionalText;
     protected $inStock;
     protected $stockMin;
     protected $weight;
     protected $len;
     protected $height;
     protected $ean;
-    protected $position;
     protected $minPurchase;
     protected $purchaseSteps;
     protected $maxPurchase;
@@ -88,14 +84,9 @@ class ShopwareProductProcessor extends AbstractConfigurableStepElement implement
 
     public function process($item)
     {
-        $start = time();
-        //echo "product processor... ";
         $this->apiClient = new ApiClient($this->url, $this->userName, $this->apiKey);
         $attributeMapping = $this->convertConfigurationVariablesToMappingArray();
-        $end = time();
-        $runtime = $end - $start;
-        echo "process: $runtime Sek. ";
-        return $this->serializer->serialize($item, $attributeMapping, $this->locale, $this->filterAttributes, $this->apiClient);
+        return $this->serializer->serialize($item, $attributeMapping, $this->locale, $this->filterAttributes, $this->apiClient, $this->currency);
     }
 
     protected function convertConfigurationVariablesToMappingArray() {
@@ -110,21 +101,15 @@ class ShopwareProductProcessor extends AbstractConfigurableStepElement implement
             'metaTitle'			=> $this->metaTitle,
             'priceGroupActive'	=> $this->priceGroupActive,
             'lastStock'			=> $this->lastStock,
-            'crossBundleLook'	=> $this->crossBundleLook,
             'notification'		=> $this->notification,
             'template'			=> $this->template,
-            'mode'				=> $this->mode,
-            'availableFrom'		=> $this->availableFrom,
-            'availableTo'		=> $this->availableTo,
             'supplier'	        => $this->supplier,
-            'additionalText'	=> $this->additionalText,
             'inStock'			=> $this->inStock,
             'stockMin'			=> $this->stockMin,
             'weight'			=> $this->weight,
             'len'				=> $this->len,
             'height'			=> $this->height,
             'ean'				=> $this->ean,
-            'position'			=> $this->position,
             'minPurchase'		=> $this->minPurchase,
             'purchaseSteps'		=> $this->purchaseSteps,
             'maxPurchase'		=> $this->maxPurchase,
@@ -138,18 +123,15 @@ class ShopwareProductProcessor extends AbstractConfigurableStepElement implement
             'price'				=> $this->price,
             'pseudoPrice'		=> $this->pseudoPrice,
             'basePrice'			=> $this->basePrice,
-            'attr'              => $this->attr,
-            //'similar'           => $this->similar,
-            //'related'           => $this->related,
+            'tax'               => $this->tax,
+            'similar'           => $this->similar,
+            'related'           => $this->related,
         );
         $attributes = explode(";",$this->attr);
-//        echo "-----------------------------------------";
         foreach($attributes as $attribute) {
             $attr = explode(":", $attribute);
             if(isset($attr[1])) $configArray[$attr[0]] = $attr[1];
         }
-//        echo "-----------------------------------------";
-//        var_dump($configArray);
         return $configArray;
     }
 
@@ -165,6 +147,12 @@ class ShopwareProductProcessor extends AbstractConfigurableStepElement implement
                 'options' => [
                     'label' => 'Locale',
                     'help'  => 'the locale you want to export'
+                ]
+            ],
+            'currency' => [
+                'options' => [
+                    'label' => 'Währung',
+                    'help'  => ' Geben Sie hier die zu exportierende Währung ein'
                 ]
             ],
             'apiKey' => [
@@ -185,18 +173,18 @@ class ShopwareProductProcessor extends AbstractConfigurableStepElement implement
                     'help'  => 'Shopware Api-URL'
                 ]
             ],
-//            'similar' => [
-//                'options' => [
-//                    'label' => 'Ähnliche Artikel',
-//                    'help'  => 'Geben Sie hier den code des Akeneo-Association Type für ähnliche Artikel ein'
-//                ]
-//            ],
-//            'related' => [
-//                'options' => [
-//                    'label' => 'Zubehör Artikel',
-//                    'help'  => 'Geben Sie hier den code des Akeneo-Association Type für Zubehör Artikel ein'
-//                ]
-//            ],
+            'similar' => [
+                'options' => [
+                    'label' => 'Ähnliche Artikel',
+                    'help'  => 'Geben Sie hier den code des Akeneo-Association Type für ähnliche Artikel ein'
+                ]
+            ],
+            'related' => [
+                'options' => [
+                    'label' => 'Zubehör Artikel',
+                    'help'  => 'Geben Sie hier den code des Akeneo-Association Type für Zubehör Artikel ein'
+                ]
+            ],
             'filterAttributes' => [
                 'options' => [
                     'label' => 'Filter Attribute',
@@ -219,6 +207,18 @@ class ShopwareProductProcessor extends AbstractConfigurableStepElement implement
                 'options' => [
                     'label' => 'Artikelnummer',
                     'help'  => 'Geben Sie hier den code des Akeneo-Artikelnummer-Attributs ein'
+                ]
+            ],
+            'tax' => [
+                'options' => [
+                    'label' => 'MwSt',
+                    'help'  => 'Geben Sie hier den code des Akeneo-MwSt-Attributs ein'
+                ]
+            ],
+            'template' => [
+                'options' => [
+                    'label' => 'Template',
+                    'help'  => 'Geben Sie hier den code des Akeneo-Template-Attributs ein'
                 ]
             ],
             'priceGroupActive' => [
@@ -307,7 +307,7 @@ class ShopwareProductProcessor extends AbstractConfigurableStepElement implement
             ],
             'pseudoSales' => [
                 'options' => [
-                    'label' => 'pseudoSales',
+                    'label' => 'Pseudo Verkäufe',
                     'help'  => 'Enter the code of the pims pseudoSales attribute'
                 ]
             ],
@@ -315,6 +315,12 @@ class ShopwareProductProcessor extends AbstractConfigurableStepElement implement
                 'options' => [
                     'label' => 'Mindestabnahme',
                     'help'  => 'Enter the code of the pims minPurchase attribute'
+                ]
+            ],
+            'purchaseSteps' => [
+                'options' => [
+                    'label' => 'Staffelung',
+                    'help'  => 'Geben Sie hier den code des Akeneo Staffelung-Attributs ein'
                 ]
             ],
             'maxPurchase' => [
@@ -459,6 +465,22 @@ class ShopwareProductProcessor extends AbstractConfigurableStepElement implement
     public function setLocale($locale)
     {
         $this->locale = $locale;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCurrency()
+    {
+        return $this->currency;
+    }
+
+    /**
+     * @param mixed $currency
+     */
+    public function setCurrency($currency)
+    {
+        $this->currency = $currency;
     }
 
     /**
@@ -624,22 +646,6 @@ class ShopwareProductProcessor extends AbstractConfigurableStepElement implement
     /**
      * @return mixed
      */
-    public function getCrossBundleLook()
-    {
-        return $this->crossBundleLook;
-    }
-
-    /**
-     * @param mixed $crossBundleLook
-     */
-    public function setCrossBundleLook($crossBundleLook)
-    {
-        $this->crossBundleLook = $crossBundleLook;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getNotification()
     {
         return $this->notification;
@@ -672,54 +678,6 @@ class ShopwareProductProcessor extends AbstractConfigurableStepElement implement
     /**
      * @return mixed
      */
-    public function getMode()
-    {
-        return $this->mode;
-    }
-
-    /**
-     * @param mixed $mode
-     */
-    public function setMode($mode)
-    {
-        $this->mode = $mode;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getAvailableFrom()
-    {
-        return $this->availableFrom;
-    }
-
-    /**
-     * @param mixed $availableFrom
-     */
-    public function setAvailableFrom($availableFrom)
-    {
-        $this->availableFrom = $availableFrom;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getAvailableTo()
-    {
-        return $this->availableTo;
-    }
-
-    /**
-     * @param mixed $availableTo
-     */
-    public function setAvailableTo($availableTo)
-    {
-        $this->availableTo = $availableTo;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getSupplier()
     {
         return $this->supplier;
@@ -731,22 +689,6 @@ class ShopwareProductProcessor extends AbstractConfigurableStepElement implement
     public function setSupplier($supplier)
     {
         $this->supplier = $supplier;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getAdditionalText()
-    {
-        return $this->additionalText;
-    }
-
-    /**
-     * @param mixed $additionalText
-     */
-    public function setAdditionalText($additionalText)
-    {
-        $this->additionalText = $additionalText;
     }
 
     /**
@@ -843,22 +785,6 @@ class ShopwareProductProcessor extends AbstractConfigurableStepElement implement
     public function setEan($ean)
     {
         $this->ean = $ean;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPosition()
-    {
-        return $this->position;
-    }
-
-    /**
-     * @param mixed $position
-     */
-    public function setPosition($position)
-    {
-        $this->position = $position;
     }
 
     /**
@@ -1085,35 +1011,51 @@ class ShopwareProductProcessor extends AbstractConfigurableStepElement implement
         $this->attr = $attr;
     }
 
-//    /**
-//     * @return mixed
-//     */
-//    public function getRelated()
-//    {
-//        return $this->related;
-//    }
-//
-//    /**
-//     * @param mixed $related
-//     */
-//    public function setRelated($related)
-//    {
-//        $this->related = $related;
-//    }
-//
-//    /**
-//     * @return mixed
-//     */
-//    public function getSimilar()
-//    {
-//        return $this->similar;
-//    }
-//
-//    /**
-//     * @param mixed $similar
-//     */
-//    public function setSimilar($similar)
-//    {
-//        $this->similar = $similar;
-//    }
+    /**
+     * @return mixed
+     */
+    public function getTax()
+    {
+        return $this->tax;
+    }
+
+    /**
+     * @param mixed $tax
+     */
+    public function setTax($tax)
+    {
+        $this->tax = $tax;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRelated()
+    {
+        return $this->related;
+    }
+
+    /**
+     * @param mixed $related
+     */
+    public function setRelated($related)
+    {
+        $this->related = $related;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSimilar()
+    {
+        return $this->similar;
+    }
+
+    /**
+     * @param mixed $similar
+     */
+    public function setSimilar($similar)
+    {
+        $this->similar = $similar;
+    }
 }

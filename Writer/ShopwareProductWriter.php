@@ -33,17 +33,12 @@ class ShopwareProductWriter extends AbstractConfigurableStepElement implements I
 
     public function write(array $items)
     {
-        $start = time();
-        echo "Product Writer... ";
         $this->apiClient = new ApiClient($this->url, $this->userName, $this->apiKey);
         $this->apiClient->put('articles/',$items);
 
 //        foreach($items as $item) {
 //            $this->apiClient->post('articles/'.$number.'?useNumberAsId=true', $item);
 //        }
-        $end = time();
-        $runtime = $end-$start;
-        echo "Laufzeit: ".$runtime." Sekunden!\n";
     }
 
     public function setStepExecution(StepExecution $stepExecution)
