@@ -16,9 +16,9 @@ class BasecomShopwareConnectorExtension extends Extension
         $loader->load('readers.yml');
         $loader->load('processors.yml');
         $loader->load('writers.yml');
-        $loader->load('steps.yml');
         $loader->load('entities.yml');
         $loader->load('serializers.yml');
         $loader->load('models.yml');
+        $loader->load('controllers.yml');
     }
 }

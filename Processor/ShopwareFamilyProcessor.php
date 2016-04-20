@@ -3,42 +3,34 @@
 namespace Basecom\Bundle\ShopwareConnectorBundle\Processor;
 
 
-use Akeneo\Bundle\BatchBundle\Entity\StepExecution;
-use Akeneo\Bundle\BatchBundle\Item\AbstractConfigurableStepElement;
-use Akeneo\Bundle\BatchBundle\Item\InvalidItemException;
-use Akeneo\Bundle\BatchBundle\Item\ItemProcessorInterface;
-use Akeneo\Bundle\BatchBundle\Step\StepExecutionAwareInterface;
-use Basecom\Bundle\ShopwareConnectorBundle\Serializer\ShopwareFamilySerializer;
-use Pim\Bundle\CatalogBundle\Manager\LocaleManager;
+
+use Akeneo\Component\Batch\Item\AbstractConfigurableStepElement;
+use Akeneo\Component\Batch\Item\ItemProcessorInterface;
+use Akeneo\Component\Batch\Model\StepExecution;
+use Akeneo\Component\Batch\Step\StepExecutionAwareInterface;
+use Pim\Component\Catalog\Repository\LocaleRepositoryInterface;
 
 class ShopwareFamilyProcessor extends AbstractConfigurableStepElement implements ItemProcessorInterface, StepExecutionAwareInterface
 {
     /** @var StepExecution */
     protected $stepExecution;
 
-    /** @var ShopwareFamilySerializer */
-    protected $serializer;
-
-    /** @var LocaleManager */
+    /** @var LocaleRepositoryInterface */
     protected $localeManager;
 
     protected $locale;
 
     /**
      * ShopwareFamilyProcessor constructor.
-     * @param ShopwareFamilySerializer $serializer
      */
-    public function __construct(LocaleManager $localeManager)
+    public function __construct(LocaleRepositoryInterface $localeManager)
     {
         $this->localeManager = $localeManager;
-        $this->serializer = new ShopwareFamilySerializer();
     }
 
     public function process($item)
     {
         return $item;
-        $item->setLocale($this->localeManager->getActiveCodes()[$this->locale]);
-        return $this->serializer->serialize($item, $this->locale);
     }
 
     public function setStepExecution(StepExecution $stepExecution)

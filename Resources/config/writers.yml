@@ -9,15 +9,11 @@ services:
         arguments:
             - '@pim_catalog.repository.category'
             - '@doctrine.orm.entity_manager'
-            - '@pim_catalog.manager.locale'
+            - '@pim_catalog.repository.locale'
     basecom_shopware_connector.writer.shopware_family:
         class: %basecom_shopware_connector.writer.shopware_family.class%
         arguments:
             - '@doctrine.orm.entity_manager'
-            - '@pim_catalog.manager.locale'
+            - '@pim_catalog.repository.locale'
     basecom_shopware_connector.writer.shopware_product:
         class: %basecom_shopware_connector.writer.shopware_product.class%
-    basecom_shopware_connector.writer.shopware_product_image:
-        class: %basecom_shopware_connector.writer.shopware_product_image.class%
-        arguments:
-            - '@pim_catalog.repository.attribute'

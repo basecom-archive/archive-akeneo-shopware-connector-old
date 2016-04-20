@@ -2,15 +2,16 @@
 
 namespace Basecom\Bundle\ShopwareConnectorBundle\Writer;
 
-use Akeneo\Bundle\BatchBundle\Entity\StepExecution;
-use Akeneo\Bundle\BatchBundle\Item\AbstractConfigurableStepElement;
-use Akeneo\Bundle\BatchBundle\Item\ItemWriterInterface;
-use Akeneo\Bundle\BatchBundle\Step\StepExecutionAwareInterface;
+
+use Akeneo\Component\Batch\Item\AbstractConfigurableStepElement;
+use Akeneo\Component\Batch\Item\ItemWriterInterface;
+use Akeneo\Component\Batch\Model\StepExecution;
+use Akeneo\Component\Batch\Step\StepExecutionAwareInterface;
 use Basecom\Bundle\ShopwareConnectorBundle\Api\ApiClient;
 use Basecom\Bundle\ShopwareConnectorBundle\Entity\Family;
 use Doctrine\ORM\EntityManager;
-use Gaufrette\Adapter\Local;
-use Pim\Bundle\CatalogBundle\Manager\LocaleManager;
+use Pim\Component\Catalog\Repository\LocaleRepositoryInterface;
+
 
 class ShopwareFamilyWriter extends AbstractConfigurableStepElement implements ItemWriterInterface, StepExecutionAwareInterface
 {
@@ -29,7 +30,7 @@ class ShopwareFamilyWriter extends AbstractConfigurableStepElement implements It
     /** @var EntityManager $entityManager */
     protected $entityManager;
 
-    /** @var LocaleManager $localeManager */
+    /** @var LocaleRepositoryInterface $localeManager */
     protected $localeManager;
 
     protected $locale;
@@ -38,7 +39,7 @@ class ShopwareFamilyWriter extends AbstractConfigurableStepElement implements It
      * ShopwareFamilyWriter constructor.
      * @param EntityManager $entityManager
      */
-    public function __construct(EntityManager $entityManager, LocaleManager $localeManager)
+    public function __construct(EntityManager $entityManager, LocaleRepositoryInterface $localeManager)
     {
         $this->entityManager = $entityManager;
         $this->localeManager = $localeManager;
@@ -46,11 +47,12 @@ class ShopwareFamilyWriter extends AbstractConfigurableStepElement implements It
 
     public function write(array $items)
     {
+        $start = time();
         echo "Family export writer...";
         $apiClient = new ApiClient($this->url, $this->userName, $this->apiKey);
         /** @var Family $item */
         foreach($items as $item) {
-            $item->setLocale($this->localeManager->getActiveCodes()[$this->locale]);
+            $item->setLocale($this->localeManager->getActivatedLocaleCodes()[$this->locale]);
             $set = array(
                 'name'      => $item->getLabel(),
                 'position'  => 0,
@@ -70,6 +72,9 @@ class ShopwareFamilyWriter extends AbstractConfigurableStepElement implements It
             }
         }
         $this->entityManager->flush();
+        $end = time();
+        $runtime = $end-$start;
+        echo "Laufzeit: ".$runtime." Sekunden!\n";
     }
 
     /**
@@ -165,7 +170,7 @@ class ShopwareFamilyWriter extends AbstractConfigurableStepElement implements It
             'locale' => [
                 'type' => 'choice',
                 'options' => [
-                    'choices'   => $this->localeManager->getActiveCodes(),
+                    'choices'   => $this->localeManager->getActivatedLocaleCodes(),
                     'required'  => true,
                     'select2'   => true,
                     'label'     => 'Locale',

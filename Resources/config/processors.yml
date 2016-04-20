@@ -2,19 +2,14 @@ parameters:
     basecom_shopware_connector.processor.shopware_category.class:       Basecom\Bundle\ShopwareConnectorBundle\Processor\ShopwareCategoryProcessor
     basecom_shopware_connector.processor.shopware_family.class:         Basecom\Bundle\ShopwareConnectorBundle\Processor\ShopwareFamilyProcessor
     basecom_shopware_connector.processor.shopware_product.class:        Basecom\Bundle\ShopwareConnectorBundle\Processor\ShopwareProductProcessor
-    basecom_shopware_connector.processor.shopware_product.image.class:  Basecom\Bundle\ShopwareConnectorBundle\Processor\ShopwareProductImageProcessor
 services:
     basecom_shopware_connector.processor.shopware_category:
         class: %basecom_shopware_connector.processor.shopware_category.class%
     basecom_shopware_connector.processor.shopware_family:
         class: %basecom_shopware_connector.processor.shopware_family.class%
         arguments:
-            - '@pim_catalog.manager.locale'
+            - '@pim_catalog.repository.locale'
     basecom_shopware_connector.processor.shopware_product:
         class: %basecom_shopware_connector.processor.shopware_product.class%
         arguments:
             - '@basecom_shopware_connector.serializer.shopware_product'
-    basecom_shopware_connector.processor.shopware_product_image:
-        class: %basecom_shopware_connector.processor.shopware_product.image.class%
-        arguments:
-            - '@basecom_shopware_connector.serializer.shopware_product_image'

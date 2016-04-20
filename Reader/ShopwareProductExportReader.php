@@ -2,16 +2,15 @@
 
 namespace Basecom\Bundle\ShopwareConnectorBundle\Reader;
 
-
-use Akeneo\Bundle\BatchBundle\Entity\StepExecution;
-use Akeneo\Bundle\BatchBundle\Item\AbstractConfigurableStepElement;
-use Akeneo\Bundle\BatchBundle\Item\InvalidItemException;
-use Akeneo\Bundle\BatchBundle\Item\ItemReaderInterface;
-use Akeneo\Bundle\BatchBundle\Step\StepExecutionAwareInterface;
 use Akeneo\Bundle\ClassificationBundle\Doctrine\ORM\Repository\CategoryRepository;
+use Akeneo\Component\Batch\Item\AbstractConfigurableStepElement;
+use Akeneo\Component\Batch\Item\ItemReaderInterface;
+use Akeneo\Component\Batch\Model\StepExecution;
+use Akeneo\Component\Batch\Step\StepExecutionAwareInterface;
 use Basecom\Bundle\ShopwareConnectorBundle\Entity\Category;
-use Pim\Bundle\CatalogBundle\Doctrine\MongoDBODM\Repository\ProductRepository;
+use Pim\Bundle\CatalogBundle\Doctrine\ORM\Repository\ProductRepository;
 use Pim\Bundle\CatalogBundle\Manager\ChannelManager;
+use Pim\Component\Catalog\Model\Product;
 
 class ShopwareProductExportReader extends AbstractConfigurableStepElement implements
     ItemReaderInterface,
@@ -52,7 +51,8 @@ class ShopwareProductExportReader extends AbstractConfigurableStepElement implem
 
     public function read()
     {
-        echo "ProductReader...\n";
+        $start = time();
+        //echo "ProductReader...";
         if (!$this->isExecuted) {
             $this->isExecuted = true;
             $this->results = $this->getResults();
@@ -62,6 +62,10 @@ class ShopwareProductExportReader extends AbstractConfigurableStepElement implem
             $this->results->next();
             $this->stepExecution->incrementSummaryInfo('read');
         }
+
+        $end = time();
+        $runtime = $end - $start;
+        echo "read: $runtime Sek. ";
         return $result;
     }
 
@@ -104,8 +108,14 @@ class ShopwareProductExportReader extends AbstractConfigurableStepElement implem
         /** @var Category $category */
         foreach($categories as $category) {
             if($category->getRoot() == $rootCategory->getId()) {
-                foreach($this->productRepository->findAllForCategory($category) as $product) {
-                    array_push($products, $product);
+//                foreach($this->productRepository->findAllForCategory($category) as $product) {
+//                    array_push($products, $product);
+//                }
+                /** @var Product $product */
+                foreach($this->productRepository->findAll() as $product) {
+                    if(in_array($category->getCode(), $product->getCategoryCodes())) {
+                        array_push($products, $product);
+                    }
                 }
             }
         }

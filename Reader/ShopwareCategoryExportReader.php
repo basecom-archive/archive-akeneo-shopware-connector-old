@@ -2,10 +2,10 @@
 
 namespace Basecom\Bundle\ShopwareConnectorBundle\Reader;
 
-use Akeneo\Bundle\BatchBundle\Entity\StepExecution;
-use Akeneo\Bundle\BatchBundle\Item\AbstractConfigurableStepElement;
-use Akeneo\Bundle\BatchBundle\Item\ItemReaderInterface;
-use Akeneo\Bundle\BatchBundle\Step\StepExecutionAwareInterface;
+use Akeneo\Component\Batch\Item\AbstractConfigurableStepElement;
+use Akeneo\Component\Batch\Item\ItemReaderInterface;
+use Akeneo\Component\Batch\Model\StepExecution;
+use Akeneo\Component\Batch\Step\StepExecutionAwareInterface;
 use Akeneo\Component\Classification\Repository\CategoryRepositoryInterface;
 use Basecom\Bundle\ShopwareConnectorBundle\Entity\Category;
 
@@ -85,7 +85,6 @@ class ShopwareCategoryExportReader extends AbstractConfigurableStepElement imple
         /** @var Category $category */
         $category = $this->categoryRepository->findOneByIdentifier($this->rootCategory);
         $categories = $this->categoryRepository->findBy(array('root' => $category->getRoot()));
-        //unset($categories[0]);
         return new \ArrayIterator($categories);
     }
 

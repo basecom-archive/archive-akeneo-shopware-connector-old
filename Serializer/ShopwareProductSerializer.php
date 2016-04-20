@@ -5,23 +5,22 @@ namespace Basecom\Bundle\ShopwareConnectorBundle\Serializer;
 use Akeneo\Bundle\ClassificationBundle\Doctrine\ORM\Repository\CategoryRepository;
 use Akeneo\Bundle\FileStorageBundle\Doctrine\ORM\Repository\FileInfoRepository;
 use Basecom\Bundle\ShopwareConnectorBundle\Api\ApiClient;
-use Basecom\Bundle\ShopwareConnectorBundle\Entity\Attribute;
 use Basecom\Bundle\ShopwareConnectorBundle\Entity\Category;
 use Basecom\Bundle\ShopwareConnectorBundle\Entity\Family;
 use Basecom\Bundle\ShopwareConnectorBundle\Entity\FileInfo;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
-use MongoDBODMProxies\__CG__\Pim\Bundle\CatalogBundle\Model\ProductValue;
-use Pim\Bundle\CatalogBundle\Doctrine\MongoDBODM\Repository\ProductRepository;
 use Pim\Bundle\CatalogBundle\Doctrine\ORM\Repository\AttributeOptionRepository;
 use Pim\Bundle\CatalogBundle\Doctrine\ORM\Repository\AttributeRepository;
 use Pim\Bundle\CatalogBundle\Doctrine\ORM\Repository\FamilyRepository;
+use Pim\Bundle\CatalogBundle\Doctrine\ORM\Repository\ProductRepository;
+use Pim\Bundle\CatalogBundle\Entity\Attribute;
 use Pim\Bundle\CatalogBundle\Entity\AttributeOption;
-use Pim\Bundle\CatalogBundle\Model\Association;
-use Pim\Bundle\CatalogBundle\Model\AttributeOptionInterface;
-use Pim\Bundle\CatalogBundle\Model\Product;
-use Pim\Bundle\CatalogBundle\Model\ProductValueInterface;
-use Pim\Bundle\TranslationBundle\Entity\AbstractTranslation;
+use Pim\Component\Catalog\Model\Association;
+use Pim\Component\Catalog\Model\AttributeOptionInterface;
+use Pim\Component\Catalog\Model\Product;
+use Pim\Component\Catalog\Model\ProductValueInterface;
+
 
 class ShopwareProductSerializer
 {
@@ -61,7 +60,7 @@ class ShopwareProductSerializer
                                 $rootDir,
                                 FileInfoRepository $fileInfoRepository,
                                 EntityManager $entityManager
-                                )
+    )
     {
         $this->productRepository    = $productRepository;
         $this->attributeRepository  = $attributeRepository;
@@ -74,29 +73,43 @@ class ShopwareProductSerializer
     }
 
     public function serialize(Product $product, $attributeMapping, $locale, $filterAttributes, ApiClient $apiClient) {
-        echo "Product Serializer for Product ".$product->getReference()."...".$this->rootDir[0]."\n";
-        echo "Produkt ID: ".$product->getId()."\n\n";
-        //var_dump($attributeMapping);
-        $propertyGroup = $this->serializeFamily($product->getFamily()->getId());
-        $item = $this->serializeValues($product->getValues(), $product->getAttributes(), $attributeMapping, $locale, $apiClient);
-        //$item['propertyValues']         = $this->serializeValuess($product->getValues(), $product->getAttributes(), $attributeMapping);//$this->serializePropertyValues($filterAttributes);
-        $item['filterGroupId']          = $propertyGroup['id'];
-        $item['mainDetail']['active']   = $item['active'] = $product->isEnabled();
-        $item['propertyGroup']          = $propertyGroup;
-        $item['categories']             = $this->serializeCategories($product->getCategories());
-        $associations                   = $this->serializeAssociations($product);
-        $item['similar']                = $associations['similar'];
-        $item['related']                = $associations['related'];
-        $item['taxId']                  = 1;
-        $item['mainDetail']['attribute']['attr1'] = "FreitextFreitextFreitextFreitextFreitextFreitext";
-//        $item['images']                 = array();
+        // echo "Product Serializer for Product ".$product->getReference()."...".$this->rootDir[0]."\n";
+        // echo "Produkt ID: ".$product->getId()."\n\n";
+        //$similar = $attributeMapping['similar'];
+        //$related = $attributeMapping['related'];
+        //unset($attributeMapping['similar']);
+        //unset($attributeMapping['related']);
 
-//        $imageItem['mainDetail']['number'] = $item['mainDetail']['number'];
-//        $imageItem['images'] = array(
-//            array('mediaId' => 1),
-//            array('mediaId' => 2)
-//        );
-        //var_dump($item);
+        $item = $this->serializeValues($product->getValues(), $product->getAttributes(), $attributeMapping, $locale, $apiClient, $filterAttributes);
+        $item['mainDetail']['active']   = $item['active'] = $product->isEnabled();
+        $item['categories']             = $this->serializeCategories($product->getCategories());
+//        $associations                   = $this->serializeAssociations($product, $similar, $related);
+//        $item['similar']                = $associations['similar'];
+//        $item['related']                = $associations['related'];
+        $item['taxId']                  = 1;
+//        $item['mainDetail']['attribute']['attr1'] = "FreitextFreitextFreitextFreitextFreitextFreitext";
+        if($product->getFamily() != null) {
+            $propertyGroup = $this->serializeFamily($product->getFamily()->getId());
+            $item['filterGroupId']          = $propertyGroup['id'];
+//            var_dump($item['filterGroupId']);
+//            //$item['propertyGroup']          = $propertyGroup;
+//            $item['propertyValues']         = $this->serializePropertyValues($product->getValues(), $filterAttributes);//$this->serializeValuess($product->getValues(), $product->getAttributes(), $attributeMapping);//
+//            var_dump($item['propertyValues']);
+        }
+        $item = $this->setRequiredValues($item);
+//        if(isset($item['propertyValues'])) var_dump($item['propertyValues']);
+//        var_dump($item['propertyValues']);
+        if(isset($item['name']) && $item['name'] == "Sony SRS-BTV25") {
+            echo "-----------!-!-!-!".$item['name']."\n";
+            var_dump($item['mainDetail']);
+        }
+        return $item;
+    }
+
+    public function setRequiredValues($item) {
+        if(!isset($item['supplier']) || $item['supplier'] == null) $item['supplier'] = "/";
+//        if(!isset($item['mainDetail']['prices']) || $item['mainDetail']['prices'] == null) $item['mainDetail']['prices'] = array(array('price' => 0));
+        if($item['taxId'] == null) $item['taxId'] = 1;
         return $item;
     }
 
@@ -135,32 +148,17 @@ class ShopwareProductSerializer
         return $propertyGroup;
     }
 
-    protected function serializePropertyValues($filterAttributes) {
-        $serializedFilterAttributes = $this->serializeFilterAttributes($filterAttributes);
-        var_dump($serializedFilterAttributes);
-        $propertyValues = array();
-        array_push($propertyValues, array(
-                                'option' => array(
-                                    'name'  => "Farbe"
-                                ),
-                                'value'     => "rot",
-                                'position'  => 1
-                            ));
-
-        return $propertyValues;
-    }
-
     protected function serializeFilterAttributes($filterAttributes) {
         $filterAttributes = str_replace(' ', '', $filterAttributes);
         $filterAttributesArray = explode(',', $filterAttributes);
         return $filterAttributesArray;
     }
 
-    public function serializeValues($values, $attributes, $attributeMapping, $locale, ApiClient $apiClient) {
+    public function serializeValues($values, $attributes, $attributeMapping, $locale, ApiClient $apiClient, $filterAttributes) {
         $item = array();
         $imageCount = 0;
+        $propValueCount = 0;
         $attributes = $this->serializeAttributes($attributes);
-        var_dump($attributes);
         /** @var ProductValueInterface $value*/
         foreach($values as $value) {
             if(in_array($value->getAttribute()->getCode(), $attributes)) {
@@ -188,6 +186,30 @@ class ShopwareProductSerializer
                         $fileInfo->setSwMediaId($mediaId);
                         $this->entityManager->persist($fileInfo);
                         $imageCount++;
+                    }
+                }
+                if(in_array($attribute->getCode(), $this->serializeFilterAttributes($filterAttributes))) {
+                    /** @var Attribute $attribute */
+                    $attribute = $this->attributeRepository->find($value->getAttribute()->getId());
+                    $attribute->setLocale($locale);
+                    $propValue = array();
+                    if($attribute->getBackendType() == 'options') {
+                        /** @var AttributeOptionInterface $option */
+                        foreach($value->getOptions() as $option) {
+                            $option->setLocale($locale);
+                            $propValue['option']['name'] = $attribute->getLabel();
+                            $propValue['option']['filterable'] = true;
+                            $propValue['value'] = $option->getOptionValue()->getValue();
+                            $propValue['position'] = $option->getSortOrder();
+                            $item['propertyValues'][$propValueCount] = $propValue;
+                            $propValueCount++;
+                        }
+                    } else {
+                        $propValue['option']['name'] = $attribute->getLabel();
+                        $propValue['option']['filterable'] = true;
+                        $propValue['value'] = $this->getAttributeValue($attribute, $value);
+                        $item['propertyValues'][$propValueCount] = $propValue;
+                        $propValueCount++;
                     }
                 }
 
@@ -231,9 +253,16 @@ class ShopwareProductSerializer
                             break;
                         case 'supplier':
                             $item['supplier'] = $this->getAttributeValue($attribute, $value);
+                            echo $item['supplier'];
                             break;
                         default:
-                            $item['mainDetail']['attribute']['attr1'] = $this->getAttributeValue($attribute, $value);
+                            echo "default\n";
+                            // Todo: richtige Überprüfung machen !!
+                            if(strpos($shopwareAttribute, 'attr')) {
+                                $item['mainDetail']['attributes'][$shopwareAttribute] = $this->getAttributeValue($attribute, $value);
+                                echo "shopwareAttribute: ".$shopwareAttribute."\n";
+                            }
+                            //$item['mainDetail']['attribute']['attr1'] = $this->getAttributeValue($attribute, $value);
                             //Todo:
                             //if filterAttribute
                             //do filterAttributeStuff
@@ -250,44 +279,6 @@ class ShopwareProductSerializer
         return $item;
     }
 
-    /**
-     * @param ArrayCollection $values
-     * Todo: propertyValues richtig auslesen
-     */
-    public function serializeValuess($values, $attributes, $attributeMapping) {
-        $propertyValues = array();
-        $attributes = $this->serializeAttributes($attributes);
-        /** @var ProductValueInterface $value */
-        foreach($values as $value) {
-            if(in_array($value->getAttribute()->getCode(), $attributes)) {
-                $backendType = $value->getAttribute()->getBackendType();
-                /** @var Attribute $attribute */
-                $attribute = $this->attributeRepository->find($value->getAttribute()->getId());
-                $attribute->setLocale('en_US');
-                switch($backendType) {
-                    case 'options':
-                        /** @var AttributeOptionInterface $option */
-                        foreach($value->getOptions() as $option) {
-                            $option->setLocale("en_US");
-                            array_push($propertyValues, array(
-                                'option' => array(
-                                    'name'  => $attribute->getLabel(),
-                                    'id'    => $attribute->getId(),
-                                    'filterable' => true,
-                                ),
-                                'value'     => $option->getOptionValue()->getValue(),
-                                'position'  => $option->getSortOrder(),
-                            ));
-                        }
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
-        return $propertyValues;
-    }
-
     protected function getAttributeValue(Attribute $attribute, ProductValueInterface $value) {
         switch($attribute->getBackendType()) {
             case 'options':
@@ -299,6 +290,7 @@ class ShopwareProductSerializer
                     $options .= $option->getOptionValue()->getValue();
                     $optionsCount++;
                 }
+                return $options;
                 break;
             case 'option':
                 $option = $value->getOption();
@@ -324,9 +316,9 @@ class ShopwareProductSerializer
                 return $value->getDatetime();
                 break;
             case 'media':
-                echo "Media ID: ".$value->getMedia()->getId()."\nMedia Extension: ".$value->getMedia()->getExtension()."\nMedia Hash: ".$value->getMedia()->getHash().
-                    "\nMedia Key: ".$value->getMedia()->getKey()."\nMedia MimeType: ".$value->getMedia()->getMimeType()."\nMedia Original Filename".$value->getMedia()->getOriginalFilename().
-                    "\nMedia Size: ".$value->getMedia()->getSize()."\nMedia Storage: ".$value->getMedia()->getStorage()."\nMedia Uploaded File";
+                //echo "Media ID: ".$value->getMedia()->getId()."\nMedia Extension: ".$value->getMedia()->getExtension()."\nMedia Hash: ".$value->getMedia()->getHash().
+                //    "\nMedia Key: ".$value->getMedia()->getKey()."\nMedia MimeType: ".$value->getMedia()->getMimeType()."\nMedia Original Filename".$value->getMedia()->getOriginalFilename().
+                //    "\nMedia Size: ".$value->getMedia()->getSize()."\nMedia Storage: ".$value->getMedia()->getStorage()."\nMedia Uploaded File";
                 break;
             case 'prices':
                 return array(
@@ -344,9 +336,9 @@ class ShopwareProductSerializer
      * @param Product $product
      * @return array
      */
-    public function serializeAssociations($product) {
-        $related = $this->serializeRelated($product->getAssociationForTypeCode("related"));
-        $similar = $this->serializeSimilar($product->getAssociationForTypeCode("similar"));
+    public function serializeAssociations($product, $similar, $related) {
+        $related = $this->serializeRelated($product->getAssociationForTypeCode($related));
+        $similar = $this->serializeSimilar($product->getAssociationForTypeCode($similar));
         $associations = array(
             'related' => $related,
             'similar' => $similar,

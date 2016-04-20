@@ -2,10 +2,10 @@
 
 namespace Basecom\Bundle\ShopwareConnectorBundle\Writer;
 
-use Akeneo\Bundle\BatchBundle\Entity\StepExecution;
-use Akeneo\Bundle\BatchBundle\Item\AbstractConfigurableStepElement;
-use Akeneo\Bundle\BatchBundle\Item\ItemWriterInterface;
-use Akeneo\Bundle\BatchBundle\Step\StepExecutionAwareInterface;
+use Akeneo\Component\Batch\Item\AbstractConfigurableStepElement;
+use Akeneo\Component\Batch\Item\ItemWriterInterface;
+use Akeneo\Component\Batch\Model\StepExecution;
+use Akeneo\Component\Batch\Step\StepExecutionAwareInterface;
 use Basecom\Bundle\ShopwareConnectorBundle\Api\ApiClient;
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -34,7 +34,7 @@ class ShopwareProductWriter extends AbstractConfigurableStepElement implements I
     public function write(array $items)
     {
         $start = time();
-        echo "Product Writer...\n";
+        echo "Product Writer... ";
         $this->apiClient = new ApiClient($this->url, $this->userName, $this->apiKey);
         $this->apiClient->put('articles/',$items);
 
@@ -43,7 +43,7 @@ class ShopwareProductWriter extends AbstractConfigurableStepElement implements I
 //        }
         $end = time();
         $runtime = $end-$start;
-        echo "\nLaufzeit: ".$runtime." Sekunden!\n";
+        echo "Laufzeit: ".$runtime." Sekunden!\n";
     }
 
     public function setStepExecution(StepExecution $stepExecution)

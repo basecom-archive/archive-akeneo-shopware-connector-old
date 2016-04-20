@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: ado
- * Date: 04.04.16
- * Time: 16:55
- */
 
 namespace Basecom\Bundle\ShopwareConnectorBundle\Entity;
 

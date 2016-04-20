@@ -2,16 +2,12 @@
 
 namespace Basecom\Bundle\ShopwareConnectorBundle\Processor;
 
-
-use Akeneo\Bundle\BatchBundle\Entity\StepExecution;
-use Akeneo\Bundle\BatchBundle\Item\AbstractConfigurableStepElement;
-use Akeneo\Bundle\BatchBundle\Item\InvalidItemException;
-use Akeneo\Bundle\BatchBundle\Item\ItemProcessorInterface;
-use Akeneo\Bundle\BatchBundle\Step\StepExecutionAwareInterface;
+use Akeneo\Component\Batch\Item\AbstractConfigurableStepElement;
+use Akeneo\Component\Batch\Item\ItemProcessorInterface;
+use Akeneo\Component\Batch\Model\StepExecution;
+use Akeneo\Component\Batch\Step\StepExecutionAwareInterface;
 use Basecom\Bundle\ShopwareConnectorBundle\Api\ApiClient;
-use Basecom\Bundle\ShopwareConnectorBundle\Entity\Attribute;
 use Basecom\Bundle\ShopwareConnectorBundle\Serializer\ShopwareProductSerializer;
-use Pim\Bundle\CatalogBundle\Doctrine\ORM\Repository\AttributeRepository;
 
 class ShopwareProductProcessor extends AbstractConfigurableStepElement implements ItemProcessorInterface, StepExecutionAwareInterface
 {
@@ -20,9 +16,6 @@ class ShopwareProductProcessor extends AbstractConfigurableStepElement implement
 
     /** @var ShopwareProductSerializer */
     protected $serializer;
-
-    /** @var AttributeRepository */
-    protected $attributeRepository;
 
     protected $rootDir;
 
@@ -36,6 +29,10 @@ class ShopwareProductProcessor extends AbstractConfigurableStepElement implement
 
     /** @var string */
     protected $url;
+//
+//    protected $related;
+//
+//    protected $similar;
 
     protected $filterAttributes;
 
@@ -78,6 +75,7 @@ class ShopwareProductProcessor extends AbstractConfigurableStepElement implement
     protected $price;
     protected $pseudoPrice;
     protected $basePrice;
+    protected $attr;
 
     /**
      * ShopwareProductProcessor constructor.
@@ -90,9 +88,13 @@ class ShopwareProductProcessor extends AbstractConfigurableStepElement implement
 
     public function process($item)
     {
-        echo "\n\nproduct processor\n\n";
+        $start = time();
+        //echo "product processor... ";
         $this->apiClient = new ApiClient($this->url, $this->userName, $this->apiKey);
         $attributeMapping = $this->convertConfigurationVariablesToMappingArray();
+        $end = time();
+        $runtime = $end - $start;
+        echo "process: $runtime Sek. ";
         return $this->serializer->serialize($item, $attributeMapping, $this->locale, $this->filterAttributes, $this->apiClient);
     }
 
@@ -136,7 +138,18 @@ class ShopwareProductProcessor extends AbstractConfigurableStepElement implement
             'price'				=> $this->price,
             'pseudoPrice'		=> $this->pseudoPrice,
             'basePrice'			=> $this->basePrice,
+            'attr'              => $this->attr,
+            //'similar'           => $this->similar,
+            //'related'           => $this->related,
         );
+        $attributes = explode(";",$this->attr);
+//        echo "-----------------------------------------";
+        foreach($attributes as $attribute) {
+            $attr = explode(":", $attribute);
+            if(isset($attr[1])) $configArray[$attr[0]] = $attr[1];
+        }
+//        echo "-----------------------------------------";
+//        var_dump($configArray);
         return $configArray;
     }
 
@@ -172,6 +185,18 @@ class ShopwareProductProcessor extends AbstractConfigurableStepElement implement
                     'help'  => 'Shopware Api-URL'
                 ]
             ],
+//            'similar' => [
+//                'options' => [
+//                    'label' => 'Ähnliche Artikel',
+//                    'help'  => 'Geben Sie hier den code des Akeneo-Association Type für ähnliche Artikel ein'
+//                ]
+//            ],
+//            'related' => [
+//                'options' => [
+//                    'label' => 'Zubehör Artikel',
+//                    'help'  => 'Geben Sie hier den code des Akeneo-Association Type für Zubehör Artikel ein'
+//                ]
+//            ],
             'filterAttributes' => [
                 'options' => [
                     'label' => 'Filter Attribute',
@@ -344,6 +369,13 @@ class ShopwareProductProcessor extends AbstractConfigurableStepElement implement
                 'options' => [
                     'label' => 'Länge',
                     'help'  => 'Enter the code of the pims len attribute'
+                ]
+            ],
+            'attr' => [
+                'type'    => 'hidden',
+                'options' => [
+                    'label' => 'Zusätzliche Attribute',
+                    'help'  => 'Zusätzliche Shopware Attribute',
                 ]
             ]
         ];
@@ -1037,5 +1069,51 @@ class ShopwareProductProcessor extends AbstractConfigurableStepElement implement
         $this->basePrice = $basePrice;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getAttr()
+    {
+        return $this->attr;
+    }
 
+    /**
+     * @param mixed $attr
+     */
+    public function setAttr($attr)
+    {
+        $this->attr = $attr;
+    }
+
+//    /**
+//     * @return mixed
+//     */
+//    public function getRelated()
+//    {
+//        return $this->related;
+//    }
+//
+//    /**
+//     * @param mixed $related
+//     */
+//    public function setRelated($related)
+//    {
+//        $this->related = $related;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getSimilar()
+//    {
+//        return $this->similar;
+//    }
+//
+//    /**
+//     * @param mixed $similar
+//     */
+//    public function setSimilar($similar)
+//    {
+//        $this->similar = $similar;
+//    }
 }
