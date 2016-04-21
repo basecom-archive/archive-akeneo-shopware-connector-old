@@ -1,0 +1,6 @@
+parameters:
+    basecom_shopware_connector.step.setup_attributes.class:   Basecom\Bundle\ShopwareConnectorBundle\Step\SetupAttributesStep
+    basecom_shopware_connector.handler.attribute_setup.class: Basecom\Bundle\ShopwareConnectorBundle\Handler\AttributeSetupHandler
+services:
+    basecom_shopware_connector.handler.attribute_setup:
+        class: "%basecom_shopware_connector.handler.attribute_setup.class%"

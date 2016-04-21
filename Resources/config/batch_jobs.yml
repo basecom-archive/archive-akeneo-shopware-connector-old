@@ -27,3 +27,12 @@ connector:
                         reader:     basecom_shopware_connector.reader.shopware_family_export
                         processor:  basecom_shopware_connector.processor.shopware_family
                         writer:     basecom_shopware_connector.writer.shopware_family
+        shopware_attribute_setup:
+            title: Shopware Attribute Setup
+            type: import
+            steps:
+                export:
+                    title:          Shopware attribute setup
+                    class:          "%basecom_shopware_connector.step.setup_attributes.class%"
+                    services:
+                        handler:    basecom_shopware_connector.handler.attribute_setup
