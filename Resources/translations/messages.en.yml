@@ -1,0 +1,139 @@
+basecom_shopware_connector:
+  jobs:
+    shopware_products_export:
+      title: Product export to Shopware
+      export_products.title: Product export
+    shopware_export:
+      title: Category and Family export to Shopware
+      export_categories.title: category export
+      export_families.title: Family export
+    shopware_attribute_setup:
+      title: Update of the Shopware product export configuration
+      import.title: Attribute update
+  export:
+    rootCategory:
+      label: Root category
+      help:  Enter the code of the root category
+    channel:
+      label: Channel
+      help:  Choose the Channel
+    locale:
+      label: Locale
+      help:  Choose the locale
+    currency:
+      label: Currency
+      help:  Enter the currency
+    apiKey:
+      label: API-Key
+      help:  Enter the API-Key
+    userName:
+      label: Username
+      help:  Enter the username
+    url:
+      label: URL
+      help:  Enter the Shopware API-URL
+    similar:
+      label: Similar items
+      help:  Enter the code of the Akeneo association type for similar items
+    related:
+      label: Accessory items
+      help:  Enter the code of the Akeneo association type for accessory items
+    filterAttributes:
+      label: Filter Attributes
+      help:  Enter the Akeneo codes of the Filter attributes seperated by comma
+    supplier:
+      label: Manufacturer
+      help:  Enter the code of the Akeneo Manufacturer attribute
+    name:
+      label: Item name
+      help:  Enter the code of the Akeneo Item name attribute
+    articleNumber:
+      label: Item number
+      help:  Enter the code of the Akeneo Item number attribute
+    tax:
+      label: VAT
+      help:  Enter the code of the Akeneo VAT attribute
+    template:
+      label: Template
+      help:  Enter the code of the Akeneo Template attribute
+    priceGroupActive:
+      label: Active price group
+      help:  Enter the code of the Akeneo Active price group attribute
+    price:
+      label: Price
+      help:  Enter the code of the Akeneo price attribute
+    descriptionLong:
+      label: Description
+      help:  Enter the code of the Akeneo description attribute
+    metaTitle:
+      label: Meta Title
+      help:  Enter the code of the Akeneo meta title attribute
+    description:
+      label: Short description
+      help:  Enter the code of the Akeneo Short description attribute
+    keywords:
+      label: Keywords
+      help:  Enter the code of the Akeneo Keywords attribute
+    purchaseUnit:
+      label: Maßeinheit
+      help:  Geben Sie hier den code des Akeneo-Maßeinheit-Attributs ein
+    referenceUnit:
+      label: Grundeinheit
+      help:  Geben Sie hier den code des Akeneo-Grundeinheit-Attributs ein
+    packUnit:
+      label: Verpackungseinheit
+      help:  Geben Sie hier den code des Akeneo-Verpackungseinheit-Attributs ein
+    notification:
+      label: E-Mail-Benachrichtigung
+      help:  Geben Sie hier den code des Akeneo-E-Mail-Benachrichtigung-Attributs ein
+    shippingTime:
+      label: Lieferzeit (in Tagen)
+      help:  Geben Sie hier den code des Akeneo-Lieferzeit-Attributs ein
+    inStock:
+      label: Lagerbestand
+      help:  Geben Sie hier den code des Akeneo-Lagerbestand-Attributs ein
+    stockMin:
+      label: Lager-Mindestbestand
+      help:  Geben Sie hier den code des Akeneo-Lager-Mindestbestand-Attributs ein
+    releaseDate:
+      label: Erscheinungsdatum
+      help:  Geben Sie hier den code des Akeneo-Erscheinungsdatum-Attributs ein
+    pseudoSales:
+      label: Pseudo Verkäufe
+      help:  Geben Sie hier den code des Akeneo-Pseudo-Verkäufe-Attributs ein
+    minPurchase:
+      label: Mindestabnahme
+      help:  Geben Sie hier den code des Akeneo-Mindestabnahme-Attributs ein
+    purchaseSteps:
+      label: Staffelung
+      help:  Geben Sie hier den code des Akeneo-Staffelung-Attributs ein
+    maxPurchase:
+      label: Maximalabnahme
+      help:  Geben Sie hier den code des Akeneo-Maximalabnahme-Attributs ein
+    weight:
+      label: Gewicht (in KG)
+      help:  Geben Sie hier den code des Akeneo-Gewicht-Attributs ein
+    shippingFree:
+      label: Versandkostenfrei
+      help:  Geben Sie hier den code des Akeneo-Versandkostenfrei-Attributs ein
+    highlight:
+      label: Artikel hervorheben
+      help:  Geben Sie hier den code des Akeneo-Artikel-hervorheben-Attributs ein
+    lastStock:
+      label: Abverkauf
+      help:  Geben Sie hier den code des Akeneo-Abverkauf-Attributs ein
+    ean:
+      label: EAN
+      help:  Geben Sie hier den code des Akeneo-EAN-Attributs ein
+    width:
+      label: Breite
+      help:  Geben Sie hier den code des Akeneo-Breite-Attributs ein
+    height:
+      label: Höhe
+      help:  Geben Sie hier den code des Akeneo-Höhe-Attributs ein
+    len:
+      label: Länge
+      help:  Geben Sie hier den code des Akeneo-Länge-Attributs ein
+    attr:
+      label: Zusätzliche Attribute
+      help:  Geben Sie hier den code des Akeneo-Attributs ein

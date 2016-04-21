@@ -25,7 +25,6 @@ class ShopwareProductSerializer
     /** @var FamilyRepository */
     protected $familyRepository;
 
-    /** @var CategoryRepository */
     protected $categoryRepository;
 
     /** @var FileInfoRepository */

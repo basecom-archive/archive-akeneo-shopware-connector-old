@@ -13,6 +13,7 @@ services:
             - '@pim_catalog.repository.product'
             - '@pim_catalog.repository.category'
             - '@pim_catalog.manager.channel'
+            - '@pim_catalog.repository.channel'
     basecom_shopware_connector.reader.shopware_category_export:
         class: %basecom_shopware_connector.reader.shopware_category_export.class%
         arguments:

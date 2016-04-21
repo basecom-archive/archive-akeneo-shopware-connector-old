@@ -8,6 +8,7 @@ use Akeneo\Component\Batch\Model\StepExecution;
 use Akeneo\Component\Batch\Step\StepExecutionAwareInterface;
 use Basecom\Bundle\ShopwareConnectorBundle\Api\ApiClient;
 use Basecom\Bundle\ShopwareConnectorBundle\Serializer\ShopwareProductSerializer;
+use Pim\Component\Catalog\Repository\LocaleRepositoryInterface;
 
 class ShopwareProductProcessor extends AbstractConfigurableStepElement implements ItemProcessorInterface, StepExecutionAwareInterface
 {
@@ -20,6 +21,9 @@ class ShopwareProductProcessor extends AbstractConfigurableStepElement implement
     protected $rootDir;
 
     protected $apiClient;
+
+    /** @var LocaleRepositoryInterface */
+    protected $localeManager;
 
     /** @var string */
     protected $apiKey;
@@ -77,9 +81,10 @@ class ShopwareProductProcessor extends AbstractConfigurableStepElement implement
      * ShopwareProductProcessor constructor.
      * @param ShopwareProductSerializer $serializer
      */
-    public function __construct(ShopwareProductSerializer $serializer)
+    public function __construct(ShopwareProductSerializer $serializer, LocaleRepositoryInterface $localeRepositoryInterface)
     {
         $this->serializer = $serializer;
+        $this->localeManager = $localeRepositoryInterface;
     }
 
     public function process($item)
@@ -144,9 +149,13 @@ class ShopwareProductProcessor extends AbstractConfigurableStepElement implement
     {
         return [
             'locale' => [
+                'type' => 'choice',
                 'options' => [
-                    'label' => 'Locale',
-                    'help'  => 'the locale you want to export'
+                    'choices'   => $this->localeManager->getActivatedLocaleCodes(),
+                    'required'  => true,
+                    'select2'   => true,
+                    'label'     => 'Locale',
+                    'help'      => 'locale'
                 ]
             ],
             'currency' => [

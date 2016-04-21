@@ -11,7 +11,6 @@
                         var attrInput = "";
                         {% for attribute in attributes %}
                             var attrName = "{{ attribute[0] }}".split(';')[0];
-                            console.log(attrName);
                             attrInput += attrName+":" + $("#{{ attribute[0] }}".split(";")[0]).val()+";";
                         {% endfor %}
                         $("#pim_import_export_jobInstance_job_steps_0_processor_attr").val(attrInput);
@@ -61,7 +60,6 @@
                 {{ form_row(form.label) }}
             {% endset %}
             {{ elements.accordion({ 'pane.accordion.properties': properties }, 1) }}
-
             {% set globalSettings %}
                 {% for step in form.job.steps %}
                     {% for child in step.children %}
@@ -76,22 +74,39 @@
                                         values = values.split(';');
                                         var attributeIterator = 0;
                                         {% for attribute in attributes %}
-                                        console.log("Start|||"+values[attributeIterator]+"|||Stop");
-                                        var value = values[attributeIterator].split(':');
-                                        var attrName = "{{ attribute[0] }}".split(';')[0];
-                                        var attrLabel = "{{ attribute[0] }}".split(';')[1];
-                                        console.log("Value: "+value[1]);
-                                        var text = '<div class="control-group">'+
-                                                '<label class="control-label" for="'+attrName+'">'+attrLabel+'</label>'+
-                                                '<div class="controls">'+
-                                                '<input type="text" id="'+attrName+'" class="input-large" value="'+value[1]+'"/>'+
-                                                '<div class="icons-container">'+
-                                                '<i class="icon-info-sign" data-toggle="tooltip" data-placement="right" data-original-title="help"></i>'+
-                                                '</div>'+
-                                                '</div>'+
-                                                '</div>';
-                                        $('#article-attributes').append(text);
-                                        attributeIterator++;
+                                        if(typeof values[attributeIterator] !== 'undefined') {
+                                            var value = values[attributeIterator].split(':');
+                                            var attrName = "{{ attribute[0] }}".split(';')[0];
+                                            var attrLabel = "{{ attribute[0] }}".split(';')[1];
+                                            if (typeof value[1] == 'undefined') {
+                                                value[1] = "";
+                                            }
+                                            var text = '<div class="control-group">'+
+                                                    '<label class="control-label" for="'+attrName+'">'+attrLabel+'</label>'+
+                                                    '<div class="controls">'+
+                                                    '<input type="text" id="'+attrName+'" class="input-large" value="'+value[1]+'"/>'+
+                                                    '<div class="icons-container">'+
+                                                    '<i class="icon-info-sign" data-toggle="tooltip" data-placement="right" data-original-title="help"></i>'+
+                                                    '</div>'+
+                                                    '</div>'+
+                                                    '</div>';
+                                            $('#article-attributes').append(text);
+                                            attributeIterator++;
+                                        } else {
+                                            var attrName = "{{ attribute[0] }}".split(';')[0];
+                                            var attrLabel = "{{ attribute[0] }}".split(';')[1]
+                                            var text = '<div class="control-group">'+
+                                                    '<label class="control-label" for="'+attrName+'">'+attrLabel+'</label>'+
+                                                    '<div class="controls">'+
+                                                    '<input type="text" id="'+attrName+'" class="input-large"/>'+
+                                                    '<div class="icons-container">'+
+                                                    '<i class="icon-info-sign" data-toggle="tooltip" data-placement="right" data-original-title="help"></i>'+
+                                                    '</div>'+
+                                                    '</div>'+
+                                                    '</div>';
+                                            $('#article-attributes').append(text);
+                                            attributeIterator++;
+                                        }
                                         {% endfor %}
                                     </script>
                                     {% endblock %}

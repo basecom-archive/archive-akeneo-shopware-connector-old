@@ -62,8 +62,8 @@ class ShopwareCategoryExportReader extends AbstractConfigurableStepElement imple
         return [
             'rootCategory' => [
                 'options' => [
-                    'label' => 'Root category',
-                    'help'  => 'The code of the root category you want to export'
+                    'label' => 'basecom_shopware_connector.export.rootCategory.label',
+                    'help'  => 'basecom_shopware_connector.export.rootCategory.help'
                 ]
             ],
         ];
