@@ -17,7 +17,7 @@ class AttributeSetupHandler extends \Akeneo\Component\Batch\Item\AbstractConfigu
     public function execute()
     {
         $client = new ApiClient($this->url, $this->userName, $this->apiKey);
-        $jsonData = $client->get('users');
+        $jsonData = $client->get('attributes');
         $fp = fopen(__DIR__.'/../Resources/config/additional_attributes.csv', 'w');
         foreach($jsonData['data'] as $data) {
             fputcsv($fp, $data, ";");
