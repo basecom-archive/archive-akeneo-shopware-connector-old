@@ -146,20 +146,20 @@ class ShopwareFamilyWriter extends AbstractConfigurableStepElement implements It
         return [
             'apiKey' => [
                 'options' => [
-                    'label' => 'API-Key',
-                    'help'  => 'pim_connector.import.filePath.help'
+                    'label' => 'basecom_shopware_connector.export.apiKey.label',
+                    'help'  => 'basecom_shopware_connector.export.apiKey.help'
                 ]
             ],
             'userName' => [
                 'options' => [
-                    'label' => 'Username',
-                    'help'  => 'HELP!'
+                    'label' => 'basecom_shopware_connector.export.userName.label',
+                    'help'  => 'basecom_shopware_connector.export.userName.help'
                 ]
             ],
             'url' => [
                 'options' => [
-                    'label' => 'URL',
-                    'help'  => 'help'
+                    'label' => 'basecom_shopware_connector.export.url.label',
+                    'help'  => 'basecom_shopware_connector.export.url.help'
                 ]
             ],
             'locale' => [
@@ -168,8 +168,8 @@ class ShopwareFamilyWriter extends AbstractConfigurableStepElement implements It
                     'choices'   => $this->localeManager->getActivatedLocaleCodes(),
                     'required'  => true,
                     'select2'   => true,
-                    'label'     => 'Locale',
-                    'help'      => 'help'
+                    'label'     => 'basecom_shopware_connector.export.locale.label',
+                    'help'      => 'basecom_shopware_connector.export.locale.help'
                 ]
             ],
         ];

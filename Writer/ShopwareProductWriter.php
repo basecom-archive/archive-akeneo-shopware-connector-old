@@ -132,20 +132,20 @@ class ShopwareProductWriter extends AbstractConfigurableStepElement implements I
         return [
             'apiKey' => [
                 'options' => [
-                    'label' => 'API-Key',
-                    'help'  => 'pim_connector.import.filePath.help'
+                    'label' => 'basecom_shopware_connector.export.apiKey.label',
+                    'help'  => 'basecom_shopware_connector.export.apiKey.help'
                 ]
             ],
             'userName' => [
                 'options' => [
-                    'label' => 'Username',
-                    'help'  => 'HELP!'
+                    'label' => 'basecom_shopware_connector.export.userName.label',
+                    'help'  => 'basecom_shopware_connector.export.userName.help'
                 ]
             ],
             'url' => [
                 'options' => [
-                    'label' => 'URL',
-                    'help'  => 'help'
+                    'label' => 'basecom_shopware_connector.export.url.label',
+                    'help'  => 'basecom_shopware_connector.export.url.help'
                 ]
             ]
         ];

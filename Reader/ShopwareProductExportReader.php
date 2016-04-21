@@ -77,8 +77,8 @@ class ShopwareProductExportReader extends AbstractConfigurableStepElement implem
         return [
             'rootCategory' => [
                 'options' => [
-                    'label' => 'Root category',
-                    'help'  => 'The code of the root category you want to export'
+                    'label' => 'basecom_shopware_connector.export.rootCategory.label',
+                    'help'  => 'basecom_shopware_connector.export.rootCategory.help'
                 ]
             ],
             'channel' => [
@@ -87,8 +87,8 @@ class ShopwareProductExportReader extends AbstractConfigurableStepElement implem
                     'choices'  => $this->channelManager->getChannelChoices(),
                     'required' => true,
                     'select2'  => true,
-                    'label'    => 'pim_base_connector.export.channel.label',
-                    'help'     => 'pim_base_connector.export.channel.help'
+                    'label'    => 'basecom_shopware_connector.export.channel.label',
+                    'help'     => 'basecom_shopware_connector.export.channel.label'
                 ]
             ]
         ];

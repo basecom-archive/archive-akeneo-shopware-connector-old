@@ -154,243 +154,243 @@ class ShopwareProductProcessor extends AbstractConfigurableStepElement implement
                     'choices'   => $this->localeManager->getActivatedLocaleCodes(),
                     'required'  => true,
                     'select2'   => true,
-                    'label'     => 'Locale',
-                    'help'      => 'locale'
+                    'label'     => 'basecom_shopware_connector.export.locale.label',
+                    'help'      => 'basecom_shopware_connector.export.locale.label'
                 ]
             ],
             'currency' => [
                 'options' => [
-                    'label' => 'Währung',
-                    'help'  => ' Geben Sie hier die zu exportierende Währung ein'
+                    'label' => 'basecom_shopware_connector.export.currency.label',
+                    'help'  => 'basecom_shopware_connector.export.currency.label'
                 ]
             ],
             'apiKey' => [
                 'options' => [
-                    'label' => 'API-Key',
-                    'help'  => 'pim_connector.import.filePath.help'
+                    'label' => 'basecom_shopware_connector.export.apiKey.label',
+                    'help'  => 'basecom_shopware_connector.export.apiKey.help'
                 ]
             ],
             'userName' => [
                 'options' => [
-                    'label' => 'Username',
-                    'help'  => 'Shopware Api-Username'
+                    'label' => 'basecom_shopware_connector.export.userName.label',
+                    'help'  => 'basecom_shopware_connector.export.userName.help'
                 ]
             ],
             'url' => [
                 'options' => [
-                    'label' => 'URL',
-                    'help'  => 'Shopware Api-URL'
+                    'label' => 'basecom_shopware_connector.export.url.label',
+                    'help'  => 'basecom_shopware_connector.export.url.help'
                 ]
             ],
             'similar' => [
                 'options' => [
-                    'label' => 'Ähnliche Artikel',
-                    'help'  => 'Geben Sie hier den code des Akeneo-Association Type für ähnliche Artikel ein'
+                    'label' => 'basecom_shopware_connector.export.similar.label',
+                    'help'  => 'basecom_shopware_connector.export.similar.help'
                 ]
             ],
             'related' => [
                 'options' => [
-                    'label' => 'Zubehör Artikel',
-                    'help'  => 'Geben Sie hier den code des Akeneo-Association Type für Zubehör Artikel ein'
+                    'label' => 'basecom_shopware_connector.export.related.label',
+                    'help'  => 'basecom_shopware_connector.export.related.help'
                 ]
             ],
             'filterAttributes' => [
                 'options' => [
-                    'label' => 'Filter Attribute',
-                    'help'  => 'the code of the attributes that should be property values seperated by comma'
+                    'label' => 'basecom_shopware_connector.export.filterAttributes.label',
+                    'help'  => 'basecom_shopware_connector.export.filterAttributes.help'
                 ]
             ],
             'supplier' => [
                 'options' => [
-                    'label' => 'Hersteller',
-                    'help'  => 'Geben Sie hier den code des Akeneo-Hersteller-Attributs ein'
+                    'label' => 'basecom_shopware_connector.export.supplier.label',
+                    'help'  => 'basecom_shopware_connector.export.supplier.help'
                 ]
             ],
             'name' => [
                 'options' => [
-                    'label' => 'Artikel-Bezeichnung',
-                    'help'  => 'Geben Sie hier den code des Akeneo-Artikel-Bezeichnung-Attributs ein'
+                    'label' => 'basecom_shopware_connector.export.name.label',
+                    'help'  => 'basecom_shopware_connector.export.name.help'
                 ]
             ],
             'articleNumber' => [
                 'options' => [
-                    'label' => 'Artikelnummer',
-                    'help'  => 'Geben Sie hier den code des Akeneo-Artikelnummer-Attributs ein'
+                    'label' => 'basecom_shopware_connector.export.articleNumber.label',
+                    'help'  => 'basecom_shopware_connector.export.articleNumber.help'
                 ]
             ],
             'tax' => [
                 'options' => [
-                    'label' => 'MwSt',
-                    'help'  => 'Geben Sie hier den code des Akeneo-MwSt-Attributs ein'
+                    'label' => 'basecom_shopware_connector.export.tax.label',
+                    'help'  => 'basecom_shopware_connector.export.tax.help'
                 ]
             ],
             'template' => [
                 'options' => [
-                    'label' => 'Template',
-                    'help'  => 'Geben Sie hier den code des Akeneo-Template-Attributs ein'
+                    'label' => 'basecom_shopware_connector.export.template.label',
+                    'help'  => 'basecom_shopware_connector.export.template.help'
                 ]
             ],
             'priceGroupActive' => [
                 'options' => [
-                    'label' => 'Preisgruppe aktiv',
-                    'help'  => 'Geben Sie hier den code des Akeneo-Preisgruppe-aktiv-Attributs ein'
+                    'label' => 'basecom_shopware_connector.export.priceGroupActive.label',
+                    'help'  => 'basecom_shopware_connector.export.priceGroupActive.help'
                 ]
             ],
             'price' => [
                 'options' => [
-                    'label' => 'Preis',
-                    'help'  => 'Geben Sie hier den code des Akeneo-Preis-Attributs ein'
+                    'label' => 'basecom_shopware_connector.export.price.label',
+                    'help'  => 'basecom_shopware_connector.export.price.help'
                 ]
             ],
             'descriptionLong' => [
                 'options' => [
-                    'label' => 'Beschreibung',
-                    'help'  => 'Geben Sie hier den code des Akeneo-Beschreibung-Attributs ein'
+                    'label' => 'basecom_shopware_connector.export.descriptionLong.label',
+                    'help'  => 'basecom_shopware_connector.export.descriptionLong.help'
                 ]
             ],
             'metaTitle' => [
                 'options' => [
-                    'label' => 'Meta Titel',
-                    'help'  => 'Geben Sie hier den code des Akeneo-Metatitel-Attributs ein'
+                    'label' => 'basecom_shopware_connector.export.metaTitle.label',
+                    'help'  => 'basecom_shopware_connector.export.metaTitle.help'
                 ]
             ],
             'description' => [
                 'options' => [
-                    'label' => 'Kurzbeschreibung',
-                    'help'  => 'Geben Sie hier den code des Akeneo-Kurzeschreibung-Attributs ein'
+                    'label' => 'basecom_shopware_connector.export.description.label',
+                    'help'  => 'basecom_shopware_connector.export.description.help'
                 ]
             ],
             'keywords' => [
                 'options' => [
-                    'label' => 'Keywords',
-                    'help'  => 'Geben Sie hier den code des Akeneo-Keywords-Attributs ein'
+                    'label' => 'basecom_shopware_connector.export.keywords.label',
+                    'help'  => 'basecom_shopware_connector.export.keywords.help'
                 ]
             ],
             'purchaseUnit' => [
                 'options' => [
-                    'label' => 'Maßeinheit',
-                    'help'  => 'Enter the code of the pims purchaseUnit attribute'
+                    'label' => 'basecom_shopware_connector.export.purchaseUnit.label',
+                    'help'  => 'basecom_shopware_connector.export.purchaseUnit.help'
                 ]
             ],
             'referenceUnit' => [
                 'options' => [
-                    'label' => 'Grundeinheit',
-                    'help'  => 'Enter the code of the pims referenceUnit attribute'
+                    'label' => 'basecom_shopware_connector.export.referenceUnit.label',
+                    'help'  => 'basecom_shopware_connector.export.referenceUnit.help'
                 ]
             ],
             'packUnit' => [
                 'options' => [
-                    'label' => 'Verpackungseinheit',
-                    'help'  => 'Enter the code of the pims packUnit attribute'
+                    'label' => 'basecom_shopware_connector.export.packUnit.label',
+                    'help'  => 'basecom_shopware_connector.export.packUnit.help'
                 ]
             ],
             'notification' => [
                 'options' => [
-                    'label' => 'E-Mail-Benachrichtigung',
-                    'help'  => 'Geben Sie hier den code des Akeneo-E-Mail-Benachrichtigung-Attributs ein'
+                    'label' => 'basecom_shopware_connector.export.notification.label',
+                    'help'  => 'basecom_shopware_connector.export.notification.help'
                 ]
             ],
             'shippingTime' => [
                 'options' => [
-                    'label' => 'Lieferzeit (in Tagen)',
-                    'help'  => 'Enter the code of the pims shippingTime attribute'
+                    'label' => 'basecom_shopware_connector.export.shippingTime.label',
+                    'help'  => 'basecom_shopware_connector.export.shippingTime.help'
                 ]
             ],
             'inStock' => [
                 'options' => [
-                    'label' => 'Lagerbestand',
-                    'help'  => 'Enter the code of the pims inStock attribute'
+                    'label' => 'basecom_shopware_connector.export.inStock.label',
+                    'help'  => 'basecom_shopware_connector.export.inStock.help'
                 ]
             ],
             'stockMin' => [
                 'options' => [
-                    'label' => 'Lager-Mindestbestand',
-                    'help'  => 'Enter the code of the pims stockMin attribute'
+                    'label' => 'basecom_shopware_connector.export.stockMin.label',
+                    'help'  => 'basecom_shopware_connector.export.stockMin.help'
                 ]
             ],
             'releaseDate' => [
                 'options' => [
-                    'label' => 'Erscheinungsdatum',
-                    'help'  => 'Enter the code of the pims releaseDate attribute'
+                    'label' => 'basecom_shopware_connector.export.releaseDate.label',
+                    'help'  => 'basecom_shopware_connector.export.releaseDate.help'
                 ]
             ],
             'pseudoSales' => [
                 'options' => [
-                    'label' => 'Pseudo Verkäufe',
-                    'help'  => 'Enter the code of the pims pseudoSales attribute'
+                    'label' => 'basecom_shopware_connector.export.pseudoSales.label',
+                    'help'  => 'basecom_shopware_connector.export.pseudoSales.help'
                 ]
             ],
             'minPurchase' => [
                 'options' => [
-                    'label' => 'Mindestabnahme',
-                    'help'  => 'Enter the code of the pims minPurchase attribute'
+                    'label' => 'basecom_shopware_connector.export.minPurchase.label',
+                    'help'  => 'basecom_shopware_connector.export.minPurchase.help'
                 ]
             ],
             'purchaseSteps' => [
                 'options' => [
-                    'label' => 'Staffelung',
-                    'help'  => 'Geben Sie hier den code des Akeneo Staffelung-Attributs ein'
+                    'label' => 'basecom_shopware_connector.export.purchaseSteps.label',
+                    'help'  => 'basecom_shopware_connector.export.purchaseSteps.help'
                 ]
             ],
             'maxPurchase' => [
                 'options' => [
-                    'label' => 'Maximalabnahme',
-                    'help'  => 'Enter the code of the pims maxPurchase attribute'
+                    'label' => 'basecom_shopware_connector.export.maxPurchase.label',
+                    'help'  => 'basecom_shopware_connector.export.maxPurchase.help'
                 ]
             ],
             'weight' => [
                 'options' => [
-                    'label' => 'Gewicht (in KG)',
-                    'help'  => 'Enter the code of the pims weight attribute'
+                    'label' => 'basecom_shopware_connector.export.weight.label',
+                    'help'  => 'basecom_shopware_connector.export.weight.help'
                 ]
             ],
             'shippingFree' => [
                 'options' => [
-                    'label' => 'Versandkostenfrei',
-                    'help'  => 'Enter the code of the pims shippingFree attribute'
+                    'label' => 'basecom_shopware_connector.export.shippingFree.label',
+                    'help'  => 'basecom_shopware_connector.export.shippingFree.help'
                 ]
             ],
             'highlight' => [
                 'options' => [
-                    'label' => 'Artikel hervorheben',
-                    'help'  => 'Enter the code of the pims highlight attribute'
+                    'label' => 'basecom_shopware_connector.export.highlight.label',
+                    'help'  => 'basecom_shopware_connector.export.highlight.help'
                 ]
             ],
             'lastStock' => [
                 'options' => [
-                    'label' => 'Abverkauf',
-                    'help'  => 'Enter the code of the pims lastStock attribute'
+                    'label' => 'basecom_shopware_connector.export.lastStock.label',
+                    'help'  => 'basecom_shopware_connector.export.lastStock.help'
                 ]
             ],
             'ean' => [
                 'options' => [
-                    'label' => 'EAN',
-                    'help'  => 'Enter the code of the pims ean attribute'
+                    'label' => 'basecom_shopware_connector.export.ean.label',
+                    'help'  => 'basecom_shopware_connector.export.ean.help'
                 ]
             ],
             'width' => [
                 'options' => [
-                    'label' => 'Breite',
-                    'help'  => 'Enter the code of the pims width attribute'
+                    'label' => 'basecom_shopware_connector.export.width.label',
+                    'help'  => 'basecom_shopware_connector.export.width.help'
                 ]
             ],
             'height' => [
                 'options' => [
-                    'label' => 'Höhe',
-                    'help'  => 'Enter the code of the pims height attribute'
+                    'label' => 'basecom_shopware_connector.export.height.label',
+                    'help'  => 'basecom_shopware_connector.export.height.help'
                 ]
             ],
             'len' => [
                 'options' => [
-                    'label' => 'Länge',
-                    'help'  => 'Enter the code of the pims len attribute'
+                    'label' => 'basecom_shopware_connector.export.len.label',
+                    'help'  => 'basecom_shopware_connector.export.len.help'
                 ]
             ],
             'attr' => [
                 'type'    => 'hidden',
                 'options' => [
-                    'label' => 'Zusätzliche Attribute',
-                    'help'  => 'Zusätzliche Shopware Attribute',
+                    'label' => 'basecom_shopware_connector.export.attr.label',
+                    'help'  => 'basecom_shopware_connector.export.attr.help',
                 ]
             ]
         ];

@@ -75,8 +75,8 @@ basecom_shopware_connector:
       label: Keywords
       help:  Enter the code of the Akeneo Keywords attribute
     purchaseUnit:
-      label: Maßeinheit
-      help:  Geben Sie hier den code des Akeneo-Maßeinheit-Attributs ein
+      label: Unit
+      help:  Enter the code of the Akeneo Unit attribute
     referenceUnit:
       label: Grundeinheit
       help:  Geben Sie hier den code des Akeneo-Grundeinheit-Attributs ein
@@ -84,56 +84,56 @@ basecom_shopware_connector:
       label: Verpackungseinheit
       help:  Geben Sie hier den code des Akeneo-Verpackungseinheit-Attributs ein
     notification:
-      label: E-Mail-Benachrichtigung
-      help:  Geben Sie hier den code des Akeneo-E-Mail-Benachrichtigung-Attributs ein
+      label: Email notification
+      help:  Enter the code of the Akeneo Email notification attribute
     shippingTime:
-      label: Lieferzeit (in Tagen)
-      help:  Geben Sie hier den code des Akeneo-Lieferzeit-Attributs ein
+      label: Delivery time (days)
+      help:  Enter the code of the Akeneo Delivery time attribute
     inStock:
-      label: Lagerbestand
-      help:  Geben Sie hier den code des Akeneo-Lagerbestand-Attributs ein
+      label: Stock
+      help:  Enter the code of the Akeneo Stock attribute
     stockMin:
-      label: Lager-Mindestbestand
-      help:  Geben Sie hier den code des Akeneo-Lager-Mindestbestand-Attributs ein
+      label: Minimum storage inventory
+      help:  Enter the code of the Akeneo Minimum storage inventory attribute
     releaseDate:
-      label: Erscheinungsdatum
-      help:  Geben Sie hier den code des Akeneo-Erscheinungsdatum-Attributs ein
+      label: Release date
+      help:  Enter the code of the Akeneo Release date attribute
     pseudoSales:
-      label: Pseudo Verkäufe
-      help:  Geben Sie hier den code des Akeneo-Pseudo-Verkäufe-Attributs ein
+      label: Pseudo Sales
+      help:  Enter the code of the Akeneo Pseudo Sales attribute
     minPurchase:
-      label: Mindestabnahme
-      help:  Geben Sie hier den code des Akeneo-Mindestabnahme-Attributs ein
+      label: Minimum Order
+      help:  Enter the code of the Akeneo Minimum Order attribute
     purchaseSteps:
-      label: Staffelung
-      help:  Geben Sie hier den code des Akeneo-Staffelung-Attributs ein
+      label: Graduation
+      help:  Enter the code of the Akeneo Graduation attribute
     maxPurchase:
-      label: Maximalabnahme
-      help:  Geben Sie hier den code des Akeneo-Maximalabnahme-Attributs ein
+      label: Maximum order
+      help:  Enter the code of the Akeneo Maximum order attribute
     weight:
-      label: Gewicht (in KG)
-      help:  Geben Sie hier den code des Akeneo-Gewicht-Attributs ein
+      label: Weight (bw)
+      help:  Enter the code of the Akeneo Weight attribute
     shippingFree:
-      label: Versandkostenfrei
-      help:  Geben Sie hier den code des Akeneo-Versandkostenfrei-Attributs ein
+      label: Free Shipping
+      help:  Enter the code of the Akeneo Free Shipping attribute
     highlight:
-      label: Artikel hervorheben
-      help:  Geben Sie hier den code des Akeneo-Artikel-hervorheben-Attributs ein
+      label: Highlight item
+      help:  Enter the code of the Akeneo Highlight item attribute
     lastStock:
-      label: Abverkauf
-      help:  Geben Sie hier den code des Akeneo-Abverkauf-Attributs ein
+      label: On sale
+      help:  Enter the code of the Akeneo on sale attribute
     ean:
       label: EAN
-      help:  Geben Sie hier den code des Akeneo-EAN-Attributs ein
+      help:  Enter the code of the Akeneo ean attribute
     width:
-      label: Breite
-      help:  Geben Sie hier den code des Akeneo-Breite-Attributs ein
+      label: Width
+      help:  Enter the code of the Akeneo width attribute
     height:
-      label: Höhe
-      help:  Geben Sie hier den code des Akeneo-Höhe-Attributs ein
+      label: Height
+      help:  Enter the code of the Akeneo height attribute
     len:
-      label: Länge
-      help:  Geben Sie hier den code des Akeneo-Länge-Attributs ein
+      label: Length
+      help:  Enter the code of the Akeneo length attribute
     attr:
-      label: Zusätzliche Attribute
-      help:  Geben Sie hier den code des Akeneo-Attributs ein
+      label: Additional fields
+      help:  Enter the code of the Akeneo attribute

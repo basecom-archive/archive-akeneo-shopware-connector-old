@@ -178,26 +178,26 @@ class ShopwareCategoryWriter extends AbstractConfigurableStepElement implements 
                     'choices'   => $this->localeManager->getActivatedLocaleCodes(),
                     'required'  => true,
                     'select2'   => true,
-                    'label'     => 'Locale',
-                    'help'      => 'locale'
+                    'label'     => 'basecom_shopware_connector.export.locale.label',
+                    'help'      => 'basecom_shopware_connector.export.locale.help'
                 ]
             ],
             'url' => [
                 'options' => [
-                    'label' => 'URL',
-                    'help'  => 'URL of the Shopware Shop'
+                    'label' => 'basecom_shopware_connector.export.url.label',
+                    'help'  => 'basecom_shopware_connector.export.url.help'
                 ]
             ],
             'userName' => [
                 'options' => [
-                    'label' => 'Username',
-                    'help'  => 'Username of the Shopware API-User'
+                    'label' => 'basecom_shopware_connector.export.userName.label',
+                    'help'  => 'basecom_shopware_connector.export.userName.help'
                 ]
             ],
             'apiKey' => [
                 'options' => [
-                    'label' => 'API-Key',
-                    'help'  => 'Shopware API-Key'
+                    'label' => 'basecom_shopware_connector.export.apiKey.label',
+                    'help'  => 'basecom_shopware_connector.export.apiKey.help'
                 ]
             ]
         ];
