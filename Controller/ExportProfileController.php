@@ -12,6 +12,7 @@ use Pim\Bundle\ImportExportBundle\Controller\ExportProfileController as BaseCont
 
 class ExportProfileController extends BaseController
 {
+    // ToDo: Wo ist das routing?
     /**
      * Edit a job instance
      *
@@ -49,6 +50,7 @@ class ExportProfileController extends BaseController
 
         $this->eventDispatcher->dispatch(JobProfileEvents::POST_EDIT, new GenericEvent($jobInstance));
 
+        // ToDo: gibt es die Methode getJob() wirklich? Bitte überprüfen
         if (null === $template = $jobInstance->getJob()->getEditTemplate()) {
             $template = sprintf('PimImportExportBundle:%sProfile:edit.html.twig', ucfirst($this->getJobType()));
         }

@@ -12,6 +12,9 @@ class BasecomShopwareConnectorExtension extends Extension
     public function load(array $config, ContainerBuilder $container)
     {
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        // ToDo: Kann raus, oder?
+        //$loader->load('messages.en.yml');
+        // ToDo: Bitte noch alphabetisch ordnen, sieht dann strukturierter aus
         $loader->load('readers.yml');
         $loader->load('processors.yml');
         $loader->load('writers.yml');

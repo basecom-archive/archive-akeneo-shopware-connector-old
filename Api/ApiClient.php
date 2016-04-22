@@ -2,8 +2,11 @@
 
 namespace Basecom\Bundle\ShopwareConnectorBundle\Api;
 
+// ToDo für alle Klassen im gesamten Projekt: Laut Checkstyle-Vorgaben muss eine PHP Datei immer mit einer leeren Zeile enden. Diese bitte überall noch hinzufügen
+// ToDo: Was macht diese Klasse? PHPDoc hinzufügen
 class ApiClient
 {
+    // ToDo: An alle Klassenvariabeln und Funktionen noch PHPDoc
     const METHODE_GET    = 'GET';
     const METHODE_PUT    = 'PUT';
     const METHODE_POST   = 'POST';
@@ -68,6 +71,7 @@ class ApiClient
     protected function prepareResponse($result, $httpCode) {
         echo "<h2>HTTP: $httpCode</h2>";
         if (null === $decodedResult = json_decode($result, true)) {
+            //ToDo: Translation bzw. da es sehr starr ist bitte auf englisch übersetzen
             $jsonErrors = array(
                 JSON_ERROR_NONE => 'Es ist kein Fehler aufgetreten',
                 JSON_ERROR_DEPTH => 'Die maximale Stacktiefe wurde erreicht',

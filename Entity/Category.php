@@ -6,6 +6,7 @@ use Pim\Bundle\CatalogBundle\Entity\Category as PimCategory;
 
 class Category extends PimCategory
 {
+    // ToDo: Bitte noch PHPDoc hinzufügen
     protected $sid;
 
     /**

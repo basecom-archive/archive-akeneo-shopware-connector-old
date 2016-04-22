@@ -5,11 +5,13 @@ namespace Basecom\Bundle\ShopwareConnectorBundle\Step;
 use Akeneo\Component\Batch\Item\AbstractConfigurableStepElement;
 use Basecom\Bundle\ShopwareConnectorBundle\Handler\AttributeSetupHandler;
 
+// ToDo: Klassen PHP Doc
 class SetupAttributesStep extends \Akeneo\Component\Batch\Step\AbstractStep
 {
     /** @var AttributeSetupHandler */
     protected $handler;
 
+    // ToDo: Überall PHPDocs hinzufügen
     protected function doExecute(\Akeneo\Component\Batch\Model\StepExecution $stepExecution)
     {
         $this->handler->setStepExecution($stepExecution);

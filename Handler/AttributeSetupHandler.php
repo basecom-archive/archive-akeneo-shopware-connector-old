@@ -6,6 +6,7 @@ use Basecom\Bundle\ShopwareConnectorBundle\Api\ApiClient;
 
 class AttributeSetupHandler extends \Akeneo\Component\Batch\Item\AbstractConfigurableStepElement implements \Akeneo\Component\Batch\Step\StepExecutionAwareInterface
 {
+    // ToDo: An alle Klassenvariabeln und Funktionen noch PHPDoc
     protected $stepExecution;
 
     protected $apiKey;

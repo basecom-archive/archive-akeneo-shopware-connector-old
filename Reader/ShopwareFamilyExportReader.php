@@ -8,6 +8,7 @@ use Akeneo\Component\Batch\Model\StepExecution;
 use Akeneo\Component\Batch\Step\StepExecutionAwareInterface;
 use Pim\Bundle\CatalogBundle\Doctrine\ORM\Repository\FamilyRepository;
 
+// ToDo: PHPDoc für die Klasse hinzufügen
 class ShopwareFamilyExportReader extends AbstractConfigurableStepElement implements
     ItemReaderInterface,
     StepExecutionAwareInterface
@@ -32,7 +33,7 @@ class ShopwareFamilyExportReader extends AbstractConfigurableStepElement impleme
     {
         $this->familyRepository = $familyRepository;
     }
-
+// ToDo: überall PHPDocs hinzufügen
     public function read()
     {
         if (!$this->isExecuted) {

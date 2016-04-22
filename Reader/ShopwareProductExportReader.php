@@ -14,7 +14,7 @@ use Pim\Bundle\CatalogBundle\Doctrine\ORM\Repository\ProductRepository;
 use Pim\Bundle\CatalogBundle\Manager\ChannelManager;
 use Pim\Component\Catalog\Model\ChannelInterface;
 use Pim\Component\Catalog\Model\Product;
-
+// ToDo: PHPDoc für die Klasse hinzufügen
 class ShopwareProductExportReader extends AbstractConfigurableStepElement implements
     ItemReaderInterface,
     StepExecutionAwareInterface
@@ -51,7 +51,7 @@ class ShopwareProductExportReader extends AbstractConfigurableStepElement implem
         $this->categoryRepository = $categoryRepository;
         $this->channelManager     = $channelManager;
     }
-
+// ToDo: überall PHPDocs hinzufügen
     public function read()
     {
         if (!$this->isExecuted) {
@@ -106,6 +106,7 @@ class ShopwareProductExportReader extends AbstractConfigurableStepElement implem
         /** @var Category $category */
         foreach($categories as $category) {
             if($category->getRoot() == $rootCategory->getId()) {
+                // ToDO: ist das hier noch notwendig? Ansonsten bitte löschen
 //                foreach($this->productRepository->findAllForCategory($category) as $product) {
 //                    array_push($products, $product);
 //                }

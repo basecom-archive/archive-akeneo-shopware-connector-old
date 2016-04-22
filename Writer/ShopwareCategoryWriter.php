@@ -12,6 +12,7 @@ use Basecom\Bundle\ShopwareConnectorBundle\Entity\Category;
 use Doctrine\ORM\EntityManager;
 use Pim\Component\Catalog\Repository\LocaleRepositoryInterface;
 
+// ToDo: Klassen PHP Doc
 class ShopwareCategoryWriter extends AbstractConfigurableStepElement implements ItemWriterInterface, StepExecutionAwareInterface
 {
     /** @var StepExecution */
@@ -38,6 +39,7 @@ class ShopwareCategoryWriter extends AbstractConfigurableStepElement implements 
     /** @var LocaleRepositoryInterface */
     protected $localeManager;
 
+    // ToDo: Update PHPDoc Block
     /**
      * ShopwareCategoryWriter constructor.
      * @param CategoryRepository $categoryRepository
@@ -49,7 +51,7 @@ class ShopwareCategoryWriter extends AbstractConfigurableStepElement implements 
         $this->entityManager = $entityManager;
         $this->localeManager = $localeManager;
     }
-
+    // ToDo: Überall PHPDocs hinzufügen
     public function write(array $items)
     {
         $apiClient = new ApiClient($this->url, $this->userName, $this->apiKey);

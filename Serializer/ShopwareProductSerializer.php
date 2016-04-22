@@ -17,6 +17,7 @@ use Pim\Component\Catalog\Model\AttributeOptionInterface;
 use Pim\Component\Catalog\Model\Product;
 use Pim\Component\Catalog\Model\ProductValueInterface;
 
+// ToDo: PHPDoc für die Klasse
 class ShopwareProductSerializer
 {
     /** @var AttributeRepository */
@@ -33,8 +34,11 @@ class ShopwareProductSerializer
     /** @var EntityManager */
     protected $entityManager;
 
+    // ToDo: PHPDoc für alle Variabeln und Funktionen hinzufügen
+    // ToDo: Muss das hier wirklich ein Array sein? Einfacher String würde doch reichen (s. serializers.yml)
     protected $rootDir;
 
+    // ToDo: Bitte den PHPDoc-Block updaten
     /**
      * ShopwareProductSerializer constructor.
      * @param AttributeRepository $attributeRepository
@@ -57,6 +61,7 @@ class ShopwareProductSerializer
         $this->entityManager        = $entityManager;
     }
 
+    // ToDo: Ist mir erst hier aufgefallen, aber bitte überall nochmal überprüfen: Bei Funktionen kommt die öffnende Klammer in die nächste Zeile, bei if und Schleifen in die gleiche
     public function serialize(Product $product, $attributeMapping, $locale, $filterAttributes, ApiClient $apiClient, $currency) {
         $similar = $attributeMapping['similar'];
         $related = $attributeMapping['related'];
@@ -344,6 +349,7 @@ class ShopwareProductSerializer
         return $associations;
     }
 
+    // ToDo: PHPDoc return fehlt
     /**
      * @param Association $association
      */
@@ -358,6 +364,7 @@ class ShopwareProductSerializer
         return $similar;
     }
 
+    // ToDo: PHPDoc return fehlt
     /**
      * @param Association $association
      */

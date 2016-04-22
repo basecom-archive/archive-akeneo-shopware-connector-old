@@ -12,6 +12,7 @@ use Pim\Component\Catalog\Repository\LocaleRepositoryInterface;
 
 class ShopwareProductProcessor extends AbstractConfigurableStepElement implements ItemProcessorInterface, StepExecutionAwareInterface
 {
+    // ToDo: überall PHPDocs hinzufügen
     /** @var StepExecution */
     protected $stepExecution;
 

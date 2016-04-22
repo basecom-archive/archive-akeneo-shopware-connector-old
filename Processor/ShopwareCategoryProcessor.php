@@ -9,6 +9,8 @@ use Akeneo\Component\Batch\Step\StepExecutionAwareInterface;
 
 class ShopwareCategoryProcessor extends AbstractConfigurableStepElement implements ItemProcessorInterface, StepExecutionAwareInterface
 {
+    // ToDo: überall PHPDocs hinzufügen
+
     /** @var StepExecution */
     protected $stepExecution;
 

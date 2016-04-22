@@ -8,7 +8,7 @@ use Akeneo\Component\Batch\Model\StepExecution;
 use Akeneo\Component\Batch\Step\StepExecutionAwareInterface;
 use Basecom\Bundle\ShopwareConnectorBundle\Api\ApiClient;
 use Doctrine\Common\Collections\ArrayCollection;
-
+// ToDo: Klassen PHP Doc
 class ShopwareProductWriter extends AbstractConfigurableStepElement implements ItemWriterInterface, StepExecutionAwareInterface
 {
     /** @var string */
@@ -30,12 +30,13 @@ class ShopwareProductWriter extends AbstractConfigurableStepElement implements I
      */
     protected $attributes;
 
-
+    // ToDo: Überall PHPDocs hinzufügen
     public function write(array $items)
     {
         $this->apiClient = new ApiClient($this->url, $this->userName, $this->apiKey);
         $this->apiClient->put('articles/',$items);
 
+        // ToDo: kann das raus?
 //        foreach($items as $item) {
 //            $this->apiClient->post('articles/'.$number.'?useNumberAsId=true', $item);
 //        }

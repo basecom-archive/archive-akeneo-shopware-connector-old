@@ -6,6 +6,7 @@ use Pim\Bundle\CatalogBundle\Entity\Family as PimFamily;
 
 class Family extends PimFamily
 {
+    // ToDo: Bitte noch PHPDoc hinzufügen
     protected $sid;
 
     /**

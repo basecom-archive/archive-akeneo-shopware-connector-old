@@ -3,4 +3,5 @@ parameters:
     basecom_shopware_connector.handler.attribute_setup.class: Basecom\Bundle\ShopwareConnectorBundle\Handler\AttributeSetupHandler
 services:
     basecom_shopware_connector.handler.attribute_setup:
+#     ToDo: Bitte einheitlich, entweder bei allen Parametern auch die '' drumherum oder nicht (s. andere yml files)
         class: "%basecom_shopware_connector.handler.attribute_setup.class%"
