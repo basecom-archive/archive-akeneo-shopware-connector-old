@@ -12,7 +12,12 @@ use Basecom\Bundle\ShopwareConnectorBundle\Entity\Category;
 use Doctrine\ORM\EntityManager;
 use Pim\Component\Catalog\Repository\LocaleRepositoryInterface;
 
-// ToDo: Klassen PHP Doc
+/**
+ * Posts all provided categories to shopware via Rest API
+ *
+ * Class ShopwareCategoryWriter
+ * @package Basecom\Bundle\ShopwareConnectorBundle\Writer
+ */
 class ShopwareCategoryWriter extends AbstractConfigurableStepElement implements ItemWriterInterface, StepExecutionAwareInterface
 {
     /** @var StepExecution */
@@ -39,11 +44,11 @@ class ShopwareCategoryWriter extends AbstractConfigurableStepElement implements 
     /** @var LocaleRepositoryInterface */
     protected $localeManager;
 
-    // ToDo: Update PHPDoc Block
     /**
      * ShopwareCategoryWriter constructor.
      * @param CategoryRepository $categoryRepository
      * @param EntityManager $entityManager
+     * @param LocaleRepositoryInterface $localeManager
      */
     public function __construct(CategoryRepository $categoryRepository, EntityManager $entityManager, LocaleRepositoryInterface $localeManager)
     {
@@ -51,7 +56,12 @@ class ShopwareCategoryWriter extends AbstractConfigurableStepElement implements 
         $this->entityManager = $entityManager;
         $this->localeManager = $localeManager;
     }
-    // ToDo: Überall PHPDocs hinzufügen
+
+    /**
+     * posts categories to Shopware
+     *
+     * @param array $items
+     */
     public function write(array $items)
     {
         $apiClient = new ApiClient($this->url, $this->userName, $this->apiKey);
@@ -60,8 +70,8 @@ class ShopwareCategoryWriter extends AbstractConfigurableStepElement implements 
         foreach($items as $item) {
             $item->setLocale($this->localeManager->getActivatedLocaleCodes()[$this->locale]);
             $parent = 1;
-            if($item->getParent() != null && $item->getParent()->getSid() != null) {
-                $parent = $item->getParent()->getSid();
+            if($item->getParent() != null && $item->getParent()->getSwId() != null) {
+                $parent = $item->getParent()->getSwId();
             }
             $swCategory = array(
                 'name'              => $item->getLabel(),
@@ -70,18 +80,17 @@ class ShopwareCategoryWriter extends AbstractConfigurableStepElement implements 
                 'blog'              => false,
                 'showFilterGroups'  => true,
             );
-            if($item->getSid() != null) {
-                if(null == $apiClient->put('categories/'.$item->getSid(), $swCategory)) {
+            if($item->getSwId() != null) {
+                if(null == $apiClient->put('categories/'.$item->getSwId(), $swCategory)) {
                     $category = $apiClient->post('categories', $swCategory);
-                    $item->setSid($category['data']['id']);
+                    $item->setSwId($category['data']['id']);
                     $this->entityManager->persist($item);
                 }
             } else {
                 $category = $apiClient->post('categories', $swCategory);
-                $item->setSid($category['data']['id']);
+                $item->setSwId($category['data']['id']);
                 $this->entityManager->persist($item);
             }
-            echo $item->getLabel()."\n";
         }
         $this->entityManager->flush();
     }
@@ -166,11 +175,17 @@ class ShopwareCategoryWriter extends AbstractConfigurableStepElement implements 
         $this->localeManager = $localeManager;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function setStepExecution(StepExecution $stepExecution)
     {
         $this->stepExecution = $stepExecution;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getConfigurationFields()
     {
         return [

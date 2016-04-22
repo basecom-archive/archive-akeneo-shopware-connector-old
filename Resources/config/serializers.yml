@@ -7,7 +7,6 @@ services:
             - '@pim_catalog.repository.attribute'
             - '@pim_catalog.repository.family'
             - '@pim_catalog.repository.category'
-#            ToDo: Warum übergibst du hier ein Array und in der Klasse selbst ist es nur ein Wert?
-            - [%kernel.root_dir%]
+            - %kernel.root_dir%
             - '@akeneo_file_storage.repository.file_info'
             - '@doctrine.orm.entity_manager'

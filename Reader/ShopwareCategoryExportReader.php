@@ -9,7 +9,12 @@ use Akeneo\Component\Batch\Step\StepExecutionAwareInterface;
 use Akeneo\Component\Classification\Repository\CategoryRepositoryInterface;
 use Basecom\Bundle\ShopwareConnectorBundle\Entity\Category;
 
-// ToDo: PHPDoc für die Klasse hinzufügen
+/**
+ * Fetches all categories of a tree and hands them over to the processor
+ *
+ * Class ShopwareCategoryExportReader
+ * @package Basecom\Bundle\ShopwareConnectorBundle\Reader
+ */
 class ShopwareCategoryExportReader extends AbstractConfigurableStepElement implements
     ItemReaderInterface,
     StepExecutionAwareInterface

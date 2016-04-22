@@ -4,24 +4,35 @@ namespace Basecom\Bundle\ShopwareConnectorBundle\Entity;
 
 use Pim\Bundle\CatalogBundle\Entity\Family as PimFamily;
 
+/**
+ * Overrides original Family entity to add
+ * the Shopware propertyGroup ID
+ *
+ * Class Family
+ * @package Basecom\Bundle\ShopwareConnectorBundle\Entity
+ */
 class Family extends PimFamily
 {
-    // ToDo: Bitte noch PHPDoc hinzufügen
-    protected $sid;
+    /**
+     * Shopware PropertyGroup ID
+     *
+     * @var integer
+     */
+    protected $swId;
 
     /**
-     * @return mixed
+     * @return int
      */
-    public function getSid()
+    public function getSwId()
     {
-        return $this->sid;
+        return $this->swId;
     }
 
     /**
-     * @param mixed $sid
+     * @param int $swId
      */
-    public function setSid($sid)
+    public function setSwId($swId)
     {
-        $this->sid = $sid;
+        $this->swId = $swId;
     }
 }

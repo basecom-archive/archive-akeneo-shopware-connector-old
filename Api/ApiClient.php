@@ -2,15 +2,23 @@
 
 namespace Basecom\Bundle\ShopwareConnectorBundle\Api;
 
-// ToDo für alle Klassen im gesamten Projekt: Laut Checkstyle-Vorgaben muss eine PHP Datei immer mit einer leeren Zeile enden. Diese bitte überall noch hinzufügen
-// ToDo: Was macht diese Klasse? PHPDoc hinzufügen
+/**
+ * Shopware ApiClient. Provides the functions for API calls.
+ *
+ * Class ApiClient
+ * @package Basecom\Bundle\ShopwareConnectorBundle\Api
+ */
 class ApiClient
 {
-    // ToDo: An alle Klassenvariabeln und Funktionen noch PHPDoc
     const METHODE_GET    = 'GET';
     const METHODE_PUT    = 'PUT';
     const METHODE_POST   = 'POST';
     const METHODE_DELETE = 'DELETE';
+    /**
+     * Holds all valid methodes for API calls
+     *
+     * @var array
+     */
     protected $validMethods = array(
         self::METHODE_GET,
         self::METHODE_PUT,
@@ -20,7 +28,14 @@ class ApiClient
     protected $apiUrl;
     protected $cURL;
 
-    public function __construct($apiUrl, $username, $apiKey) {
+    /**
+     * ApiClient constructor.
+     * @param $apiUrl
+     * @param $username
+     * @param $apiKey
+     */
+    public function __construct($apiUrl, $username, $apiKey)
+    {
         $this->apiUrl = rtrim($apiUrl, '/') . '/';
         //Initializes the cURL instance
         $this->cURL = curl_init();
@@ -33,7 +48,18 @@ class ApiClient
         ));
     }
 
-    public function call($url, $method = self::METHODE_GET, $data = array(), $params = array()) {
+    /**
+     * Calls the Shopware API
+     *
+     * @param $url
+     * @param string $method
+     * @param array $data
+     * @param array $params
+     * @return mixed|void
+     * @throws \Exception
+     */
+    public function call($url, $method = self::METHODE_GET, $data = array(), $params = array())
+    {
         if (!in_array($method, $this->validMethods)) {
             throw new \Exception('Invalid HTTP-Methode: ' . $method);
         }
@@ -52,31 +78,77 @@ class ApiClient
         return $this->prepareResponse($result, $httpCode);
     }
 
-    public function get($url, $params = array()) {
+    /**
+     * Calls the Shopware API with GET parameter
+     *
+     * @param $url
+     * @param array $params
+     * @return mixed|void
+     * @throws \Exception
+     */
+    public function get($url, $params = array())
+    {
         return $this->call($url, self::METHODE_GET, array(), $params);
     }
 
-    public function post($url, $data = array(), $params = array()) {
+    /**
+     * Calls the Shopware API with POST parameter
+     *
+     * @param $url
+     * @param array $data
+     * @param array $params
+     * @return mixed|void
+     * @throws \Exception
+     */
+    public function post($url, $data = array(), $params = array())
+    {
         return $this->call($url, self::METHODE_POST, $data, $params);
     }
 
-    public function put($url, $data = array(), $params = array()) {
+    /**
+     * Calls the Shopware API with PUT parameter
+     *
+     * @param $url
+     * @param array $data
+     * @param array $params
+     * @return mixed|void
+     * @throws \Exception
+     */
+    public function put($url, $data = array(), $params = array())
+    {
         return $this->call($url, self::METHODE_PUT, $data, $params);
     }
 
-    public function delete($url, $params = array()) {
+    /**
+     * Calls the Shopware API with DELETE parameter
+     *
+     * @param $url
+     * @param array $params
+     * @return mixed|void
+     * @throws \Exception
+     */
+    public function delete($url, $params = array())
+    {
         return $this->call($url, self::METHODE_DELETE, array(), $params);
     }
 
-    protected function prepareResponse($result, $httpCode) {
+    /**
+     * Delivers Shopwares Response to an API call
+     *
+     * @param $result
+     * @param $httpCode
+     * @return mixed|void
+     */
+    protected function prepareResponse($result, $httpCode)
+    {
         echo "<h2>HTTP: $httpCode</h2>";
+
         if (null === $decodedResult = json_decode($result, true)) {
-            //ToDo: Translation bzw. da es sehr starr ist bitte auf englisch übersetzen
             $jsonErrors = array(
-                JSON_ERROR_NONE => 'Es ist kein Fehler aufgetreten',
-                JSON_ERROR_DEPTH => 'Die maximale Stacktiefe wurde erreicht',
-                JSON_ERROR_CTRL_CHAR => 'Steuerzeichenfehler, möglicherweise fehlerhaft kodiert',
-                JSON_ERROR_SYNTAX => 'Syntaxfehler',
+                JSON_ERROR_NONE => 'An error ocurred',
+                JSON_ERROR_DEPTH => 'Maximum stack depth was reached',
+                JSON_ERROR_CTRL_CHAR => 'control character error, probably corrupt encoding',
+                JSON_ERROR_SYNTAX => 'Syntaxerror',
             );
             echo "<h2>Could not decode json</h2>";
             echo "json_last_error: " . $jsonErrors[json_last_error()];
@@ -84,19 +156,19 @@ class ApiClient
             echo "<pre>" . print_r($result, true) . "</pre>";
             return;
         }
+
         if (!isset($decodedResult['success'])) {
             echo "Invalid Response";
             return;
         }
+
         if (!$decodedResult['success']) {
             echo "<h2>No Success</h2>";
             echo "<p>" . $decodedResult['message'] . "</p>";
             return;
         }
         echo "<h2>Success</h2>"."\n";
-        if (isset($decodedResult['data'])) {
-            //echo "<pre>" . print_r($decodedResult['data'], true) . "</pre>";
-        }
+
         return $decodedResult;
     }
 }

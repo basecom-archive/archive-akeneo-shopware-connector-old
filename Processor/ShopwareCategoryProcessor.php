@@ -7,23 +7,39 @@ use Akeneo\Component\Batch\Item\ItemProcessorInterface;
 use Akeneo\Component\Batch\Model\StepExecution;
 use Akeneo\Component\Batch\Step\StepExecutionAwareInterface;
 
+/**
+ * processes the category for the export to shopware
+ *
+ * Class ShopwareCategoryProcessor
+ * @package Basecom\Bundle\ShopwareConnectorBundle\Processor
+ */
 class ShopwareCategoryProcessor extends AbstractConfigurableStepElement implements ItemProcessorInterface, StepExecutionAwareInterface
 {
-    // ToDo: überall PHPDocs hinzufügen
-
     /** @var StepExecution */
     protected $stepExecution;
 
+    /**
+     * processes the category for the export
+     *
+     * @param mixed $item
+     * @return mixed
+     */
     public function process($item)
     {
         return $item;
     }
 
+    /**
+     * @param StepExecution $stepExecution
+     */
     public function setStepExecution(StepExecution $stepExecution)
     {
         $this->stepExecution = $stepExecution;
     }
 
+    /**
+     * @return array
+     */
     public function getConfigurationFields()
     {
         return array();

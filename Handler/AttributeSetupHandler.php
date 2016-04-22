@@ -2,19 +2,48 @@
 
 namespace Basecom\Bundle\ShopwareConnectorBundle\Handler;
 
+use Akeneo\Component\Batch\Model\StepExecution;
 use Basecom\Bundle\ShopwareConnectorBundle\Api\ApiClient;
 
+/**
+ * Recieves Shopwares additional attribute fields
+ * and writes them into a csv file
+ *
+ * Class AttributeSetupHandler
+ * @package Basecom\Bundle\ShopwareConnectorBundle\Handler
+ */
 class AttributeSetupHandler extends \Akeneo\Component\Batch\Item\AbstractConfigurableStepElement implements \Akeneo\Component\Batch\Step\StepExecutionAwareInterface
 {
-    // ToDo: An alle Klassenvariabeln und Funktionen noch PHPDoc
+    /**
+     * @var StepExecution
+     */
     protected $stepExecution;
 
+    /**
+     * Shopwares API-Key
+     *
+     * @var string
+     */
     protected $apiKey;
 
+    /**
+     * Shopwares API-Username
+     *
+     * @var string
+     */
     protected $userName;
 
+    /**
+     * the Shopware API-URL
+     *
+     * @var string
+     */
     protected $url;
 
+    /**
+     * Gets Shopwares additional attribute fields via API call
+     * and writes them to a csv file
+     */
     public function execute()
     {
         $client = new ApiClient($this->url, $this->userName, $this->apiKey);
@@ -26,30 +55,38 @@ class AttributeSetupHandler extends \Akeneo\Component\Batch\Item\AbstractConfigu
         fclose($fp);
     }
 
-    public function setStepExecution(\Akeneo\Component\Batch\Model\StepExecution $stepExecution)
+    /**
+     * @param StepExecution $stepExecution
+     */
+    public function setStepExecution(StepExecution $stepExecution)
     {
         $this->stepExecution = $stepExecution;
     }
 
+    /**
+     * Returns the configuration Fields for the job
+     *
+     * @return array
+     */
     public function getConfigurationFields()
     {
         return [
             'apiKey' => [
                 'options' => [
-                    'label' => 'API-Key',
-                    'help'  => 'API-Key'
+                    'label' => 'basecom_shopware_connector.export.apiKey.label',
+                    'help'  => 'basecom_shopware_connector.export.apiKey.help'
                 ]
             ],
             'userName' => [
                 'options' => [
-                    'label' => 'Username',
-                    'help'  => 'Username'
+                    'label' => 'basecom_shopware_connector.export.userName.label',
+                    'help'  => 'basecom_shopware_connector.export.userName.help'
                 ]
             ],
             'url' => [
                 'options' => [
-                    'label' => 'URL',
-                    'help'  => 'URL'
+                    'label' => 'basecom_shopware_connector.export.url.label',
+                    'help'  => 'basecom_shopware_connector.export.url.help'
                 ]
             ]
         ];

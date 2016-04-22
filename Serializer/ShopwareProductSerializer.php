@@ -17,7 +17,10 @@ use Pim\Component\Catalog\Model\AttributeOptionInterface;
 use Pim\Component\Catalog\Model\Product;
 use Pim\Component\Catalog\Model\ProductValueInterface;
 
-// ToDo: PHPDoc für die Klasse
+/**
+ * Class ShopwareProductSerializer
+ * @package Basecom\Bundle\ShopwareConnectorBundle\Serializer
+ */
 class ShopwareProductSerializer
 {
     /** @var AttributeRepository */
@@ -26,6 +29,7 @@ class ShopwareProductSerializer
     /** @var FamilyRepository */
     protected $familyRepository;
 
+    /** @var CategoryRepository */
     protected $categoryRepository;
 
     /** @var FileInfoRepository */
@@ -34,15 +38,17 @@ class ShopwareProductSerializer
     /** @var EntityManager */
     protected $entityManager;
 
-    // ToDo: PHPDoc für alle Variabeln und Funktionen hinzufügen
-    // ToDo: Muss das hier wirklich ein Array sein? Einfacher String würde doch reichen (s. serializers.yml)
+    /** @var string */
     protected $rootDir;
 
-    // ToDo: Bitte den PHPDoc-Block updaten
     /**
      * ShopwareProductSerializer constructor.
      * @param AttributeRepository $attributeRepository
      * @param FamilyRepository $familyRepository
+     * @param CategoryRepository $categoryRepository
+     * @param $rootDir
+     * @param FileInfoRepository $fileInfoRepository
+     * @param EntityManager $entityManager
      */
     public function __construct(
         AttributeRepository $attributeRepository,
@@ -61,8 +67,17 @@ class ShopwareProductSerializer
         $this->entityManager        = $entityManager;
     }
 
-    // ToDo: Ist mir erst hier aufgefallen, aber bitte überall nochmal überprüfen: Bei Funktionen kommt die öffnende Klammer in die nächste Zeile, bei if und Schleifen in die gleiche
-    public function serialize(Product $product, $attributeMapping, $locale, $filterAttributes, ApiClient $apiClient, $currency) {
+    /**
+     * @param Product $product
+     * @param $attributeMapping
+     * @param $locale
+     * @param $filterAttributes
+     * @param ApiClient $apiClient
+     * @param $currency
+     * @return array
+     */
+    public function serialize(Product $product, $attributeMapping, $locale, $filterAttributes, ApiClient $apiClient, $currency)
+    {
         $similar = $attributeMapping['similar'];
         $related = $attributeMapping['related'];
         unset($attributeMapping['similar']);
@@ -73,28 +88,41 @@ class ShopwareProductSerializer
         $associations                   = $this->serializeAssociations($product, $similar, $related);
         $item['similar']                = $associations['similar'];
         $item['related']                = $associations['related'];
+
         if($product->getFamily() != null) {
             $propertyGroup = $this->serializeFamily($product->getFamily()->getId(), $locale);
             $item['filterGroupId']          = $propertyGroup['id'];
         }
+
         return $item;
     }
 
-    protected function serializeCategories($productCategories, $locale) {
+    /**
+     * @param $productCategories
+     * @param $locale
+     * @return array
+     */
+    protected function serializeCategories($productCategories, $locale)
+    {
         $categories = array();
         foreach($productCategories as $category) {
             /** @var Category $category */
             $category = $this->categoryRepository->find($category->getId());
             $category->setLocale($locale);
-            $categories[$category->getSid()] = array(
-                'id'    => $category->getSid(),
+            $categories[$category->getSwId()] = array(
+                'id'    => $category->getSwId(),
                 'name'  => $category->getLabel(),
             );
         }
         return $categories;
     }
 
-    public function serializeAttributes($attributes) {
+    /**
+     * @param $attributes
+     * @return array
+     */
+    public function serializeAttributes($attributes)
+    {
         $attributeArray = array();
         /** @var Attribute $attribute */
         foreach($attributes as $attribute) {
@@ -104,39 +132,63 @@ class ShopwareProductSerializer
         return $attributeArray;
     }
 
-    public function serializeFamily($familyId, $locale) {
+    /**
+     * @param $familyId
+     * @param $locale
+     * @return array
+     */
+    public function serializeFamily($familyId, $locale)
+    {
         /** @var Family $family */
         $family = $this->familyRepository->find($familyId);
         $family->setLocale($locale);
         $propertyGroup = array(
-            'id'  => (int)$family->getSid(),
+            'id'  => (int)$family->getSwId(),
             'name' => $family->getLabel(),
         );
         return $propertyGroup;
     }
 
-    protected function serializeFilterAttributes($filterAttributes) {
+    /**
+     * @param $filterAttributes
+     * @return array
+     */
+    protected function serializeFilterAttributes($filterAttributes)
+    {
         $filterAttributes = str_replace(' ', '', $filterAttributes);
         $filterAttributesArray = explode(',', $filterAttributes);
         return $filterAttributesArray;
     }
 
-    public function serializeValues($values, $attributes, $attributeMapping, $locale, ApiClient $apiClient, $filterAttributes, $currency) {
+    /**
+     * @param $values
+     * @param $attributes
+     * @param $attributeMapping
+     * @param $locale
+     * @param ApiClient $apiClient
+     * @param $filterAttributes
+     * @param $currency
+     * @return array
+     */
+    public function serializeValues($values, $attributes, $attributeMapping, $locale, ApiClient $apiClient, $filterAttributes, $currency)
+    {
         $item = array();
         $imageCount = 0;
         $propValueCount = 0;
         $attributes = $this->serializeAttributes($attributes);
+
         /** @var ProductValueInterface $value*/
         foreach($values as $value) {
             if(in_array($value->getAttribute()->getCode(), $attributes)) {
                 /** @var Attribute $attribute */
                 $attribute = $this->attributeRepository->find($value->getAttribute()->getId());
                 $attribute->setLocale($locale);
+
                 if($attribute->getAttributeType() == "pim_catalog_image") {
                     /** @var FileInfo $media */
                     $fileInfo = $this->fileInfoRepository->find($value->getMedia());
                     if($fileInfo->getSwMediaId() == null) {
-                        $path = $this->rootDir[0]."/file_storage/catalog/".$value->getMedia()->getKey();
+                        $path = $this->rootDir."/file_storage/catalog/".$value->getMedia()->getKey();
                         $type = pathinfo($path, PATHINFO_EXTENSION);
                         $data = file_get_contents($path);
                         $base64 = 'data:image/'.$type.';base64,'.base64_encode($data);
@@ -153,6 +205,7 @@ class ShopwareProductSerializer
                         $imageCount++;
                     }
                 }
+
                 if(in_array($attribute->getCode(), $this->serializeFilterAttributes($filterAttributes))) {
                     /** @var Attribute $attribute */
                     $attribute = $this->attributeRepository->find($value->getAttribute()->getId());
@@ -177,6 +230,7 @@ class ShopwareProductSerializer
                         $propValueCount++;
                     }
                 }
+
                 if($shopwareAttribute = array_search($attribute->getCode(), $attributeMapping)) {
                     switch($shopwareAttribute) {
                         case 'articleNumber':
@@ -287,6 +341,13 @@ class ShopwareProductSerializer
         return $item;
     }
 
+    /**
+     * @param Attribute $attribute
+     * @param ProductValueInterface $value
+     * @param $locale
+     * @param $currency
+     * @return array|\Datetime|float|null|string
+     */
     protected function getAttributeValue(Attribute $attribute, ProductValueInterface $value, $locale, $currency) {
         switch($attribute->getBackendType()) {
             case 'options':
@@ -349,9 +410,9 @@ class ShopwareProductSerializer
         return $associations;
     }
 
-    // ToDo: PHPDoc return fehlt
     /**
      * @param Association $association
+     * @return array
      */
     protected function serializeSimilar($association) {
         $similar = [];
@@ -364,9 +425,9 @@ class ShopwareProductSerializer
         return $similar;
     }
 
-    // ToDo: PHPDoc return fehlt
     /**
      * @param Association $association
+     * @return array
      */
     protected function serializeRelated($association) {
         $related = [];

@@ -10,17 +10,21 @@ use Basecom\Bundle\ShopwareConnectorBundle\Api\ApiClient;
 use Basecom\Bundle\ShopwareConnectorBundle\Serializer\ShopwareProductSerializer;
 use Pim\Component\Catalog\Repository\LocaleRepositoryInterface;
 
+/**
+ * processes the product for the export to shopware
+ *
+ * Class ShopwareProductProcessor
+ * @package Basecom\Bundle\ShopwareConnectorBundle\Processor
+ */
 class ShopwareProductProcessor extends AbstractConfigurableStepElement implements ItemProcessorInterface, StepExecutionAwareInterface
 {
-    // ToDo: überall PHPDocs hinzufügen
     /** @var StepExecution */
     protected $stepExecution;
 
     /** @var ShopwareProductSerializer */
     protected $serializer;
 
-    protected $rootDir;
-
+    /** @var ApiClient */
     protected $apiClient;
 
     /** @var LocaleRepositoryInterface */
@@ -35,47 +39,86 @@ class ShopwareProductProcessor extends AbstractConfigurableStepElement implement
     /** @var string */
     protected $url;
 
+    /** @var string */
     protected $related;
 
+    /** @var string */
     protected $similar;
 
+    /** @var string */
     protected $filterAttributes;
 
+    /** @var string */
     protected $locale;
+    /** @var string */
     protected $currency;
+    /** @var string */
     protected $articleNumber;
+    /** @var string */
     protected $tax;
+    /** @var string */
     protected $name;
+    /** @var string */
     protected $description;
+    /** @var string */
     protected $descriptionLong;
+    /** @var string */
     protected $pseudoSales;
+    /** @var string */
     protected $highlight;
+    /** @var string */
     protected $keywords;
+    /** @var string */
     protected $metaTitle;
+    /** @var string */
     protected $priceGroupActive;
+    /** @var string */
     protected $lastStock;
+    /** @var string */
     protected $notification;
+    /** @var string */
     protected $template;
+    /** @var string */
     protected $supplier;
+    /** @var string */
     protected $inStock;
+    /** @var string */
     protected $stockMin;
+    /** @var string */
     protected $weight;
+    /** @var string */
     protected $len;
+    /** @var string */
     protected $height;
+    /** @var string */
     protected $ean;
+    /** @var string */
     protected $minPurchase;
+    /** @var string */
     protected $purchaseSteps;
+    /** @var string */
     protected $maxPurchase;
+    /** @var string */
     protected $purchaseUnit;
+    /** @var string */
     protected $referenceUnit;
+    /** @var string */
     protected $packUnit;
+    /** @var string */
     protected $shippingFree;
+    /** @var string */
     protected $releaseDate;
+    /** @var string */
     protected $shippingTime;
+    /** @var string */
     protected $width;
+    /** @var string */
     protected $price;
+    /** @var string */
     protected $pseudoPrice;
+    /** @var string */
     protected $basePrice;
+    /** @var string */
     protected $attr;
 
     /**
@@ -88,6 +131,9 @@ class ShopwareProductProcessor extends AbstractConfigurableStepElement implement
         $this->localeManager = $localeRepositoryInterface;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function process($item)
     {
         $this->apiClient = new ApiClient($this->url, $this->userName, $this->apiKey);
@@ -95,7 +141,13 @@ class ShopwareProductProcessor extends AbstractConfigurableStepElement implement
         return $this->serializer->serialize($item, $attributeMapping, $this->locale, $this->filterAttributes, $this->apiClient, $this->currency);
     }
 
-    protected function convertConfigurationVariablesToMappingArray() {
+    /**
+     * maps the configuration fields variables to an array
+     *
+     * @return array
+     */
+    protected function convertConfigurationVariablesToMappingArray()
+    {
         $configArray = array(
             'articleNumber'     => $this->articleNumber,
             'name'              => $this->name,
@@ -141,11 +193,17 @@ class ShopwareProductProcessor extends AbstractConfigurableStepElement implement
         return $configArray;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function setStepExecution(StepExecution $stepExecution)
     {
         $this->stepExecution = $stepExecution;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getConfigurationFields()
     {
         return [

@@ -3,7 +3,7 @@ Basecom\Bundle\ShopwareConnectorBundle\Entity\Family:
     table: pim_catalog_family
     repositoryClass: Pim\Bundle\CatalogBundle\Doctrine\ORM\Repository\FamilyRepository
     fields:
-        sid:
+        swId:
             type: integer
             nullable: true
             unique: true

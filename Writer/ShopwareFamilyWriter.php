@@ -12,8 +12,12 @@ use Basecom\Bundle\ShopwareConnectorBundle\Entity\Family;
 use Doctrine\ORM\EntityManager;
 use Pim\Component\Catalog\Repository\LocaleRepositoryInterface;
 
-// ToDo: Klassen PHP Doc
-
+/**
+ * Posts all provided families to shopware via Rest API
+ *
+ * Class ShopwareFamilyWriter
+ * @package Basecom\Bundle\ShopwareConnectorBundle\Writer
+ */
 class ShopwareFamilyWriter extends AbstractConfigurableStepElement implements ItemWriterInterface, StepExecutionAwareInterface
 {
     /** @var StepExecution */
@@ -34,12 +38,13 @@ class ShopwareFamilyWriter extends AbstractConfigurableStepElement implements It
     /** @var LocaleRepositoryInterface $localeManager */
     protected $localeManager;
 
+    /** @var string */
     protected $locale;
 
-    // ToDo: Update PHPDoc Block
     /**
      * ShopwareFamilyWriter constructor.
      * @param EntityManager $entityManager
+     * @param LocaleRepositoryInterface $localeManager
      */
     public function __construct(EntityManager $entityManager, LocaleRepositoryInterface $localeManager)
     {
@@ -47,7 +52,9 @@ class ShopwareFamilyWriter extends AbstractConfigurableStepElement implements It
         $this->localeManager = $localeManager;
     }
 
-    // ToDo: Überall PHPDocs hinzufügen
+    /**
+     * {@inheritdoc}
+     */
     public function write(array $items)
     {
         $apiClient = new ApiClient($this->url, $this->userName, $this->apiKey);
@@ -60,15 +67,15 @@ class ShopwareFamilyWriter extends AbstractConfigurableStepElement implements It
                 'comparable'=> true,
                 'sortMode'  => 0
             );
-            if($item->getSid() != null) {
-                if(null == $apiClient->put('propertyGroups/'.$item->getSid(), $set)) {
+            if($item->getSwId() != null) {
+                if(null == $apiClient->put('propertyGroups/'.$item->getSwId(), $set)) {
                     $family = $apiClient->post('propertyGroups/', $set);
-                    $item->setSid($family['data']['id']);
+                    $item->setSwId($family['data']['id']);
                     $this->entityManager->persist($item);
                 }
             } else {
                 $family = $apiClient->post('propertyGroups/', $set);
-                $item->setSid($family['data']['id']);
+                $item->setSwId($family['data']['id']);
                 $this->entityManager->persist($item);
             }
         }
@@ -139,11 +146,17 @@ class ShopwareFamilyWriter extends AbstractConfigurableStepElement implements It
         $this->locale = $locale;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function setStepExecution(StepExecution $stepExecution)
     {
         $this->stepExecution = $stepExecution;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getConfigurationFields()
     {
         return [

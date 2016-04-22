@@ -3,7 +3,6 @@ Basecom\Bundle\ShopwareConnectorBundle\Entity\FileInfo:
     table: akeneo_file_storage_file_info
     repositoryClass: Akeneo\Bundle\FileStorageBundle\Doctrine\ORM\Repository\FileInfoRepository
     fields:
-#       ToDo: Auf einmal swMediaId? bei den anderen Entities war es immer nur sId, also entweder s oder sw, bitte einheitlich!
         swMediaId:
             type: integer
             nullable: true

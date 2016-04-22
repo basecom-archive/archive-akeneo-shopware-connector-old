@@ -4,24 +4,35 @@ namespace Basecom\Bundle\ShopwareConnectorBundle\Entity;
 
 use Pim\Bundle\CatalogBundle\Entity\Category as PimCategory;
 
+/**
+ * Overrides original Category entity to add
+ * the Shopware category ID
+ *
+ * Class Category
+ * @package Basecom\Bundle\ShopwareConnectorBundle\Entity
+ */
 class Category extends PimCategory
 {
-    // ToDo: Bitte noch PHPDoc hinzufügen
-    protected $sid;
+    /**
+     * Shopware Category ID
+     *
+     * @var integer
+     */
+    protected $swId;
 
     /**
-     * @return mixed
+     * @return int
      */
-    public function getSid()
+    public function getSwId()
     {
-        return $this->sid;
+        return $this->swId;
     }
 
     /**
-     * @param mixed $sid
+     * @param int $swId
      */
-    public function setSid($sid)
+    public function setSwId($swId)
     {
-        $this->sid = $sid;
+        $this->swId = $swId;
     }
 }

@@ -28,11 +28,11 @@ connector:
                         processor:  basecom_shopware_connector.processor.shopware_family
                         writer:     basecom_shopware_connector.writer.shopware_family
         shopware_attribute_setup:
-            title: shopware_attribute_setup.title
+            title: basecom_shopware_connector.jobs.shopware_attribute_setup.title
             type: import
             steps:
                 import:
-                    title:          shopware_attribute_setup.import.title
+                    title:          basecom_shopware_connector.jobs.shopware_attribute_setup.import.title
                     class:          "%basecom_shopware_connector.step.setup_attributes.class%"
                     services:
                         handler:    basecom_shopware_connector.handler.attribute_setup
