@@ -2,25 +2,23 @@
 
 namespace Basecom\Bundle\ShopwareConnectorBundle\Controller;
 
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Pim\Bundle\EnrichBundle\Flash\Message;
+use Pim\Bundle\ImportExportBundle\Controller\ExportProfileController as BaseController;
 use Pim\Bundle\ImportExportBundle\Event\JobProfileEvents;
 use Symfony\Component\EventDispatcher\GenericEvent;
-
-use Pim\Bundle\ImportExportBundle\Controller\ExportProfileController as BaseController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Overrides the original ExportProfileController class to provide the JobProfile
- * edit-template with an additional argument *
+ * edit-template with an additional argument *.
  *
  * Class ExportProfileController
- * @package Basecom\Bundle\ShopwareConnectorBundle\Controller
  */
 class ExportProfileController extends BaseController
 {
     /**
-     * Edit a job instance
+     * Edit a job instance.
      *
      * @param Request $request
      * @param int     $id
@@ -60,6 +58,7 @@ class ExportProfileController extends BaseController
             $template = sprintf('PimImportExportBundle:%sProfile:edit.html.twig', ucfirst($this->getJobType()));
         }
         $attributes = array_map('str_getcsv', file(__DIR__.'/../Resources/config/additional_attributes.csv'));
+
         return $this->templating->renderResponse(
             $template,
             [

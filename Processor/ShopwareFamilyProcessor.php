@@ -8,10 +8,9 @@ use Akeneo\Component\Batch\Model\StepExecution;
 use Akeneo\Component\Batch\Step\StepExecutionAwareInterface;
 
 /**
- * processes the family for the export to shopware
+ * processes the family for the export to shopware.
  *
  * Class ShopwareFamilyProcessor
- * @package Basecom\Bundle\ShopwareConnectorBundle\Processor
  */
 class ShopwareFamilyProcessor extends AbstractConfigurableStepElement implements ItemProcessorInterface, StepExecutionAwareInterface
 {
@@ -20,6 +19,7 @@ class ShopwareFamilyProcessor extends AbstractConfigurableStepElement implements
 
     /**
      * @param mixed $item
+     *
      * @return mixed
      */
     public function process($item)
@@ -40,6 +40,6 @@ class ShopwareFamilyProcessor extends AbstractConfigurableStepElement implements
      */
     public function getConfigurationFields()
     {
-        return array();
+        return [];
     }
 }

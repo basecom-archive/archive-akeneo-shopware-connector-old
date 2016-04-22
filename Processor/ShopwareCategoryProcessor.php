@@ -8,10 +8,9 @@ use Akeneo\Component\Batch\Model\StepExecution;
 use Akeneo\Component\Batch\Step\StepExecutionAwareInterface;
 
 /**
- * processes the category for the export to shopware
+ * processes the category for the export to shopware.
  *
  * Class ShopwareCategoryProcessor
- * @package Basecom\Bundle\ShopwareConnectorBundle\Processor
  */
 class ShopwareCategoryProcessor extends AbstractConfigurableStepElement implements ItemProcessorInterface, StepExecutionAwareInterface
 {
@@ -19,9 +18,10 @@ class ShopwareCategoryProcessor extends AbstractConfigurableStepElement implemen
     protected $stepExecution;
 
     /**
-     * processes the category for the export
+     * processes the category for the export.
      *
      * @param mixed $item
+     *
      * @return mixed
      */
     public function process($item)
@@ -42,6 +42,6 @@ class ShopwareCategoryProcessor extends AbstractConfigurableStepElement implemen
      */
     public function getConfigurationFields()
     {
-        return array();
+        return [];
     }
 }

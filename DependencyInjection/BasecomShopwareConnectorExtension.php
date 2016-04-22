@@ -8,8 +8,7 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
- * Class BasecomShopwareConnectorExtension
- * @package Basecom\Bundle\ShopwareConnectorBundle\DependencyInjection
+ * Class BasecomShopwareConnectorExtension.
  */
 class BasecomShopwareConnectorExtension extends Extension
 {

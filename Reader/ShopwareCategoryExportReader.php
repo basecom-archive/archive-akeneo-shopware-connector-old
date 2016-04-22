@@ -10,10 +10,9 @@ use Akeneo\Component\Classification\Repository\CategoryRepositoryInterface;
 use Basecom\Bundle\ShopwareConnectorBundle\Entity\Category;
 
 /**
- * Fetches all categories of a tree and hands them over to the processor
+ * Fetches all categories of a tree and hands them over to the processor.
  *
  * Class ShopwareCategoryExportReader
- * @package Basecom\Bundle\ShopwareConnectorBundle\Reader
  */
 class ShopwareCategoryExportReader extends AbstractConfigurableStepElement implements
     ItemReaderInterface,
@@ -69,8 +68,8 @@ class ShopwareCategoryExportReader extends AbstractConfigurableStepElement imple
             'rootCategory' => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.rootCategory.label',
-                    'help'  => 'basecom_shopware_connector.export.rootCategory.help'
-                ]
+                    'help'  => 'basecom_shopware_connector.export.rootCategory.help',
+                ],
             ],
         ];
     }
@@ -89,8 +88,9 @@ class ShopwareCategoryExportReader extends AbstractConfigurableStepElement imple
     protected function getResults()
     {
         /** @var Category $category */
-        $category = $this->categoryRepository->findOneByIdentifier($this->rootCategory);
-        $categories = $this->categoryRepository->findBy(array('root' => $category->getRoot()));
+        $category   = $this->categoryRepository->findOneByIdentifier($this->rootCategory);
+        $categories = $this->categoryRepository->findBy(['root' => $category->getRoot()]);
+
         return new \ArrayIterator($categories);
     }
 

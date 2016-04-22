@@ -9,10 +9,9 @@ use Akeneo\Component\Batch\Step\StepExecutionAwareInterface;
 use Pim\Bundle\CatalogBundle\Doctrine\ORM\Repository\FamilyRepository;
 
 /**
- * Fetches all Families and hands them over to the processor
+ * Fetches all Families and hands them over to the processor.
  *
  * Class ShopwareFamilyExportReader
- * @package Basecom\Bundle\ShopwareConnectorBundle\Reader
  */
 class ShopwareFamilyExportReader extends AbstractConfigurableStepElement implements
     ItemReaderInterface,
@@ -32,6 +31,7 @@ class ShopwareFamilyExportReader extends AbstractConfigurableStepElement impleme
 
     /**
      * ShopwareFamilyExportReader constructor.
+     *
      * @param FamilyRepository $familyRepository
      */
     public function __construct(FamilyRepository $familyRepository)
@@ -46,7 +46,7 @@ class ShopwareFamilyExportReader extends AbstractConfigurableStepElement impleme
     {
         if (!$this->isExecuted) {
             $this->isExecuted = true;
-            $this->results = $this->getResults();
+            $this->results    = $this->getResults();
         }
 
         if (null !== $result = $this->results->current()) {
@@ -70,7 +70,7 @@ class ShopwareFamilyExportReader extends AbstractConfigurableStepElement impleme
      */
     public function getConfigurationFields()
     {
-        return array();
+        return [];
     }
 
     /**

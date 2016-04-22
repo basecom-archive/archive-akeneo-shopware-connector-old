@@ -6,17 +6,16 @@ use Pim\Bundle\CatalogBundle\Entity\Family as PimFamily;
 
 /**
  * Overrides original Family entity to add
- * the Shopware propertyGroup ID
+ * the Shopware propertyGroup ID.
  *
  * Class Family
- * @package Basecom\Bundle\ShopwareConnectorBundle\Entity
  */
 class Family extends PimFamily
 {
     /**
-     * Shopware PropertyGroup ID
+     * Shopware PropertyGroup ID.
      *
-     * @var integer
+     * @var int
      */
     protected $swId;
 

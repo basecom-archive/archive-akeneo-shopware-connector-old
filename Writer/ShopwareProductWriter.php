@@ -10,10 +10,9 @@ use Basecom\Bundle\ShopwareConnectorBundle\Api\ApiClient;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * Posts all provided products to shopware via Rest API
+ * Posts all provided products to shopware via Rest API.
  *
  * Class ShopwareProductWriter
- * @package Basecom\Bundle\ShopwareConnectorBundle\Writer
  */
 class ShopwareProductWriter extends AbstractConfigurableStepElement implements ItemWriterInterface, StepExecutionAwareInterface
 {
@@ -42,7 +41,7 @@ class ShopwareProductWriter extends AbstractConfigurableStepElement implements I
     public function write(array $items)
     {
         $this->apiClient = new ApiClient($this->url, $this->userName, $this->apiKey);
-        $this->apiClient->put('articles/',$items);
+        $this->apiClient->put('articles/', $items);
     }
 
     public function setStepExecution(StepExecution $stepExecution)
@@ -135,26 +134,25 @@ class ShopwareProductWriter extends AbstractConfigurableStepElement implements I
      */
     public function getConfigurationFields()
     {
-
         return [
             'apiKey' => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.apiKey.label',
-                    'help'  => 'basecom_shopware_connector.export.apiKey.help'
-                ]
+                    'help'  => 'basecom_shopware_connector.export.apiKey.help',
+                ],
             ],
             'userName' => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.userName.label',
-                    'help'  => 'basecom_shopware_connector.export.userName.help'
-                ]
+                    'help'  => 'basecom_shopware_connector.export.userName.help',
+                ],
             ],
             'url' => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.url.label',
-                    'help'  => 'basecom_shopware_connector.export.url.help'
-                ]
-            ]
+                    'help'  => 'basecom_shopware_connector.export.url.help',
+                ],
+            ],
         ];
     }
 }

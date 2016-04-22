@@ -6,8 +6,7 @@ use Akeneo\Component\Batch\Item\AbstractConfigurableStepElement;
 use Basecom\Bundle\ShopwareConnectorBundle\Handler\AttributeSetupHandler;
 
 /**
- * Class SetupAttributesStep
- * @package Basecom\Bundle\ShopwareConnectorBundle\Step
+ * Class SetupAttributesStep.
  */
 class SetupAttributesStep extends \Akeneo\Component\Batch\Step\AbstractStep
 {
@@ -28,7 +27,7 @@ class SetupAttributesStep extends \Akeneo\Component\Batch\Step\AbstractStep
      */
     public function getConfiguration()
     {
-        $configuration = array();
+        $configuration = [];
         foreach ($this->getConfigurableStepElements() as $stepElement) {
             if ($stepElement instanceof AbstractConfigurableStepElement) {
                 foreach ($stepElement->getConfiguration() as $key => $value) {
@@ -68,16 +67,16 @@ class SetupAttributesStep extends \Akeneo\Component\Batch\Step\AbstractStep
      */
     public function setHandler(AttributeSetupHandler $handler)
     {
-        $this->handler= $handler;
+        $this->handler = $handler;
     }
 
     /**
-     * step items which are configurable with the job edit form
+     * step items which are configurable with the job edit form.
      *
      * @return array
      */
     public function getConfigurableStepElements()
     {
-        return array('handler' => $this->getHandler());
+        return ['handler' => $this->getHandler()];
     }
 }

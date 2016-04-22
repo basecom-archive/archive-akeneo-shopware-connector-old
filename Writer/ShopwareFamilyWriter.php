@@ -2,7 +2,6 @@
 
 namespace Basecom\Bundle\ShopwareConnectorBundle\Writer;
 
-
 use Akeneo\Component\Batch\Item\AbstractConfigurableStepElement;
 use Akeneo\Component\Batch\Item\ItemWriterInterface;
 use Akeneo\Component\Batch\Model\StepExecution;
@@ -13,10 +12,9 @@ use Doctrine\ORM\EntityManager;
 use Pim\Component\Catalog\Repository\LocaleRepositoryInterface;
 
 /**
- * Posts all provided families to shopware via Rest API
+ * Posts all provided families to shopware via Rest API.
  *
  * Class ShopwareFamilyWriter
- * @package Basecom\Bundle\ShopwareConnectorBundle\Writer
  */
 class ShopwareFamilyWriter extends AbstractConfigurableStepElement implements ItemWriterInterface, StepExecutionAwareInterface
 {
@@ -43,7 +41,8 @@ class ShopwareFamilyWriter extends AbstractConfigurableStepElement implements It
 
     /**
      * ShopwareFamilyWriter constructor.
-     * @param EntityManager $entityManager
+     *
+     * @param EntityManager             $entityManager
      * @param LocaleRepositoryInterface $localeManager
      */
     public function __construct(EntityManager $entityManager, LocaleRepositoryInterface $localeManager)
@@ -59,16 +58,16 @@ class ShopwareFamilyWriter extends AbstractConfigurableStepElement implements It
     {
         $apiClient = new ApiClient($this->url, $this->userName, $this->apiKey);
         /** @var Family $item */
-        foreach($items as $item) {
+        foreach ($items as $item) {
             $item->setLocale($this->localeManager->getActivatedLocaleCodes()[$this->locale]);
-            $set = array(
-                'name'      => $item->getLabel(),
-                'position'  => 0,
-                'comparable'=> true,
-                'sortMode'  => 0
-            );
-            if($item->getSwId() != null) {
-                if(null == $apiClient->put('propertyGroups/'.$item->getSwId(), $set)) {
+            $set = [
+                'name'       => $item->getLabel(),
+                'position'   => 0,
+                'comparable' => true,
+                'sortMode'   => 0,
+            ];
+            if ($item->getSwId() != null) {
+                if (null == $apiClient->put('propertyGroups/'.$item->getSwId(), $set)) {
                     $family = $apiClient->post('propertyGroups/', $set);
                     $item->setSwId($family['data']['id']);
                     $this->entityManager->persist($item);
@@ -163,30 +162,30 @@ class ShopwareFamilyWriter extends AbstractConfigurableStepElement implements It
             'apiKey' => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.apiKey.label',
-                    'help'  => 'basecom_shopware_connector.export.apiKey.help'
-                ]
+                    'help'  => 'basecom_shopware_connector.export.apiKey.help',
+                ],
             ],
             'userName' => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.userName.label',
-                    'help'  => 'basecom_shopware_connector.export.userName.help'
-                ]
+                    'help'  => 'basecom_shopware_connector.export.userName.help',
+                ],
             ],
             'url' => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.url.label',
-                    'help'  => 'basecom_shopware_connector.export.url.help'
-                ]
+                    'help'  => 'basecom_shopware_connector.export.url.help',
+                ],
             ],
             'locale' => [
-                'type' => 'choice',
+                'type'    => 'choice',
                 'options' => [
-                    'choices'   => $this->localeManager->getActivatedLocaleCodes(),
-                    'required'  => true,
-                    'select2'   => true,
-                    'label'     => 'basecom_shopware_connector.export.locale.label',
-                    'help'      => 'basecom_shopware_connector.export.locale.help'
-                ]
+                    'choices'  => $this->localeManager->getActivatedLocaleCodes(),
+                    'required' => true,
+                    'select2'  => true,
+                    'label'    => 'basecom_shopware_connector.export.locale.label',
+                    'help'     => 'basecom_shopware_connector.export.locale.help',
+                ],
             ],
         ];
     }

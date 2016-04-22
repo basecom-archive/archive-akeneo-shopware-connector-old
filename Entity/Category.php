@@ -6,17 +6,16 @@ use Pim\Bundle\CatalogBundle\Entity\Category as PimCategory;
 
 /**
  * Overrides original Category entity to add
- * the Shopware category ID
+ * the Shopware category ID.
  *
  * Class Category
- * @package Basecom\Bundle\ShopwareConnectorBundle\Entity
  */
 class Category extends PimCategory
 {
     /**
-     * Shopware Category ID
+     * Shopware Category ID.
      *
-     * @var integer
+     * @var int
      */
     protected $swId;
 

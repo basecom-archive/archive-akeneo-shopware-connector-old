@@ -7,11 +7,11 @@ use Basecom\Bundle\ShopwareConnectorBundle\Api\ApiClient;
 
 /**
  * Recieves Shopwares additional attribute fields
- * and writes them into a csv file
+ * and writes them into a csv file.
  *
  * Class AttributeSetupHandler
- * @package Basecom\Bundle\ShopwareConnectorBundle\Handler
  */
+// ToDo: use Statements für die Klassen
 class AttributeSetupHandler extends \Akeneo\Component\Batch\Item\AbstractConfigurableStepElement implements \Akeneo\Component\Batch\Step\StepExecutionAwareInterface
 {
     /**
@@ -20,21 +20,21 @@ class AttributeSetupHandler extends \Akeneo\Component\Batch\Item\AbstractConfigu
     protected $stepExecution;
 
     /**
-     * Shopwares API-Key
+     * Shopwares API-Key.
      *
      * @var string
      */
     protected $apiKey;
 
     /**
-     * Shopwares API-Username
+     * Shopwares API-Username.
      *
      * @var string
      */
     protected $userName;
 
     /**
-     * the Shopware API-URL
+     * the Shopware API-URL.
      *
      * @var string
      */
@@ -42,15 +42,15 @@ class AttributeSetupHandler extends \Akeneo\Component\Batch\Item\AbstractConfigu
 
     /**
      * Gets Shopwares additional attribute fields via API call
-     * and writes them to a csv file
+     * and writes them to a csv file.
      */
     public function execute()
     {
-        $client = new ApiClient($this->url, $this->userName, $this->apiKey);
+        $client   = new ApiClient($this->url, $this->userName, $this->apiKey);
         $jsonData = $client->get('attributes');
-        $fp = fopen(__DIR__.'/../Resources/config/additional_attributes.csv', 'w');
-        foreach($jsonData['data'] as $data) {
-            fputcsv($fp, $data, ";");
+        $fp       = fopen(__DIR__.'/../Resources/config/additional_attributes.csv', 'w');
+        foreach ($jsonData['data'] as $data) {
+            fputcsv($fp, $data, ';');
         }
         fclose($fp);
     }
@@ -64,7 +64,7 @@ class AttributeSetupHandler extends \Akeneo\Component\Batch\Item\AbstractConfigu
     }
 
     /**
-     * Returns the configuration Fields for the job
+     * Returns the configuration Fields for the job.
      *
      * @return array
      */
@@ -74,21 +74,21 @@ class AttributeSetupHandler extends \Akeneo\Component\Batch\Item\AbstractConfigu
             'apiKey' => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.apiKey.label',
-                    'help'  => 'basecom_shopware_connector.export.apiKey.help'
-                ]
+                    'help'  => 'basecom_shopware_connector.export.apiKey.help',
+                ],
             ],
             'userName' => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.userName.label',
-                    'help'  => 'basecom_shopware_connector.export.userName.help'
-                ]
+                    'help'  => 'basecom_shopware_connector.export.userName.help',
+                ],
             ],
             'url' => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.url.label',
-                    'help'  => 'basecom_shopware_connector.export.url.help'
-                ]
-            ]
+                    'help'  => 'basecom_shopware_connector.export.url.help',
+                ],
+            ],
         ];
     }
 

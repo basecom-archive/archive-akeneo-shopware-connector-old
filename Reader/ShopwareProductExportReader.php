@@ -13,10 +13,9 @@ use Pim\Bundle\CatalogBundle\Manager\ChannelManager;
 use Pim\Component\Catalog\Model\Product;
 
 /**
- * Fetches all products for a category and hands them over to the processor
+ * Fetches all products for a category and hands them over to the processor.
  *
  * Class ShopwareProductExportReader
- * @package Basecom\Bundle\ShopwareConnectorBundle\Reader
  */
 class ShopwareProductExportReader extends AbstractConfigurableStepElement implements
     ItemReaderInterface,
@@ -48,6 +47,7 @@ class ShopwareProductExportReader extends AbstractConfigurableStepElement implem
 
     /**
      * ShopwareProductExportReader constructor.
+     *
      * @param ProductRepository $productRepository
      */
     public function __construct(ProductRepository $productRepository, CategoryRepository $categoryRepository, ChannelManager $channelManager)
@@ -64,7 +64,7 @@ class ShopwareProductExportReader extends AbstractConfigurableStepElement implem
     {
         if (!$this->isExecuted) {
             $this->isExecuted = true;
-            $this->results = $this->getResults();
+            $this->results    = $this->getResults();
         }
 
         if (null !== $result = $this->results->current()) {
@@ -92,8 +92,8 @@ class ShopwareProductExportReader extends AbstractConfigurableStepElement implem
             'rootCategory' => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.rootCategory.label',
-                    'help'  => 'basecom_shopware_connector.export.rootCategory.help'
-                ]
+                    'help'  => 'basecom_shopware_connector.export.rootCategory.help',
+                ],
             ],
             'channel' => [
                 'type'    => 'choice',
@@ -102,9 +102,9 @@ class ShopwareProductExportReader extends AbstractConfigurableStepElement implem
                     'required' => true,
                     'select2'  => true,
                     'label'    => 'basecom_shopware_connector.export.channel.label',
-                    'help'     => 'basecom_shopware_connector.export.channel.label'
-                ]
-            ]
+                    'help'     => 'basecom_shopware_connector.export.channel.label',
+                ],
+            ],
         ];
     }
 
@@ -115,19 +115,20 @@ class ShopwareProductExportReader extends AbstractConfigurableStepElement implem
     {
         /** @var Category $rootCategory */
         $rootCategory = $this->categoryRepository->findOneByIdentifier($this->rootCategory);
-        $categories = $this->categoryRepository->findAll();
-        $products = array();
+        $categories   = $this->categoryRepository->findAll();
+        $products     = [];
         /** @var Category $category */
-        foreach($categories as $category) {
-            if($category->getRoot() == $rootCategory->getId()) {
+        foreach ($categories as $category) {
+            if ($category->getRoot() == $rootCategory->getId()) {
                 /** @var Product $product */
-                foreach($this->productRepository->findAll() as $product) {
-                    if(in_array($category->getCode(), $product->getCategoryCodes())) {
+                foreach ($this->productRepository->findAll() as $product) {
+                    if (in_array($category->getCode(), $product->getCategoryCodes())) {
                         array_push($products, $product);
                     }
                 }
             }
         }
+
         return new \ArrayIterator($products);
     }
 

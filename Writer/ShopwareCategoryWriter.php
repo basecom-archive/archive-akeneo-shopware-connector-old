@@ -13,10 +13,9 @@ use Doctrine\ORM\EntityManager;
 use Pim\Component\Catalog\Repository\LocaleRepositoryInterface;
 
 /**
- * Posts all provided categories to shopware via Rest API
+ * Posts all provided categories to shopware via Rest API.
  *
  * Class ShopwareCategoryWriter
- * @package Basecom\Bundle\ShopwareConnectorBundle\Writer
  */
 class ShopwareCategoryWriter extends AbstractConfigurableStepElement implements ItemWriterInterface, StepExecutionAwareInterface
 {
@@ -46,19 +45,20 @@ class ShopwareCategoryWriter extends AbstractConfigurableStepElement implements 
 
     /**
      * ShopwareCategoryWriter constructor.
-     * @param CategoryRepository $categoryRepository
-     * @param EntityManager $entityManager
+     *
+     * @param CategoryRepository        $categoryRepository
+     * @param EntityManager             $entityManager
      * @param LocaleRepositoryInterface $localeManager
      */
     public function __construct(CategoryRepository $categoryRepository, EntityManager $entityManager, LocaleRepositoryInterface $localeManager)
     {
         $this->categoryRepository = $categoryRepository;
-        $this->entityManager = $entityManager;
-        $this->localeManager = $localeManager;
+        $this->entityManager      = $entityManager;
+        $this->localeManager      = $localeManager;
     }
 
     /**
-     * posts categories to Shopware
+     * posts categories to Shopware.
      *
      * @param array $items
      */
@@ -67,21 +67,21 @@ class ShopwareCategoryWriter extends AbstractConfigurableStepElement implements 
         $apiClient = new ApiClient($this->url, $this->userName, $this->apiKey);
 
         /** @var Category $item */
-        foreach($items as $item) {
+        foreach ($items as $item) {
             $item->setLocale($this->localeManager->getActivatedLocaleCodes()[$this->locale]);
             $parent = 1;
-            if($item->getParent() != null && $item->getParent()->getSwId() != null) {
+            if ($item->getParent() != null && $item->getParent()->getSwId() != null) {
                 $parent = $item->getParent()->getSwId();
             }
-            $swCategory = array(
-                'name'              => $item->getLabel(),
-                'parentId'          => $parent,
-                'active'            => true,
-                'blog'              => false,
-                'showFilterGroups'  => true,
-            );
-            if($item->getSwId() != null) {
-                if(null == $apiClient->put('categories/'.$item->getSwId(), $swCategory)) {
+            $swCategory = [
+                'name'             => $item->getLabel(),
+                'parentId'         => $parent,
+                'active'           => true,
+                'blog'             => false,
+                'showFilterGroups' => true,
+            ];
+            if ($item->getSwId() != null) {
+                if (null == $apiClient->put('categories/'.$item->getSwId(), $swCategory)) {
                     $category = $apiClient->post('categories', $swCategory);
                     $item->setSwId($category['data']['id']);
                     $this->entityManager->persist($item);
@@ -190,33 +190,33 @@ class ShopwareCategoryWriter extends AbstractConfigurableStepElement implements 
     {
         return [
             'locale' => [
-                'type' => 'choice',
+                'type'    => 'choice',
                 'options' => [
-                    'choices'   => $this->localeManager->getActivatedLocaleCodes(),
-                    'required'  => true,
-                    'select2'   => true,
-                    'label'     => 'basecom_shopware_connector.export.locale.label',
-                    'help'      => 'basecom_shopware_connector.export.locale.help'
-                ]
+                    'choices'  => $this->localeManager->getActivatedLocaleCodes(),
+                    'required' => true,
+                    'select2'  => true,
+                    'label'    => 'basecom_shopware_connector.export.locale.label',
+                    'help'     => 'basecom_shopware_connector.export.locale.help',
+                ],
             ],
             'url' => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.url.label',
-                    'help'  => 'basecom_shopware_connector.export.url.help'
-                ]
+                    'help'  => 'basecom_shopware_connector.export.url.help',
+                ],
             ],
             'userName' => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.userName.label',
-                    'help'  => 'basecom_shopware_connector.export.userName.help'
-                ]
+                    'help'  => 'basecom_shopware_connector.export.userName.help',
+                ],
             ],
             'apiKey' => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.apiKey.label',
-                    'help'  => 'basecom_shopware_connector.export.apiKey.help'
-                ]
-            ]
+                    'help'  => 'basecom_shopware_connector.export.apiKey.help',
+                ],
+            ],
         ];
     }
 }
