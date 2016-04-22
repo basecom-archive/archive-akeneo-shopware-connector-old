@@ -78,11 +78,11 @@ basecom_shopware_connector:
       label: Unit
       help:  Enter the code of the Akeneo Unit attribute
     referenceUnit:
-      label: Grundeinheit
-      help:  Geben Sie hier den code des Akeneo-Grundeinheit-Attributs ein
+      label: Basic unit
+      help:  Enter the code of the Akeneo basic unit attribute
     packUnit:
-      label: Verpackungseinheit
-      help:  Geben Sie hier den code des Akeneo-Verpackungseinheit-Attributs ein
+      label: Packing unit
+      help:  Enter the code of the Akeneo packing unit attribute
     notification:
       label: Email notification
       help:  Enter the code of the Akeneo Email notification attribute
