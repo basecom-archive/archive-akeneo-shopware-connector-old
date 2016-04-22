@@ -138,7 +138,7 @@ class ShopwareProductProcessor extends AbstractConfigurableStepElement implement
     {
         $this->apiClient = new ApiClient($this->url, $this->userName, $this->apiKey);
         $attributeMapping = $this->convertConfigurationVariablesToMappingArray();
-        return $this->serializer->serialize($item, $attributeMapping, $this->locale, $this->filterAttributes, $this->apiClient, $this->currency);
+        return $this->serializer->serialize($item, $attributeMapping, $this->localeManager->getActivatedLocaleCodes()[$this->locale], $this->filterAttributes, $this->apiClient, $this->currency);
     }
 
     /**
