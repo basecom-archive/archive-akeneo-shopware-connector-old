@@ -13,7 +13,7 @@ use Pim\Bundle\ImportExportBundle\Controller\ExportProfileController as BaseCont
 
 /**
  * Overrides the original ExportProfileController class to provide the JobProfile
- * edit-template with an additional argument *
+ * edit-template with an additional argument
  *
  * Class ExportProfileController
  * @package Basecom\Bundle\ShopwareConnectorBundle\Controller
@@ -60,7 +60,8 @@ class ExportProfileController extends BaseController
         if (null === $template = $jobInstance->getJob()->getEditTemplate()) {
             $template = sprintf('PimImportExportBundle:%sProfile:edit.html.twig', ucfirst($this->getJobType()));
         }
-        $attributes = array_map('str_getcsv', file(__DIR__.'/../Resources/config/additional_attributes.csv'));
+        $attributes = array_map('str_getcsv', file(__DIR__ . '/../Resources/config/additional_attributes.csv'));
+
         return $this->templating->renderResponse(
             $template,
             [

@@ -50,74 +50,109 @@ class ShopwareProductProcessor extends AbstractConfigurableStepElement implement
 
     /** @var string */
     protected $locale;
+
     /** @var string */
     protected $currency;
+
     /** @var string */
     protected $articleNumber;
+
     /** @var string */
     protected $tax;
+
     /** @var string */
     protected $name;
+
     /** @var string */
     protected $description;
+
     /** @var string */
     protected $descriptionLong;
+
     /** @var string */
     protected $pseudoSales;
+
     /** @var string */
     protected $highlight;
+
     /** @var string */
     protected $keywords;
+
     /** @var string */
     protected $metaTitle;
+
     /** @var string */
     protected $priceGroupActive;
+
     /** @var string */
     protected $lastStock;
+
     /** @var string */
     protected $notification;
+
     /** @var string */
     protected $template;
+
     /** @var string */
     protected $supplier;
+
     /** @var string */
     protected $inStock;
+
     /** @var string */
     protected $stockMin;
+
     /** @var string */
     protected $weight;
+
     /** @var string */
     protected $len;
+
     /** @var string */
     protected $height;
+
     /** @var string */
     protected $ean;
+
     /** @var string */
     protected $minPurchase;
+
     /** @var string */
     protected $purchaseSteps;
+
     /** @var string */
     protected $maxPurchase;
+
     /** @var string */
     protected $purchaseUnit;
+
     /** @var string */
     protected $referenceUnit;
+
     /** @var string */
     protected $packUnit;
+
     /** @var string */
     protected $shippingFree;
+
     /** @var string */
     protected $releaseDate;
+
     /** @var string */
     protected $shippingTime;
+
     /** @var string */
     protected $width;
+
     /** @var string */
     protected $price;
+
     /** @var string */
     protected $pseudoPrice;
+
     /** @var string */
     protected $basePrice;
+
     /** @var string */
     protected $attr;
 
@@ -127,8 +162,10 @@ class ShopwareProductProcessor extends AbstractConfigurableStepElement implement
      * @param ShopwareProductSerializer $serializer
      * @param LocaleRepositoryInterface $localeRepositoryInterface
      */
-    public function __construct(ShopwareProductSerializer $serializer, LocaleRepositoryInterface $localeRepositoryInterface)
-    {
+    public function __construct(
+        ShopwareProductSerializer $serializer,
+        LocaleRepositoryInterface $localeRepositoryInterface
+    ) {
         $this->serializer = $serializer;
         $this->localeManager = $localeRepositoryInterface;
     }
@@ -140,7 +177,10 @@ class ShopwareProductProcessor extends AbstractConfigurableStepElement implement
     {
         $this->apiClient = new ApiClient($this->url, $this->userName, $this->apiKey);
         $attributeMapping = $this->convertConfigurationVariablesToMappingArray();
-        return $this->serializer->serialize($item, $attributeMapping, $this->localeManager->getActivatedLocaleCodes()[$this->locale], $this->filterAttributes, $this->apiClient, $this->currency);
+
+        return $this->serializer->serialize($item, $attributeMapping,
+            $this->localeManager->getActivatedLocaleCodes()[$this->locale], $this->filterAttributes, $this->apiClient,
+            $this->currency);
     }
 
     /**
@@ -150,48 +190,51 @@ class ShopwareProductProcessor extends AbstractConfigurableStepElement implement
      */
     protected function convertConfigurationVariablesToMappingArray()
     {
-        $configArray = array(
-            'articleNumber'     => $this->articleNumber,
-            'name'              => $this->name,
-            'description'       => $this->description,
-            'descriptionLong'   => $this->descriptionLong,
-            'pseudoSales'		=> $this->pseudoSales,
-            'highlight'			=> $this->highlight,
-            'keywords'          => $this->keywords,
-            'metaTitle'			=> $this->metaTitle,
-            'priceGroupActive'	=> $this->priceGroupActive,
-            'lastStock'			=> $this->lastStock,
-            'notification'		=> $this->notification,
-            'template'			=> $this->template,
-            'supplier'	        => $this->supplier,
-            'inStock'			=> $this->inStock,
-            'stockMin'			=> $this->stockMin,
-            'weight'			=> $this->weight,
-            'len'				=> $this->len,
-            'height'			=> $this->height,
-            'ean'				=> $this->ean,
-            'minPurchase'		=> $this->minPurchase,
-            'purchaseSteps'		=> $this->purchaseSteps,
-            'maxPurchase'		=> $this->maxPurchase,
-            'purchaseUnit'		=> $this->purchaseUnit,
-            'referenceUnit'		=> $this->referenceUnit,
-            'packUnit'			=> $this->packUnit,
-            'shippingFree'		=> $this->shippingFree,
-            'releaseDate'		=> $this->releaseDate,
-            'shippingTime'		=> $this->shippingTime,
-            'width'				=> $this->width,
-            'price'				=> $this->price,
-            'pseudoPrice'		=> $this->pseudoPrice,
-            'basePrice'			=> $this->basePrice,
-            'tax'               => $this->tax,
-            'similar'           => $this->similar,
-            'related'           => $this->related,
-        );
-        $attributes = explode(";",$this->attr);
-        foreach($attributes as $attribute) {
+        $configArray = [
+            'articleNumber'    => $this->articleNumber,
+            'name'             => $this->name,
+            'description'      => $this->description,
+            'descriptionLong'  => $this->descriptionLong,
+            'pseudoSales'      => $this->pseudoSales,
+            'highlight'        => $this->highlight,
+            'keywords'         => $this->keywords,
+            'metaTitle'        => $this->metaTitle,
+            'priceGroupActive' => $this->priceGroupActive,
+            'lastStock'        => $this->lastStock,
+            'notification'     => $this->notification,
+            'template'         => $this->template,
+            'supplier'         => $this->supplier,
+            'inStock'          => $this->inStock,
+            'stockMin'         => $this->stockMin,
+            'weight'           => $this->weight,
+            'len'              => $this->len,
+            'height'           => $this->height,
+            'ean'              => $this->ean,
+            'minPurchase'      => $this->minPurchase,
+            'purchaseSteps'    => $this->purchaseSteps,
+            'maxPurchase'      => $this->maxPurchase,
+            'purchaseUnit'     => $this->purchaseUnit,
+            'referenceUnit'    => $this->referenceUnit,
+            'packUnit'         => $this->packUnit,
+            'shippingFree'     => $this->shippingFree,
+            'releaseDate'      => $this->releaseDate,
+            'shippingTime'     => $this->shippingTime,
+            'width'            => $this->width,
+            'price'            => $this->price,
+            'pseudoPrice'      => $this->pseudoPrice,
+            'basePrice'        => $this->basePrice,
+            'tax'              => $this->tax,
+            'similar'          => $this->similar,
+            'related'          => $this->related,
+        ];
+        $attributes = explode(";", $this->attr);
+        foreach ($attributes as $attribute) {
             $attr = explode(":", $attribute);
-            if(isset($attr[1])) $configArray[$attr[0]] = $attr[1];
+            if (isset($attr[1])) {
+                $configArray[$attr[0]] = $attr[1];
+            }
         }
+
         return $configArray;
     }
 
@@ -209,47 +252,47 @@ class ShopwareProductProcessor extends AbstractConfigurableStepElement implement
     public function getConfigurationFields()
     {
         return [
-            'locale' => [
-                'type' => 'choice',
+            'locale'           => [
+                'type'    => 'choice',
                 'options' => [
-                    'choices'   => $this->localeManager->getActivatedLocaleCodes(),
-                    'required'  => true,
-                    'select2'   => true,
-                    'label'     => 'basecom_shopware_connector.export.locale.label',
-                    'help'      => 'basecom_shopware_connector.export.locale.label'
+                    'choices'  => $this->localeManager->getActivatedLocaleCodes(),
+                    'required' => true,
+                    'select2'  => true,
+                    'label'    => 'basecom_shopware_connector.export.locale.label',
+                    'help'     => 'basecom_shopware_connector.export.locale.label'
                 ]
             ],
-            'currency' => [
+            'currency'         => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.currency.label',
                     'help'  => 'basecom_shopware_connector.export.currency.label'
                 ]
             ],
-            'apiKey' => [
+            'apiKey'           => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.apiKey.label',
                     'help'  => 'basecom_shopware_connector.export.apiKey.help'
                 ]
             ],
-            'userName' => [
+            'userName'         => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.userName.label',
                     'help'  => 'basecom_shopware_connector.export.userName.help'
                 ]
             ],
-            'url' => [
+            'url'              => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.url.label',
                     'help'  => 'basecom_shopware_connector.export.url.help'
                 ]
             ],
-            'similar' => [
+            'similar'          => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.similar.label',
                     'help'  => 'basecom_shopware_connector.export.similar.help'
                 ]
             ],
-            'related' => [
+            'related'          => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.related.label',
                     'help'  => 'basecom_shopware_connector.export.related.help'
@@ -261,31 +304,31 @@ class ShopwareProductProcessor extends AbstractConfigurableStepElement implement
                     'help'  => 'basecom_shopware_connector.export.filterAttributes.help'
                 ]
             ],
-            'supplier' => [
+            'supplier'         => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.supplier.label',
                     'help'  => 'basecom_shopware_connector.export.supplier.help'
                 ]
             ],
-            'name' => [
+            'name'             => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.name.label',
                     'help'  => 'basecom_shopware_connector.export.name.help'
                 ]
             ],
-            'articleNumber' => [
+            'articleNumber'    => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.articleNumber.label',
                     'help'  => 'basecom_shopware_connector.export.articleNumber.help'
                 ]
             ],
-            'tax' => [
+            'tax'              => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.tax.label',
                     'help'  => 'basecom_shopware_connector.export.tax.help'
                 ]
             ],
-            'template' => [
+            'template'         => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.template.label',
                     'help'  => 'basecom_shopware_connector.export.template.help'
@@ -297,157 +340,157 @@ class ShopwareProductProcessor extends AbstractConfigurableStepElement implement
                     'help'  => 'basecom_shopware_connector.export.priceGroupActive.help'
                 ]
             ],
-            'price' => [
+            'price'            => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.price.label',
                     'help'  => 'basecom_shopware_connector.export.price.help'
                 ]
             ],
-            'descriptionLong' => [
+            'descriptionLong'  => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.descriptionLong.label',
                     'help'  => 'basecom_shopware_connector.export.descriptionLong.help'
                 ]
             ],
-            'metaTitle' => [
+            'metaTitle'        => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.metaTitle.label',
                     'help'  => 'basecom_shopware_connector.export.metaTitle.help'
                 ]
             ],
-            'description' => [
+            'description'      => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.description.label',
                     'help'  => 'basecom_shopware_connector.export.description.help'
                 ]
             ],
-            'keywords' => [
+            'keywords'         => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.keywords.label',
                     'help'  => 'basecom_shopware_connector.export.keywords.help'
                 ]
             ],
-            'purchaseUnit' => [
+            'purchaseUnit'     => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.purchaseUnit.label',
                     'help'  => 'basecom_shopware_connector.export.purchaseUnit.help'
                 ]
             ],
-            'referenceUnit' => [
+            'referenceUnit'    => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.referenceUnit.label',
                     'help'  => 'basecom_shopware_connector.export.referenceUnit.help'
                 ]
             ],
-            'packUnit' => [
+            'packUnit'         => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.packUnit.label',
                     'help'  => 'basecom_shopware_connector.export.packUnit.help'
                 ]
             ],
-            'notification' => [
+            'notification'     => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.notification.label',
                     'help'  => 'basecom_shopware_connector.export.notification.help'
                 ]
             ],
-            'shippingTime' => [
+            'shippingTime'     => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.shippingTime.label',
                     'help'  => 'basecom_shopware_connector.export.shippingTime.help'
                 ]
             ],
-            'inStock' => [
+            'inStock'          => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.inStock.label',
                     'help'  => 'basecom_shopware_connector.export.inStock.help'
                 ]
             ],
-            'stockMin' => [
+            'stockMin'         => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.stockMin.label',
                     'help'  => 'basecom_shopware_connector.export.stockMin.help'
                 ]
             ],
-            'releaseDate' => [
+            'releaseDate'      => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.releaseDate.label',
                     'help'  => 'basecom_shopware_connector.export.releaseDate.help'
                 ]
             ],
-            'pseudoSales' => [
+            'pseudoSales'      => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.pseudoSales.label',
                     'help'  => 'basecom_shopware_connector.export.pseudoSales.help'
                 ]
             ],
-            'minPurchase' => [
+            'minPurchase'      => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.minPurchase.label',
                     'help'  => 'basecom_shopware_connector.export.minPurchase.help'
                 ]
             ],
-            'purchaseSteps' => [
+            'purchaseSteps'    => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.purchaseSteps.label',
                     'help'  => 'basecom_shopware_connector.export.purchaseSteps.help'
                 ]
             ],
-            'maxPurchase' => [
+            'maxPurchase'      => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.maxPurchase.label',
                     'help'  => 'basecom_shopware_connector.export.maxPurchase.help'
                 ]
             ],
-            'weight' => [
+            'weight'           => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.weight.label',
                     'help'  => 'basecom_shopware_connector.export.weight.help'
                 ]
             ],
-            'shippingFree' => [
+            'shippingFree'     => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.shippingFree.label',
                     'help'  => 'basecom_shopware_connector.export.shippingFree.help'
                 ]
             ],
-            'highlight' => [
+            'highlight'        => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.highlight.label',
                     'help'  => 'basecom_shopware_connector.export.highlight.help'
                 ]
             ],
-            'lastStock' => [
+            'lastStock'        => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.lastStock.label',
                     'help'  => 'basecom_shopware_connector.export.lastStock.help'
                 ]
             ],
-            'ean' => [
+            'ean'              => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.ean.label',
                     'help'  => 'basecom_shopware_connector.export.ean.help'
                 ]
             ],
-            'width' => [
+            'width'            => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.width.label',
                     'help'  => 'basecom_shopware_connector.export.width.help'
                 ]
             ],
-            'height' => [
+            'height'           => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.height.label',
                     'help'  => 'basecom_shopware_connector.export.height.help'
                 ]
             ],
-            'len' => [
+            'len'              => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.len.label',
                     'help'  => 'basecom_shopware_connector.export.len.help'
                 ]
             ],
-            'attr' => [
+            'attr'             => [
                 'type'    => 'hidden',
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.attr.label',

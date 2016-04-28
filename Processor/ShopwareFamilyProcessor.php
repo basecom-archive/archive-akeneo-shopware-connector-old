@@ -20,6 +20,7 @@ class ShopwareFamilyProcessor extends AbstractConfigurableStepElement implements
 
     /**
      * @param mixed $item
+     *
      * @return mixed
      */
     public function process($item)
@@ -40,6 +41,6 @@ class ShopwareFamilyProcessor extends AbstractConfigurableStepElement implements
      */
     public function getConfigurationFields()
     {
-        return array();
+        return [];
     }
 }

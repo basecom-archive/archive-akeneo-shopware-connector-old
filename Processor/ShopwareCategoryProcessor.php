@@ -22,6 +22,7 @@ class ShopwareCategoryProcessor extends AbstractConfigurableStepElement implemen
      * processes the category for the export
      *
      * @param mixed $item
+     *
      * @return mixed
      */
     public function process($item)
@@ -42,6 +43,6 @@ class ShopwareCategoryProcessor extends AbstractConfigurableStepElement implemen
      */
     public function getConfigurationFields()
     {
-        return array();
+        return [];
     }
 }
