@@ -27,11 +27,9 @@ class ShopwareFamilyExportReader extends AbstractConfigurableStepElement impleme
     /** @var \ArrayIterator */
     protected $results;
 
-    /** @var bool Checks if all attributes are sent to the processor */
-    protected $isExecuted = false;
-
     /**
      * ShopwareFamilyExportReader constructor.
+     *
      * @param FamilyRepository $familyRepository
      */
     public function __construct(FamilyRepository $familyRepository)
@@ -44,8 +42,7 @@ class ShopwareFamilyExportReader extends AbstractConfigurableStepElement impleme
      */
     public function read()
     {
-        if (!$this->isExecuted) {
-            $this->isExecuted = true;
+        if (null === $this->results) {
             $this->results = $this->getResults();
         }
 
@@ -70,7 +67,7 @@ class ShopwareFamilyExportReader extends AbstractConfigurableStepElement impleme
      */
     public function getConfigurationFields()
     {
-        return array();
+        return [];
     }
 
     /**
