@@ -48,14 +48,14 @@ class ExportProfileController extends BaseController
                 $this->entityManager->persist($jobInstance);
                 $this->entityManager->flush();
 
+                $this->eventDispatcher->dispatch(JobProfileEvents::POST_EDIT, new GenericEvent($jobInstance));
+
                 $this->request->getSession()->getFlashBag()
                     ->add('success', new Message(sprintf('flash.%s.updated', $this->getJobType())));
 
                 return $this->redirectToShowView($jobInstance->getId());
             }
         }
-
-        $this->eventDispatcher->dispatch(JobProfileEvents::POST_EDIT, new GenericEvent($jobInstance));
 
         if (null === $template = $jobInstance->getJob()->getEditTemplate()) {
             $template = sprintf('PimImportExportBundle:%sProfile:edit.html.twig', ucfirst($this->getJobType()));
