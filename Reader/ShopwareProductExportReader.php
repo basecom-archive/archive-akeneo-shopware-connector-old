@@ -48,7 +48,10 @@ class ShopwareProductExportReader extends AbstractConfigurableStepElement implem
 
     /**
      * ShopwareProductExportReader constructor.
-     * @param ProductRepository $productRepository
+     *
+     * @param ProductRepository  $productRepository
+     * @param CategoryRepository $categoryRepository
+     * @param ChannelManager     $channelManager
      */
     public function __construct(ProductRepository $productRepository, CategoryRepository $categoryRepository, ChannelManager $channelManager)
     {

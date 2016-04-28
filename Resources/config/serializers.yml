@@ -2,11 +2,11 @@ parameters:
     basecom_shopware_connector.serializer.shopware_product.class:       Basecom\Bundle\ShopwareConnectorBundle\Serializer\ShopwareProductSerializer
 services:
     basecom_shopware_connector.serializer.shopware_product:
-        class: %basecom_shopware_connector.serializer.shopware_product.class%
+        class: '%basecom_shopware_connector.serializer.shopware_product.class%'
         arguments:
             - '@pim_catalog.repository.attribute'
             - '@pim_catalog.repository.family'
             - '@pim_catalog.repository.category'
-            - %kernel.root_dir%
+            - '%kernel.root_dir%'
             - '@akeneo_file_storage.repository.file_info'
             - '@doctrine.orm.entity_manager'

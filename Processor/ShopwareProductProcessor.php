@@ -123,7 +123,9 @@ class ShopwareProductProcessor extends AbstractConfigurableStepElement implement
 
     /**
      * ShopwareProductProcessor constructor.
+     *
      * @param ShopwareProductSerializer $serializer
+     * @param LocaleRepositoryInterface $localeRepositoryInterface
      */
     public function __construct(ShopwareProductSerializer $serializer, LocaleRepositoryInterface $localeRepositoryInterface)
     {

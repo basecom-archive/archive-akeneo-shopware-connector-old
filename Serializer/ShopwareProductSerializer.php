@@ -398,6 +398,9 @@ class ShopwareProductSerializer
 
     /**
      * @param Product $product
+     * @param string  $similar
+     * @param string  $related
+     *
      * @return array
      */
     public function serializeAssociations($product, $similar, $related) {

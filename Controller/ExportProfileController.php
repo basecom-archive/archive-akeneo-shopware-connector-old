@@ -3,6 +3,7 @@
 namespace Basecom\Bundle\ShopwareConnectorBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Pim\Bundle\EnrichBundle\Flash\Message;
 use Pim\Bundle\ImportExportBundle\Event\JobProfileEvents;
@@ -25,7 +26,7 @@ class ExportProfileController extends BaseController
      * @param Request $request
      * @param int     $id
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function editAction(Request $request, $id)
     {
