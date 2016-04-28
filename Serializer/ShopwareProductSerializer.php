@@ -8,14 +8,14 @@ use Basecom\Bundle\ShopwareConnectorBundle\Api\ApiClient;
 use Basecom\Bundle\ShopwareConnectorBundle\Entity\Category;
 use Basecom\Bundle\ShopwareConnectorBundle\Entity\Family;
 use Basecom\Bundle\ShopwareConnectorBundle\Entity\FileInfo;
-use Doctrine\ORM\EntityManager;
-use Pim\Bundle\CatalogBundle\Doctrine\ORM\Repository\AttributeRepository;
-use Pim\Bundle\CatalogBundle\Doctrine\ORM\Repository\FamilyRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Pim\Bundle\CatalogBundle\Entity\Attribute;
-use Pim\Component\Catalog\Model\Association;
+use Pim\Bundle\CatalogBundle\Repository\FamilyRepositoryInterface;
+use Pim\Component\Catalog\Model\AssociationInterface;
 use Pim\Component\Catalog\Model\AttributeOptionInterface;
-use Pim\Component\Catalog\Model\Product;
+use Pim\Component\Catalog\Model\ProductInterface;
 use Pim\Component\Catalog\Model\ProductValueInterface;
+use Pim\Component\Catalog\Repository\AttributeRepositoryInterface;
 
 /**
  * Class ShopwareProductSerializer
@@ -23,10 +23,10 @@ use Pim\Component\Catalog\Model\ProductValueInterface;
  */
 class ShopwareProductSerializer
 {
-    /** @var AttributeRepository */
+    /** @var AttributeRepositoryInterface */
     protected $attributeRepository;
 
-    /** @var FamilyRepository */
+    /** @var FamilyRepositoryInterface */
     protected $familyRepository;
 
     /** @var CategoryRepository */
@@ -35,7 +35,7 @@ class ShopwareProductSerializer
     /** @var FileInfoRepository */
     protected $fileInfoRepository;
 
-    /** @var EntityManager */
+    /** @var EntityManagerInterface */
     protected $entityManager;
 
     /** @var string */
@@ -43,55 +43,63 @@ class ShopwareProductSerializer
 
     /**
      * ShopwareProductSerializer constructor.
-     * @param AttributeRepository $attributeRepository
-     * @param FamilyRepository $familyRepository
-     * @param CategoryRepository $categoryRepository
-     * @param $rootDir
-     * @param FileInfoRepository $fileInfoRepository
-     * @param EntityManager $entityManager
+     *
+     * @param AttributeRepositoryInterface $attributeRepository
+     * @param FamilyRepositoryInterface    $familyRepository
+     * @param CategoryRepository           $categoryRepository
+     * @param FileInfoRepository           $fileInfoRepository
+     * @param EntityManagerInterface       $entityManager
+     * @param string                       $rootDir
      */
     public function __construct(
-        AttributeRepository $attributeRepository,
-        FamilyRepository $familyRepository,
+        AttributeRepositoryInterface $attributeRepository,
+        FamilyRepositoryInterface $familyRepository,
         CategoryRepository $categoryRepository,
-        $rootDir,
         FileInfoRepository $fileInfoRepository,
-        EntityManager $entityManager
-    )
-    {
-        $this->attributeRepository  = $attributeRepository;
-        $this->familyRepository     = $familyRepository;
-        $this->categoryRepository   = $categoryRepository;
-        $this->rootDir              = $rootDir;
-        $this->fileInfoRepository   = $fileInfoRepository;
-        $this->entityManager        = $entityManager;
+        EntityManagerInterface $entityManager,
+        $rootDir
+    ) {
+        $this->attributeRepository = $attributeRepository;
+        $this->familyRepository = $familyRepository;
+        $this->categoryRepository = $categoryRepository;
+        $this->rootDir = $rootDir;
+        $this->fileInfoRepository = $fileInfoRepository;
+        $this->entityManager = $entityManager;
     }
 
     /**
-     * @param Product $product
-     * @param $attributeMapping
-     * @param $locale
-     * @param $filterAttributes
-     * @param ApiClient $apiClient
-     * @param $currency
+     * @param ProductInterface $product
+     * @param                  $attributeMapping
+     * @param                  $locale
+     * @param                  $filterAttributes
+     * @param ApiClient        $apiClient
+     * @param                  $currency
+     *
      * @return array
      */
-    public function serialize(Product $product, $attributeMapping, $locale, $filterAttributes, ApiClient $apiClient, $currency)
-    {
+    public function serialize(
+        ProductInterface $product,
+        array $attributeMapping,
+        $locale,
+        $filterAttributes,
+        ApiClient $apiClient,
+        $currency
+    ) {
         $similar = $attributeMapping['similar'];
         $related = $attributeMapping['related'];
         unset($attributeMapping['similar']);
         unset($attributeMapping['related']);
-        $item = $this->serializeValues($product->getValues(), $product->getAttributes(), $attributeMapping, $locale, $apiClient, $filterAttributes, $currency);
-        $item['mainDetail']['active']   = $item['active'] = $product->isEnabled();
-        $item['categories']             = $this->serializeCategories($product->getCategories(), $locale);
-        $associations                   = $this->serializeAssociations($product, $similar, $related);
-        $item['similar']                = $associations['similar'];
-        $item['related']                = $associations['related'];
+        $item = $this->serializeValues($product->getValues(), $product->getAttributes(), $attributeMapping, $locale,
+            $apiClient, $filterAttributes, $currency);
+        $item['mainDetail']['active'] = $item['active'] = $product->isEnabled();
+        $item['categories'] = $this->serializeCategories($product->getCategories(), $locale);
+        $associations = $this->serializeAssociations($product, $similar, $related);
+        $item['similar'] = $associations['similar'];
+        $item['related'] = $associations['related'];
 
-        if($product->getFamily() != null) {
+        if ($product->getFamily() != null) {
             $propertyGroup = $this->serializeFamily($product->getFamily()->getId(), $locale);
-            $item['filterGroupId']          = $propertyGroup['id'];
+            $item['filterGroupId'] = $propertyGroup['id'];
         }
 
         return $item;
@@ -100,41 +108,46 @@ class ShopwareProductSerializer
     /**
      * @param $productCategories
      * @param $locale
+     *
      * @return array
      */
     protected function serializeCategories($productCategories, $locale)
     {
-        $categories = array();
-        foreach($productCategories as $category) {
+        $categories = [];
+        foreach ($productCategories as $category) {
             /** @var Category $category */
             $category = $this->categoryRepository->find($category->getId());
             $category->setLocale($locale);
-            $categories[$category->getSwId()] = array(
-                'id'    => $category->getSwId(),
-                'name'  => $category->getLabel(),
-            );
+            $categories[$category->getSwId()] = [
+                'id'   => $category->getSwId(),
+                'name' => $category->getLabel(),
+            ];
         }
+
         return $categories;
     }
 
     /**
      * @param $attributes
+     *
      * @return array
      */
     public function serializeAttributes($attributes)
     {
-        $attributeArray = array();
+        $attributeArray = [];
         /** @var Attribute $attribute */
-        foreach($attributes as $attribute) {
+        foreach ($attributes as $attribute) {
             $attribute = $this->attributeRepository->find($attribute->getId());
             array_push($attributeArray, $attribute->getCode());
         }
+
         return $attributeArray;
     }
 
     /**
      * @param $familyId
      * @param $locale
+     *
      * @return array
      */
     public function serializeFamily($familyId, $locale)
@@ -142,78 +155,89 @@ class ShopwareProductSerializer
         /** @var Family $family */
         $family = $this->familyRepository->find($familyId);
         $family->setLocale($locale);
-        $propertyGroup = array(
-            'id'  => (int)$family->getSwId(),
+        $propertyGroup = [
+            'id'   => (int)$family->getSwId(),
             'name' => $family->getLabel(),
-        );
+        ];
+
         return $propertyGroup;
     }
 
     /**
      * @param $filterAttributes
+     *
      * @return array
      */
     protected function serializeFilterAttributes($filterAttributes)
     {
         $filterAttributes = str_replace(' ', '', $filterAttributes);
         $filterAttributesArray = explode(',', $filterAttributes);
+
         return $filterAttributesArray;
     }
 
     /**
-     * @param $values
-     * @param $attributes
-     * @param $attributeMapping
-     * @param $locale
+     * @param           $values
+     * @param           $attributes
+     * @param           $attributeMapping
+     * @param           $locale
      * @param ApiClient $apiClient
-     * @param $filterAttributes
-     * @param $currency
+     * @param           $filterAttributes
+     * @param           $currency
+     *
      * @return array
      */
-    public function serializeValues($values, $attributes, $attributeMapping, $locale, ApiClient $apiClient, $filterAttributes, $currency)
-    {
-        $item = array();
+    public function serializeValues(
+        $values,
+        $attributes,
+        $attributeMapping,
+        $locale,
+        ApiClient $apiClient,
+        $filterAttributes,
+        $currency
+    ) {
+        $item = [];
         $imageCount = 0;
         $propValueCount = 0;
         $attributes = $this->serializeAttributes($attributes);
 
-        /** @var ProductValueInterface $value*/
-        foreach($values as $value) {
-            if(in_array($value->getAttribute()->getCode(), $attributes)) {
+        /** @var ProductValueInterface $value */
+        foreach ($values as $value) {
+            if (in_array($value->getAttribute()->getCode(), $attributes)) {
                 /** @var Attribute $attribute */
                 $attribute = $this->attributeRepository->find($value->getAttribute()->getId());
                 $attribute->setLocale($locale);
 
-                if($attribute->getAttributeType() == "pim_catalog_image") {
+                if ($attribute->getAttributeType() == "pim_catalog_image") {
                     /** @var FileInfo $media */
                     $fileInfo = $this->fileInfoRepository->find($value->getMedia());
-                    if($fileInfo->getSwMediaId() == null) {
-                        $path = $this->rootDir."/file_storage/catalog/".$value->getMedia()->getKey();
+                    if ($fileInfo->getSwMediaId() == null) {
+                        $path = $this->rootDir . "/file_storage/catalog/" . $value->getMedia()->getKey();
                         $type = pathinfo($path, PATHINFO_EXTENSION);
                         $data = file_get_contents($path);
-                        $base64 = 'data:image/'.$type.';base64,'.base64_encode($data);
-                        $mediaArray = array(
+                        $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+                        $mediaArray = [
                             'album'       => -1,
                             'file'        => $base64,
                             'description' => $value->getMedia()->getOriginalFilename(),
-                        );
+                        ];
                         $media = $apiClient->post('media', $mediaArray);
                         $mediaId = $media['data']['id'];
-                        $item['images'][$imageCount] = array('mediaId' => $mediaId);
+                        $item['images'][$imageCount] = ['mediaId' => $mediaId];
                         $fileInfo->setSwMediaId($mediaId);
                         $this->entityManager->persist($fileInfo);
                         $imageCount++;
                     }
                 }
 
-                if(in_array($attribute->getCode(), $this->serializeFilterAttributes($filterAttributes))) {
+                if (in_array($attribute->getCode(), $this->serializeFilterAttributes($filterAttributes))) {
                     /** @var Attribute $attribute */
                     $attribute = $this->attributeRepository->find($value->getAttribute()->getId());
                     $attribute->setLocale($locale);
-                    $propValue = array();
-                    if($attribute->getBackendType() == 'options') {
+                    $propValue = [];
+                    if ($attribute->getBackendType() == 'options') {
                         /** @var AttributeOptionInterface $option */
-                        foreach($value->getOptions() as $option) {
+                        foreach ($value->getOptions() as $option) {
                             $option->setLocale($locale);
                             $propValue['option']['name'] = $attribute->getLabel();
                             $propValue['option']['filterable'] = true;
@@ -231,10 +255,11 @@ class ShopwareProductSerializer
                     }
                 }
 
-                if($shopwareAttribute = array_search($attribute->getCode(), $attributeMapping)) {
-                    switch($shopwareAttribute) {
+                if ($shopwareAttribute = array_search($attribute->getCode(), $attributeMapping)) {
+                    switch ($shopwareAttribute) {
                         case 'articleNumber':
-                            $item['mainDetail']['number'] = $this->getAttributeValue($attribute, $value, $locale, $currency);
+                            $item['mainDetail']['number'] = $this->getAttributeValue($attribute, $value, $locale,
+                                $currency);
                             break;
                         case 'name':
                             $item['name'] = $this->getAttributeValue($attribute, $value, $locale, $currency);
@@ -258,7 +283,8 @@ class ShopwareProductSerializer
                             $item['metaTitle'] = $this->getAttributeValue($attribute, $value, $locale, $currency);
                             break;
                         case 'priceGroupActive':
-                            $item['priceGroupActive'] = $this->getAttributeValue($attribute, $value, $locale, $currency);
+                            $item['priceGroupActive'] = $this->getAttributeValue($attribute, $value, $locale,
+                                $currency);
                             break;
                         case 'lastStock':
                             $item['lastStock'] = $this->getAttributeValue($attribute, $value, $locale, $currency);
@@ -273,63 +299,84 @@ class ShopwareProductSerializer
                             $item['supplier'] = $this->getAttributeValue($attribute, $value, $locale, $currency);
                             break;
                         case 'inStock':
-                            $item['mainDetail']['inStock'] = $this->getAttributeValue($attribute, $value, $locale, $currency);
+                            $item['mainDetail']['inStock'] = $this->getAttributeValue($attribute, $value, $locale,
+                                $currency);
                             break;
                         case 'stockMin':
-                            $item['mainDetail']['stockMin'] = $this->getAttributeValue($attribute, $value, $locale, $currency);
+                            $item['mainDetail']['stockMin'] = $this->getAttributeValue($attribute, $value, $locale,
+                                $currency);
                             break;
                         case 'weight':
-                            $item['mainDetail']['weight'] = $this->getAttributeValue($attribute, $value, $locale, $currency);
+                            $item['mainDetail']['weight'] = $this->getAttributeValue($attribute, $value, $locale,
+                                $currency);
                             break;
                         case 'len':
-                            $item['mainDetail']['len'] = $this->getAttributeValue($attribute, $value, $locale, $currency);
+                            $item['mainDetail']['len'] = $this->getAttributeValue($attribute, $value, $locale,
+                                $currency);
                             break;
                         case 'height':
-                            $item['mainDetail']['height'] = $this->getAttributeValue($attribute, $value, $locale, $currency);
+                            $item['mainDetail']['height'] = $this->getAttributeValue($attribute, $value, $locale,
+                                $currency);
                             break;
                         case 'ean':
-                            $item['mainDetail']['ean'] = $this->getAttributeValue($attribute, $value, $locale, $currency);
+                            $item['mainDetail']['ean'] = $this->getAttributeValue($attribute, $value, $locale,
+                                $currency);
                             break;
                         case 'minPurchase':
-                            $item['mainDetail']['minPurchase'] = $this->getAttributeValue($attribute, $value, $locale, $currency);
+                            $item['mainDetail']['minPurchase'] = $this->getAttributeValue($attribute, $value, $locale,
+                                $currency);
                             break;
                         case 'purchaseSteps':
-                            $item['mainDetail']['purchaseSteps'] = $this->getAttributeValue($attribute, $value, $locale, $currency);
+                            $item['mainDetail']['purchaseSteps'] = $this->getAttributeValue($attribute, $value, $locale,
+                                $currency);
                             break;
                         case 'maxPurchase':
-                            $item['mainDetail']['maxPurchase'] = $this->getAttributeValue($attribute, $value, $locale, $currency);
+                            $item['mainDetail']['maxPurchase'] = $this->getAttributeValue($attribute, $value, $locale,
+                                $currency);
                             break;
                         case 'purchaseUnit':
-                            $item['mainDetail']['purchaseUnit'] = $this->getAttributeValue($attribute, $value, $locale, $currency);
+                            $item['mainDetail']['purchaseUnit'] = $this->getAttributeValue($attribute, $value, $locale,
+                                $currency);
                             break;
                         case 'referenceUnit':
-                            $item['mainDetail']['referenceUnit'] = $this->getAttributeValue($attribute, $value, $locale, $currency);
+                            $item['mainDetail']['referenceUnit'] = $this->getAttributeValue($attribute, $value, $locale,
+                                $currency);
                             break;
                         case 'packUnit':
-                            $item['mainDetail']['packUnit'] = $this->getAttributeValue($attribute, $value, $locale, $currency);
+                            $item['mainDetail']['packUnit'] = $this->getAttributeValue($attribute, $value, $locale,
+                                $currency);
                             break;
                         case 'shippingFree':
-                            $item['mainDetail']['shippingFree'] = $this->getAttributeValue($attribute, $value, $locale, $currency);
+                            $item['mainDetail']['shippingFree'] = $this->getAttributeValue($attribute, $value, $locale,
+                                $currency);
                             break;
                         case 'releaseDate':
-                            $item['mainDetail']['releaseDate'] = $this->getAttributeValue($attribute, $value, $locale, $currency);
+                            $item['mainDetail']['releaseDate'] = $this->getAttributeValue($attribute, $value, $locale,
+                                $currency);
                             break;
                         case 'shippingTime':
-                            $item['mainDetail']['shippingTime'] = $this->getAttributeValue($attribute, $value, $locale, $currency);
+                            $item['mainDetail']['shippingTime'] = $this->getAttributeValue($attribute, $value, $locale,
+                                $currency);
                             break;
                         case 'width':
-                            $item['mainDetail']['width'] = $this->getAttributeValue($attribute, $value, $locale, $currency);
+                            $item['mainDetail']['width'] = $this->getAttributeValue($attribute, $value, $locale,
+                                $currency);
                             break;
                         case 'price':
-                            $item['mainDetail']['prices'] = $this->getAttributeValue($attribute, $value, $locale, $currency);
+                            $item['mainDetail']['prices'] = $this->getAttributeValue($attribute, $value, $locale,
+                                $currency);
                             break;
                         case 'tax':
                             $item['tax'] = $this->getAttributeValue($attribute, $value, $locale, $currency);
                             break;
                         default:
-                            if(strpos($shopwareAttribute, 'attr') !== false) {
-                                if($this->getAttributeValue($attribute, $value, $locale, $currency) != "" && $this->getAttributeValue($attribute, $value, $locale, $currency) != null) {
-                                    $item['mainDetail']['attribute'][$shopwareAttribute] = $this->getAttributeValue($attribute, $value, $locale, $currency);
+                            if (strpos($shopwareAttribute, 'attr') !== false) {
+                                if ($this->getAttributeValue($attribute, $value, $locale,
+                                        $currency) != "" && $this->getAttributeValue($attribute, $value, $locale,
+                                        $currency) != null
+                                ) {
+                                    $item['mainDetail']['attribute'][$shopwareAttribute] = $this->getAttributeValue($attribute,
+                                        $value, $locale, $currency);
                                 }
                             }
                             break;
@@ -338,32 +385,39 @@ class ShopwareProductSerializer
             }
         }
         $this->entityManager->flush();
+
         return $item;
     }
 
     /**
-     * @param Attribute $attribute
+     * @param Attribute             $attribute
      * @param ProductValueInterface $value
-     * @param $locale
-     * @param $currency
+     * @param                       $locale
+     * @param                       $currency
+     *
      * @return array|\Datetime|float|null|string
      */
-    protected function getAttributeValue(Attribute $attribute, ProductValueInterface $value, $locale, $currency) {
-        switch($attribute->getBackendType()) {
+    protected function getAttributeValue(Attribute $attribute, ProductValueInterface $value, $locale, $currency)
+    {
+        switch ($attribute->getBackendType()) {
             case 'options':
                 $options = "";
                 $optionsCount = 0;
-                foreach($value->getOptions() as $option) {
+                foreach ($value->getOptions() as $option) {
                     $option->setLocale($locale);
-                    if($optionsCount > 0) $options .= ", ";
+                    if ($optionsCount > 0) {
+                        $options .= ", ";
+                    }
                     $options .= $option->getOptionValue()->getValue();
                     $optionsCount++;
                 }
+
                 return $options;
                 break;
             case 'option':
                 $option = $value->getOption();
                 $option->setLocale($locale);
+
                 return $option->getOptionValue()->getValue();
                 break;
             case 'varchar':
@@ -385,62 +439,76 @@ class ShopwareProductSerializer
                 return $value->getDatetime();
                 break;
             case 'prices':
-                return array(
-                    array(
+                return [
+                    [
                         'price' => $value->getPrice($currency)->getData(),
-                    ));
+                    ]
+                ];
                 break;
             default:
                 break;
         }
+
         return null;
     }
 
     /**
-     * @param Product $product
-     * @param string  $similar
-     * @param string  $related
+     * @param ProductInterface $product
+     * @param string           $similar
+     * @param string           $related
      *
      * @return array
      */
-    public function serializeAssociations($product, $similar, $related) {
+    public function serializeAssociations(ProductInterface $product, $similar, $related)
+    {
         $related = $this->serializeRelated($product->getAssociationForTypeCode($related));
         $similar = $this->serializeSimilar($product->getAssociationForTypeCode($similar));
-        $associations = array(
+        $associations = [
             'related' => $related,
             'similar' => $similar,
-        );
+        ];
+
         return $associations;
     }
 
     /**
-     * @param Association $association
+     * @param AssociationInterface $association
+     *
      * @return array
      */
-    protected function serializeSimilar($association) {
+    protected function serializeSimilar(AssociationInterface $association)
+    {
         $similar = [];
-        if($association === null) return $similar;
-        foreach($association->getProducts() as $associationProduct) {
-            array_push($similar, array(
-                'number'    => (string)$associationProduct->getIdentifier(),
-            ));
+        if ($association === null) {
+            return $similar;
         }
+        foreach ($association->getProducts() as $associationProduct) {
+            array_push($similar, [
+                'number' => (string)$associationProduct->getIdentifier(),
+            ]);
+        }
+
         return $similar;
     }
 
     /**
-     * @param Association $association
+     * @param AssociationInterface $association
+     *
      * @return array
      */
-    protected function serializeRelated($association) {
+    protected function serializeRelated(AssociationInterface $association)
+    {
         $related = [];
-        if($association === null) return $related;
-        foreach($association->getProducts() as $associationProduct) {
-            echo (string)$associationProduct->getIdentifier()."\n\n";
-            array_push($related, array(
-                'number'    => (string)$associationProduct->getIdentifier(),
-            ));
+        if ($association === null) {
+            return $related;
         }
+        foreach ($association->getProducts() as $associationProduct) {
+            echo (string)$associationProduct->getIdentifier() . "\n\n";
+            array_push($related, [
+                'number' => (string)$associationProduct->getIdentifier(),
+            ]);
+        }
+
         return $related;
     }
 }
