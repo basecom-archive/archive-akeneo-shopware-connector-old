@@ -60,13 +60,12 @@ class ShopwareCategoryWriter extends AbstractConfigurableStepElement implements 
     /**
      * posts categories to Shopware
      *
-     * @param array $items
+     * @param Category[] $items
      */
     public function write(array $items)
     {
         $apiClient = new ApiClient($this->url, $this->userName, $this->apiKey);
 
-        /** @var Category $item */
         foreach($items as $item) {
             $item->setLocale($this->localeManager->getActivatedLocaleCodes()[$this->locale]);
             $parent = 1;

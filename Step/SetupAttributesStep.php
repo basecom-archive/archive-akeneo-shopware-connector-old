@@ -3,21 +3,23 @@
 namespace Basecom\Bundle\ShopwareConnectorBundle\Step;
 
 use Akeneo\Component\Batch\Item\AbstractConfigurableStepElement;
+use Akeneo\Component\Batch\Model\StepExecution;
+use Akeneo\Component\Batch\Step\AbstractStep;
 use Basecom\Bundle\ShopwareConnectorBundle\Handler\AttributeSetupHandler;
 
 /**
  * Class SetupAttributesStep
  * @package Basecom\Bundle\ShopwareConnectorBundle\Step
  */
-class SetupAttributesStep extends \Akeneo\Component\Batch\Step\AbstractStep
+class SetupAttributesStep extends AbstractStep
 {
     /** @var AttributeSetupHandler */
     protected $handler;
 
     /**
-     * @param \Akeneo\Component\Batch\Model\StepExecution $stepExecution
+     * @param StepExecution $stepExecution
      */
-    protected function doExecute(\Akeneo\Component\Batch\Model\StepExecution $stepExecution)
+    protected function doExecute(StepExecution $stepExecution)
     {
         $this->handler->setStepExecution($stepExecution);
         $this->handler->execute();

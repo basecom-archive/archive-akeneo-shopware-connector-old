@@ -2,7 +2,9 @@
 
 namespace Basecom\Bundle\ShopwareConnectorBundle\Handler;
 
+use Akeneo\Component\Batch\Item\AbstractConfigurableStepElement;
 use Akeneo\Component\Batch\Model\StepExecution;
+use Akeneo\Component\Batch\Step\StepExecutionAwareInterface;
 use Basecom\Bundle\ShopwareConnectorBundle\Api\ApiClient;
 
 /**
@@ -12,7 +14,7 @@ use Basecom\Bundle\ShopwareConnectorBundle\Api\ApiClient;
  * Class AttributeSetupHandler
  * @package Basecom\Bundle\ShopwareConnectorBundle\Handler
  */
-class AttributeSetupHandler extends \Akeneo\Component\Batch\Item\AbstractConfigurableStepElement implements \Akeneo\Component\Batch\Step\StepExecutionAwareInterface
+class AttributeSetupHandler extends AbstractConfigurableStepElement implements StepExecutionAwareInterface
 {
     /**
      * @var StepExecution

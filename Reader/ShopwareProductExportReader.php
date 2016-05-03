@@ -34,9 +34,6 @@ class ShopwareProductExportReader extends AbstractConfigurableStepElement implem
     /** @var \ArrayIterator */
     protected $results;
 
-    /** @var bool Checks if all attributes are sent to the processor */
-    protected $isExecuted = false;
-
     /** @var ChannelManager */
     protected $channelManager;
 
@@ -48,13 +45,19 @@ class ShopwareProductExportReader extends AbstractConfigurableStepElement implem
 
     /**
      * ShopwareProductExportReader constructor.
-     * @param ProductRepository $productRepository
+     *
+     * @param ProductRepository  $productRepository
+     * @param CategoryRepository $categoryRepository
+     * @param ChannelManager     $channelManager
      */
-    public function __construct(ProductRepository $productRepository, CategoryRepository $categoryRepository, ChannelManager $channelManager)
-    {
-        $this->productRepository  = $productRepository;
+    public function __construct(
+        ProductRepository $productRepository,
+        CategoryRepository $categoryRepository,
+        ChannelManager $channelManager
+    ) {
+        $this->productRepository = $productRepository;
         $this->categoryRepository = $categoryRepository;
-        $this->channelManager     = $channelManager;
+        $this->channelManager = $channelManager;
     }
 
     /**
@@ -62,8 +65,7 @@ class ShopwareProductExportReader extends AbstractConfigurableStepElement implem
      */
     public function read()
     {
-        if (!$this->isExecuted) {
-            $this->isExecuted = true;
+        if (null === $this->results) {
             $this->results = $this->getResults();
         }
 
@@ -95,7 +97,7 @@ class ShopwareProductExportReader extends AbstractConfigurableStepElement implem
                     'help'  => 'basecom_shopware_connector.export.rootCategory.help'
                 ]
             ],
-            'channel' => [
+            'channel'      => [
                 'type'    => 'choice',
                 'options' => [
                     'choices'  => $this->channelManager->getChannelChoices(),
@@ -116,18 +118,19 @@ class ShopwareProductExportReader extends AbstractConfigurableStepElement implem
         /** @var Category $rootCategory */
         $rootCategory = $this->categoryRepository->findOneByIdentifier($this->rootCategory);
         $categories = $this->categoryRepository->findAll();
-        $products = array();
+        $products = [];
         /** @var Category $category */
-        foreach($categories as $category) {
-            if($category->getRoot() == $rootCategory->getId()) {
+        foreach ($categories as $category) {
+            if ($category->getRoot() == $rootCategory->getId()) {
                 /** @var Product $product */
-                foreach($this->productRepository->findAll() as $product) {
-                    if(in_array($category->getCode(), $product->getCategoryCodes())) {
+                foreach ($this->productRepository->findAll() as $product) {
+                    if (in_array($category->getCode(), $product->getCategoryCodes())) {
                         array_push($products, $product);
                     }
                 }
             }
         }
+
         return new \ArrayIterator($products);
     }
 

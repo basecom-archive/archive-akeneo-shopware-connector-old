@@ -3,6 +3,7 @@
 namespace Basecom\Bundle\ShopwareConnectorBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Pim\Bundle\EnrichBundle\Flash\Message;
 use Pim\Bundle\ImportExportBundle\Event\JobProfileEvents;
@@ -12,7 +13,7 @@ use Pim\Bundle\ImportExportBundle\Controller\ExportProfileController as BaseCont
 
 /**
  * Overrides the original ExportProfileController class to provide the JobProfile
- * edit-template with an additional argument *
+ * edit-template with an additional argument
  *
  * Class ExportProfileController
  * @package Basecom\Bundle\ShopwareConnectorBundle\Controller
@@ -25,7 +26,7 @@ class ExportProfileController extends BaseController
      * @param Request $request
      * @param int     $id
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function editAction(Request $request, $id)
     {
@@ -47,6 +48,8 @@ class ExportProfileController extends BaseController
                 $this->entityManager->persist($jobInstance);
                 $this->entityManager->flush();
 
+                $this->eventDispatcher->dispatch(JobProfileEvents::POST_EDIT, new GenericEvent($jobInstance));
+
                 $this->request->getSession()->getFlashBag()
                     ->add('success', new Message(sprintf('flash.%s.updated', $this->getJobType())));
 
@@ -54,12 +57,11 @@ class ExportProfileController extends BaseController
             }
         }
 
-        $this->eventDispatcher->dispatch(JobProfileEvents::POST_EDIT, new GenericEvent($jobInstance));
-
         if (null === $template = $jobInstance->getJob()->getEditTemplate()) {
             $template = sprintf('PimImportExportBundle:%sProfile:edit.html.twig', ucfirst($this->getJobType()));
         }
-        $attributes = array_map('str_getcsv', file(__DIR__.'/../Resources/config/additional_attributes.csv'));
+        $attributes = array_map('str_getcsv', file(__DIR__ . '/../Resources/config/additional_attributes.csv'));
+
         return $this->templating->renderResponse(
             $template,
             [
