@@ -50,8 +50,8 @@ class AttributeSetupHandler extends AbstractConfigurableStepElement implements S
     {
         $client = new ApiClient($this->url, $this->userName, $this->apiKey);
         $jsonData = $client->get('attributes');
-        $fp = fopen(__DIR__.'/../Resources/config/additional_attributes.csv', 'w');
-        foreach($jsonData['data'] as $data) {
+        $fp = fopen(__DIR__ . '/../Resources/config/additional_attributes.csv', 'w');
+        foreach ($jsonData['data'] as $data) {
             fputcsv($fp, $data, ";");
         }
         fclose($fp);
@@ -73,7 +73,7 @@ class AttributeSetupHandler extends AbstractConfigurableStepElement implements S
     public function getConfigurationFields()
     {
         return [
-            'apiKey' => [
+            'apiKey'   => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.apiKey.label',
                     'help'  => 'basecom_shopware_connector.export.apiKey.help'
@@ -85,7 +85,7 @@ class AttributeSetupHandler extends AbstractConfigurableStepElement implements S
                     'help'  => 'basecom_shopware_connector.export.userName.help'
                 ]
             ],
-            'url' => [
+            'url'      => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.url.label',
                     'help'  => 'basecom_shopware_connector.export.url.help'

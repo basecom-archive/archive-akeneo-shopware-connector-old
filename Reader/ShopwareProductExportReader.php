@@ -2,14 +2,14 @@
 
 namespace Basecom\Bundle\ShopwareConnectorBundle\Reader;
 
-use Akeneo\Bundle\ClassificationBundle\Doctrine\ORM\Repository\CategoryRepository;
 use Akeneo\Component\Batch\Item\AbstractConfigurableStepElement;
 use Akeneo\Component\Batch\Item\ItemReaderInterface;
 use Akeneo\Component\Batch\Model\StepExecution;
 use Akeneo\Component\Batch\Step\StepExecutionAwareInterface;
+use Akeneo\Component\Classification\Repository\CategoryRepositoryInterface;
 use Basecom\Bundle\ShopwareConnectorBundle\Entity\Category;
-use Pim\Bundle\CatalogBundle\Doctrine\ORM\Repository\ProductRepository;
 use Pim\Bundle\CatalogBundle\Manager\ChannelManager;
+use Pim\Bundle\CatalogBundle\Repository\ProductRepositoryInterface;
 use Pim\Component\Catalog\Model\Product;
 
 /**
@@ -25,10 +25,10 @@ class ShopwareProductExportReader extends AbstractConfigurableStepElement implem
     /** @var StepExecution */
     protected $stepExecution;
 
-    /** @var ProductRepository */
+    /** @var ProductRepositoryInterface */
     protected $productRepository;
 
-    /** @var CategoryRepository */
+    /** @var CategoryRepositoryInterface */
     protected $categoryRepository;
 
     /** @var \ArrayIterator */
@@ -46,13 +46,13 @@ class ShopwareProductExportReader extends AbstractConfigurableStepElement implem
     /**
      * ShopwareProductExportReader constructor.
      *
-     * @param ProductRepository  $productRepository
-     * @param CategoryRepository $categoryRepository
-     * @param ChannelManager     $channelManager
+     * @param ProductRepositoryInterface  $productRepository
+     * @param CategoryRepositoryInterface $categoryRepository
+     * @param ChannelManager              $channelManager
      */
     public function __construct(
-        ProductRepository $productRepository,
-        CategoryRepository $categoryRepository,
+        ProductRepositoryInterface $productRepository,
+        CategoryRepositoryInterface $categoryRepository,
         ChannelManager $channelManager
     ) {
         $this->productRepository = $productRepository;
@@ -121,7 +121,7 @@ class ShopwareProductExportReader extends AbstractConfigurableStepElement implem
         $products = [];
         /** @var Category $category */
         foreach ($categories as $category) {
-            if ($category->getRoot() == $rootCategory->getId()) {
+            if ($category->getRoot() === $rootCategory->getId()) {
                 /** @var Product $product */
                 foreach ($this->productRepository->findAll() as $product) {
                     if (in_array($category->getCode(), $product->getCategoryCodes())) {

@@ -6,7 +6,7 @@ use Akeneo\Component\Batch\Item\AbstractConfigurableStepElement;
 use Akeneo\Component\Batch\Item\ItemReaderInterface;
 use Akeneo\Component\Batch\Model\StepExecution;
 use Akeneo\Component\Batch\Step\StepExecutionAwareInterface;
-use Pim\Bundle\CatalogBundle\Doctrine\ORM\Repository\FamilyRepository;
+use Pim\Bundle\CatalogBundle\Repository\FamilyRepositoryInterface;
 
 /**
  * Fetches all Families and hands them over to the processor
@@ -21,7 +21,7 @@ class ShopwareFamilyExportReader extends AbstractConfigurableStepElement impleme
     /** @var StepExecution */
     protected $stepExecution;
 
-    /** @var FamilyRepository */
+    /** @var FamilyRepositoryInterface */
     protected $familyRepository;
 
     /** @var \ArrayIterator */
@@ -30,9 +30,9 @@ class ShopwareFamilyExportReader extends AbstractConfigurableStepElement impleme
     /**
      * ShopwareFamilyExportReader constructor.
      *
-     * @param FamilyRepository $familyRepository
+     * @param FamilyRepositoryInterface $familyRepository
      */
-    public function __construct(FamilyRepository $familyRepository)
+    public function __construct(FamilyRepositoryInterface $familyRepository)
     {
         $this->familyRepository = $familyRepository;
     }
