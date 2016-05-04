@@ -28,7 +28,7 @@ class ShopwareCategoryExportReader extends AbstractConfigurableStepElement imple
     /** @var \ArrayIterator */
     protected $results;
 
-    // TODO should be typed
+    /** @var string */
     protected $rootCategory;
 
     /**

@@ -29,7 +29,7 @@ class ShopwareProductWriter extends AbstractConfigurableStepElement implements I
     /** @var StepExecution */
     protected $stepExecution;
 
-    // TODO variable type
+    /** @var ApiClient */
     protected $apiClient;
 
     /**

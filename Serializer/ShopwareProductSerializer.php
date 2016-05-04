@@ -8,6 +8,7 @@ use Basecom\Bundle\ShopwareConnectorBundle\Api\ApiClient;
 use Basecom\Bundle\ShopwareConnectorBundle\Entity\Category;
 use Basecom\Bundle\ShopwareConnectorBundle\Entity\Family;
 use Basecom\Bundle\ShopwareConnectorBundle\Entity\FileInfo;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Pim\Bundle\CatalogBundle\Entity\Attribute;
 use Pim\Bundle\CatalogBundle\Repository\FamilyRepositoryInterface;
@@ -176,15 +177,14 @@ class ShopwareProductSerializer
         return $filterAttributesArray;
     }
 
-    // TODO variables types
     /**
-     * @param           $values
-     * @param           $attributes
-     * @param           $attributeMapping
-     * @param           $locale
-     * @param ApiClient $apiClient
-     * @param           $filterAttributes
-     * @param           $currency
+     * @param ArrayCollection $values
+     * @param array           $attributes
+     * @param array           $attributeMapping
+     * @param string          $locale
+     * @param ApiClient       $apiClient
+     * @param string          $filterAttributes
+     * @param string          $currency
      *
      * @return array
      */
@@ -390,12 +390,11 @@ class ShopwareProductSerializer
         return $item;
     }
 
-    // TODO variables types
     /**
      * @param Attribute             $attribute
      * @param ProductValueInterface $value
-     * @param                       $locale
-     * @param                       $currency
+     * @param string                $locale
+     * @param string                $currency
      *
      * @return array|\Datetime|float|null|string
      */
