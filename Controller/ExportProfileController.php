@@ -2,14 +2,13 @@
 
 namespace Basecom\Bundle\ShopwareConnectorBundle\Controller;
 
+use Pim\Bundle\EnrichBundle\Flash\Message;
+use Pim\Bundle\ImportExportBundle\Controller\ExportProfileController as BaseController;
+use Pim\Bundle\ImportExportBundle\Event\JobProfileEvents;
+use Symfony\Component\EventDispatcher\GenericEvent;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Pim\Bundle\EnrichBundle\Flash\Message;
-use Pim\Bundle\ImportExportBundle\Event\JobProfileEvents;
-use Symfony\Component\EventDispatcher\GenericEvent;
-
-use Pim\Bundle\ImportExportBundle\Controller\ExportProfileController as BaseController;
 
 /**
  * Overrides the original ExportProfileController class to provide the JobProfile

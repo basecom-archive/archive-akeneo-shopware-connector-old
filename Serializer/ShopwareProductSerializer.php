@@ -2,8 +2,8 @@
 
 namespace Basecom\Bundle\ShopwareConnectorBundle\Serializer;
 
-use Akeneo\Bundle\ClassificationBundle\Doctrine\ORM\Repository\CategoryRepository;
-use Akeneo\Bundle\FileStorageBundle\Doctrine\ORM\Repository\FileInfoRepository;
+use Akeneo\Component\Classification\Repository\CategoryRepositoryInterface;
+use Akeneo\Component\FileStorage\Repository\FileInfoRepositoryInterface;
 use Basecom\Bundle\ShopwareConnectorBundle\Api\ApiClient;
 use Basecom\Bundle\ShopwareConnectorBundle\Entity\Category;
 use Basecom\Bundle\ShopwareConnectorBundle\Entity\Family;
@@ -29,10 +29,10 @@ class ShopwareProductSerializer
     /** @var FamilyRepositoryInterface */
     protected $familyRepository;
 
-    /** @var CategoryRepository */
+    /** @var CategoryRepositoryInterface */
     protected $categoryRepository;
 
-    /** @var FileInfoRepository */
+    /** @var FileInfoRepositoryInterface */
     protected $fileInfoRepository;
 
     /** @var EntityManagerInterface */
@@ -46,16 +46,16 @@ class ShopwareProductSerializer
      *
      * @param AttributeRepositoryInterface $attributeRepository
      * @param FamilyRepositoryInterface    $familyRepository
-     * @param CategoryRepository           $categoryRepository
-     * @param FileInfoRepository           $fileInfoRepository
+     * @param CategoryRepositoryInterface  $categoryRepository
+     * @param FileInfoRepositoryInterface  $fileInfoRepository
      * @param EntityManagerInterface       $entityManager
      * @param string                       $rootDir
      */
     public function __construct(
         AttributeRepositoryInterface $attributeRepository,
         FamilyRepositoryInterface $familyRepository,
-        CategoryRepository $categoryRepository,
-        FileInfoRepository $fileInfoRepository,
+        CategoryRepositoryInterface $categoryRepository,
+        FileInfoRepositoryInterface $fileInfoRepository,
         EntityManagerInterface $entityManager,
         $rootDir
     ) {
@@ -176,6 +176,7 @@ class ShopwareProductSerializer
         return $filterAttributesArray;
     }
 
+    // TODO variables types
     /**
      * @param           $values
      * @param           $attributes
@@ -389,6 +390,7 @@ class ShopwareProductSerializer
         return $item;
     }
 
+    // TODO variables types
     /**
      * @param Attribute             $attribute
      * @param ProductValueInterface $value
