@@ -462,12 +462,19 @@ class ShopwareProductSerializer
      */
     public function serializeAssociations(ProductInterface $product, $similar, $related)
     {
-        $related = $this->serializeRelated($product->getAssociationForTypeCode($related));
-        $similar = $this->serializeSimilar($product->getAssociationForTypeCode($similar));
-        $associations = [
-            'related' => $related,
-            'similar' => $similar,
-        ];
+        $associations = array(
+            'related' => null,
+            'similar' => null,
+        );
+        
+        if(null != $product->getAssociationForTypeCode($related)) {
+            $related = $this->serializeRelated($product->getAssociationForTypeCode($related));
+            $associations['related'] = $related;
+        }
+        if(null != $product->getAssociationForTypeCode($similar)) {
+            $similar = $this->serializeSimilar($product->getAssociationForTypeCode($similar));
+            $associations['similar'] = $similar;
+        }
 
         return $associations;
     }
