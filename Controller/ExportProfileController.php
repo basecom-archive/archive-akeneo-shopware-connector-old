@@ -2,6 +2,7 @@
 
 namespace Basecom\Bundle\ShopwareConnectorBundle\Controller;
 
+use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
 use Pim\Bundle\EnrichBundle\Flash\Message;
 use Pim\Bundle\ImportExportBundle\Controller\ExportProfileController as BaseController;
 use Pim\Bundle\ImportExportBundle\Event\JobProfileEvents;
@@ -20,7 +21,25 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class ExportProfileController extends BaseController
 {
     /**
+     * @AclAncestor("pim_importexport_export_profile_index")
+     *
+     * @return Response
+     */
+    public function indexAction()
+    {
+        return $this->templating->renderResponse(
+            'PimImportExportBundle:ExportProfile:index.html.twig',
+            [
+                'jobType'    => $this->getJobType(),
+                'connectors' => $this->connectorRegistry->getJobs($this->getJobType())
+            ]
+        );
+    }
+
+    /**
      * Edit a job instance
+     *
+     * @AclAncestor("pim_importexport_export_profile_edit")
      *
      * @param Request $request
      * @param int     $id
@@ -57,7 +76,7 @@ class ExportProfileController extends BaseController
         }
 
         if (null === $template = $jobInstance->getJob()->getEditTemplate()) {
-            $template = sprintf('PimImportExportBundle:%sProfile:edit.html.twig', ucfirst($this->getJobType()));
+            $template = 'BasecomShopwareConnectorBundle:ExportProfile:edit.html.twig';
         }
         $attributes = array_map('str_getcsv', file(__DIR__ . '/../Resources/config/additional_attributes.csv'));
 
