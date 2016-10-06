@@ -16,11 +16,7 @@
         }
     ],
     "require": {
-        "akeneo/pim-community-dev": ">=1.5.2",
-        "doctrine/migrations": "1.0.0-alpha3@alpha"
-    },
-    "require-dev": {
-        "fabpot/php-cs-fixer": "^1.11"
+        "akeneo/pim-community-dev": ">=1.5.2"
     },
     "autoload": {
         "psr-4": {
