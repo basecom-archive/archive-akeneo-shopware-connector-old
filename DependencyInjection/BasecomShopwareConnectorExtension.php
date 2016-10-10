@@ -16,13 +16,8 @@ class BasecomShopwareConnectorExtension extends Extension
     public function load(array $config, ContainerBuilder $container)
     {
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
-        $loader->load('controllers.yml');
-        $loader->load('entities.yml');
-        $loader->load('models.yml');
-        $loader->load('processors.yml');
-        $loader->load('readers.yml');
-        $loader->load('serializers.yml');
-        $loader->load('steps.yml');
-        $loader->load('writers.yml');
+        $loader->load('jobs.yml');
+        $loader->load('job_parameters.yml');
+
     }
 }

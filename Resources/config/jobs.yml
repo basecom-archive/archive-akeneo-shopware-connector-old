@@ -1,0 +1,23 @@
+parameters: ~
+
+services:
+    basecom_shopware_connector.job.shopware_export:
+        class: '%pim_connector.job.simple_job.class%'
+        arguments:
+          - 'shopware_export'
+          - '@event_dispatcher'
+          - '@akeneo_batch.job_repository'
+          -
+              - '@basecom_shopware_connector.step.export_categories'
+        tags:
+            - { name: akeneo_batch.job, connector: 'Shopware Connector', type: '%pim_connector.job.export_type%' }
+
+    basecom_shopware_connector.step.export_categories:
+        class: '%pim_connector.step.item_step.class%'
+        arguments:
+            - 'export_categories'
+            - '@event_dispatcher'
+            - '@akeneo_batch.job_repository'
+            - '@pim_connector.reader.dummy_item'
+            - '@pim_connector.processor.dummy_item'
+            - '@pim_connector.writer.dummy_item'

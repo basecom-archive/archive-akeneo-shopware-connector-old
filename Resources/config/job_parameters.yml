@@ -1,0 +1,30 @@
+parameters:
+    basecom_shopware_connector.job.job_parameters.default_values_provider.shopware_export.class:        Basecom\Bundle\ShopwareConnectorBundle\Job\JobParameters\DefaultValuesProvider\ShopwareExport
+    basecom_shopware_connector.job.job_parameters.constraint_collection_provider.shopware_export.class: Basecom\Bundle\ShopwareConnectorBundle\Job\JobParameters\ConstraintCollectionProvider\ShopwareExport
+    basecom_shopware_connector.job.job_parameters.form_configuration_provider.shopware_export.class: Basecom\Bundle\ShopwareConnectorBundle\Job\JobParameters\FormConfigurationProvider\ShopwareExport
+
+services:
+    basecom_shopware_connector.job.job_parameters.default_values_provider.shopware_export:
+        class: '%basecom_shopware_connector.job.job_parameters.default_values_provider.shopware_export.class%'
+        arguments:
+            -
+                - 'shopware_export'
+        tags:
+            - { name: akeneo_batch.job.job_parameters.default_values_provider }
+
+    basecom_shopware_connector.job.job_parameters.constraint_collection_provider.shopware_export:
+        class: '%basecom_shopware_connector.job.job_parameters.constraint_collection_provider.shopware_export.class%'
+        arguments:
+            -
+                - 'shopware_export'
+        tags:
+            - { name: akeneo_batch.job.job_parameters.constraint_collection_provider }
+
+    basecom_shopware_connector.job.job_parameters.form_configuration_provider.shopware_export:
+        class: '%basecom_shopware_connector.job.job_parameters.form_configuration_provider.shopware_export.class%'
+        arguments:
+            -
+                - 'shopware_export'
+            - '@pim_catalog.repository.locale'
+        tags:
+            - { name: pim_import_export.job_parameters.form_configuration_provider }
