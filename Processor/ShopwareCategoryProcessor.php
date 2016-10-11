@@ -13,7 +13,7 @@ use Akeneo\Component\Batch\Step\StepExecutionAwareInterface;
  * Class ShopwareCategoryProcessor
  * @package Basecom\Bundle\ShopwareConnectorBundle\Processor
  */
-class ShopwareCategoryProcessor extends AbstractConfigurableStepElement implements ItemProcessorInterface, StepExecutionAwareInterface
+class ShopwareCategoryProcessor implements ItemProcessorInterface, StepExecutionAwareInterface
 {
     /** @var StepExecution */
     protected $stepExecution;
@@ -36,13 +36,5 @@ class ShopwareCategoryProcessor extends AbstractConfigurableStepElement implemen
     public function setStepExecution(StepExecution $stepExecution)
     {
         $this->stepExecution = $stepExecution;
-    }
-
-    /**
-     * @return array
-     */
-    public function getConfigurationFields()
-    {
-        return [];
     }
 }

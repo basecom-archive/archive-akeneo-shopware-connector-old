@@ -31,7 +31,7 @@ class ShopwareExport implements ConstraintCollectionProviderInterface
                 'apiKey' => [
                     new NotBlank(['groups' => 'Execution'])
                 ],
-                'username' => [
+                'userName' => [
                     new NotBlank(['groups' => 'Execution'])
                 ],
                 'url' => [

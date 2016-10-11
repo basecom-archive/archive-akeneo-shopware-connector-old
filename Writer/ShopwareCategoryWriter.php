@@ -18,7 +18,7 @@ use Pim\Component\Catalog\Repository\LocaleRepositoryInterface;
  * Class ShopwareCategoryWriter
  * @package Basecom\Bundle\ShopwareConnectorBundle\Writer
  */
-class ShopwareCategoryWriter extends AbstractConfigurableStepElement implements ItemWriterInterface, StepExecutionAwareInterface
+class ShopwareCategoryWriter implements ItemWriterInterface, StepExecutionAwareInterface
 {
     /** @var StepExecution */
     protected $stepExecution;
@@ -68,10 +68,16 @@ class ShopwareCategoryWriter extends AbstractConfigurableStepElement implements 
      */
     public function write(array $items)
     {
-        $apiClient = new ApiClient($this->url, $this->userName, $this->apiKey);
+        $jobParameters = $this->stepExecution->getJobParameters();
+        $url = $jobParameters->get('url');
+        $userName = $jobParameters->get('userName');
+        $apiKey = $jobParameters->get('apiKey');
+        $locale = $jobParameters->get('locale');
+
+        $apiClient = new ApiClient($url, $userName, $apiKey);
 
         foreach ($items as $item) {
-            $item->setLocale($this->localeRepository->getActivatedLocaleCodes()[$this->locale]);
+            $item->setLocale($locale);
             $parent = 1;
             if (null !== $item->getParent() && null !== $item->getParent()->getSwId()) {
                 $parent = $item->getParent()->getSwId();
@@ -99,70 +105,6 @@ class ShopwareCategoryWriter extends AbstractConfigurableStepElement implements 
     }
 
     /**
-     * @return string
-     */
-    public function getApiKey()
-    {
-        return $this->apiKey;
-    }
-
-    /**
-     * @param string $apiKey
-     */
-    public function setApiKey($apiKey)
-    {
-        $this->apiKey = $apiKey;
-    }
-
-    /**
-     * @return string
-     */
-    public function getUserName()
-    {
-        return $this->userName;
-    }
-
-    /**
-     * @param string $userName
-     */
-    public function setUserName($userName)
-    {
-        $this->userName = $userName;
-    }
-
-    /**
-     * @return string
-     */
-    public function getUrl()
-    {
-        return $this->url;
-    }
-
-    /**
-     * @param string $url
-     */
-    public function setUrl($url)
-    {
-        $this->url = $url;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getLocale()
-    {
-        return $this->locale;
-    }
-
-    /**
-     * @param mixed $locale
-     */
-    public function setLocale($locale)
-    {
-        $this->locale = $locale;
-    }
-
-    /**
      * @return LocaleRepositoryInterface
      */
     public function getLocaleRepository()
@@ -184,42 +126,5 @@ class ShopwareCategoryWriter extends AbstractConfigurableStepElement implements 
     public function setStepExecution(StepExecution $stepExecution)
     {
         $this->stepExecution = $stepExecution;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getConfigurationFields()
-    {
-        return [
-            'locale'   => [
-                'type'    => 'choice',
-                'options' => [
-                    'choices'  => $this->localeRepository->getActivatedLocaleCodes(),
-                    'required' => true,
-                    'select2'  => true,
-                    'label'    => 'basecom_shopware_connector.export.locale.label',
-                    'help'     => 'basecom_shopware_connector.export.locale.help'
-                ]
-            ],
-            'url'      => [
-                'options' => [
-                    'label' => 'basecom_shopware_connector.export.url.label',
-                    'help'  => 'basecom_shopware_connector.export.url.help'
-                ]
-            ],
-            'userName' => [
-                'options' => [
-                    'label' => 'basecom_shopware_connector.export.userName.label',
-                    'help'  => 'basecom_shopware_connector.export.userName.help'
-                ]
-            ],
-            'apiKey'   => [
-                'options' => [
-                    'label' => 'basecom_shopware_connector.export.apiKey.label',
-                    'help'  => 'basecom_shopware_connector.export.apiKey.help'
-                ]
-            ]
-        ];
     }
 }

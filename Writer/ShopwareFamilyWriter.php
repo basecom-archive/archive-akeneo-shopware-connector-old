@@ -17,7 +17,7 @@ use Pim\Component\Catalog\Repository\LocaleRepositoryInterface;
  * Class ShopwareFamilyWriter
  * @package Basecom\Bundle\ShopwareConnectorBundle\Writer
  */
-class ShopwareFamilyWriter extends AbstractConfigurableStepElement implements ItemWriterInterface, StepExecutionAwareInterface
+class ShopwareFamilyWriter implements ItemWriterInterface, StepExecutionAwareInterface
 {
     /** @var StepExecution */
     protected $stepExecution;
@@ -57,10 +57,16 @@ class ShopwareFamilyWriter extends AbstractConfigurableStepElement implements It
      */
     public function write(array $items)
     {
-        $apiClient = new ApiClient($this->url, $this->userName, $this->apiKey);
+        $jobParameters = $this->stepExecution->getJobParameters();
+        $url = $jobParameters->get('url');
+        $userName = $jobParameters->get('userName');
+        $apiKey = $jobParameters->get('apiKey');
+        $locale = $jobParameters->get('locale');
+
+        $apiClient = new ApiClient($url, $userName, $apiKey);
         /** @var Family $item */
         foreach ($items as $item) {
-            $item->setLocale($this->localeRepository->getActivatedLocaleCodes()[$this->locale]);
+            $item->setLocale($locale);
             $set = [
                 'name'       => $item->getLabel(),
                 'position'   => 0,
@@ -83,111 +89,10 @@ class ShopwareFamilyWriter extends AbstractConfigurableStepElement implements It
     }
 
     /**
-     * @return string
-     */
-    public function getApiKey()
-    {
-        return $this->apiKey;
-    }
-
-    /**
-     * @param string $apiKey
-     */
-    public function setApiKey($apiKey)
-    {
-        $this->apiKey = $apiKey;
-    }
-
-    /**
-     * @return string
-     */
-    public function getUserName()
-    {
-        return $this->userName;
-    }
-
-    /**
-     * @param string $userName
-     */
-    public function setUserName($userName)
-    {
-        $this->userName = $userName;
-    }
-
-    /**
-     * @return string
-     */
-    public function getUrl()
-    {
-        return $this->url;
-    }
-
-    /**
-     * @param string $url
-     */
-    public function setUrl($url)
-    {
-        $this->url = $url;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getLocale()
-    {
-        return $this->locale;
-    }
-
-    /**
-     * @param mixed $locale
-     */
-    public function setLocale($locale)
-    {
-        $this->locale = $locale;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function setStepExecution(StepExecution $stepExecution)
     {
         $this->stepExecution = $stepExecution;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getConfigurationFields()
-    {
-        return [
-            'apiKey'   => [
-                'options' => [
-                    'label' => 'basecom_shopware_connector.export.apiKey.label',
-                    'help'  => 'basecom_shopware_connector.export.apiKey.help'
-                ]
-            ],
-            'userName' => [
-                'options' => [
-                    'label' => 'basecom_shopware_connector.export.userName.label',
-                    'help'  => 'basecom_shopware_connector.export.userName.help'
-                ]
-            ],
-            'url'      => [
-                'options' => [
-                    'label' => 'basecom_shopware_connector.export.url.label',
-                    'help'  => 'basecom_shopware_connector.export.url.help'
-                ]
-            ],
-            'locale'   => [
-                'type'    => 'choice',
-                'options' => [
-                    'choices'  => $this->localeRepository->getActivatedLocaleCodes(),
-                    'required' => true,
-                    'select2'  => true,
-                    'label'    => 'basecom_shopware_connector.export.locale.label',
-                    'help'     => 'basecom_shopware_connector.export.locale.help'
-                ]
-            ],
-        ];
     }
 }

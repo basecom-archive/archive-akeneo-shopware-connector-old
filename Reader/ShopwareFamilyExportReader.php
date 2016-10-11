@@ -2,11 +2,10 @@
 
 namespace Basecom\Bundle\ShopwareConnectorBundle\Reader;
 
-use Akeneo\Component\Batch\Item\AbstractConfigurableStepElement;
 use Akeneo\Component\Batch\Item\ItemReaderInterface;
 use Akeneo\Component\Batch\Model\StepExecution;
 use Akeneo\Component\Batch\Step\StepExecutionAwareInterface;
-use Pim\Bundle\CatalogBundle\Repository\FamilyRepositoryInterface;
+use Pim\Component\Catalog\Repository\FamilyRepositoryInterface;
 
 /**
  * Fetches all Families and hands them over to the processor
@@ -14,7 +13,7 @@ use Pim\Bundle\CatalogBundle\Repository\FamilyRepositoryInterface;
  * Class ShopwareFamilyExportReader
  * @package Basecom\Bundle\ShopwareConnectorBundle\Reader
  */
-class ShopwareFamilyExportReader extends AbstractConfigurableStepElement implements
+class ShopwareFamilyExportReader implements
     ItemReaderInterface,
     StepExecutionAwareInterface
 {
@@ -60,14 +59,6 @@ class ShopwareFamilyExportReader extends AbstractConfigurableStepElement impleme
     public function setStepExecution(StepExecution $stepExecution)
     {
         $this->stepExecution = $stepExecution;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getConfigurationFields()
-    {
-        return [];
     }
 
     /**

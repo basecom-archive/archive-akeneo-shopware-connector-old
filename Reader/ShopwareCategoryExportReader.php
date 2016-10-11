@@ -3,6 +3,7 @@
 namespace Basecom\Bundle\ShopwareConnectorBundle\Reader;
 
 use Akeneo\Component\Batch\Item\AbstractConfigurableStepElement;
+use Akeneo\Component\Batch\Item\FlushableInterface;
 use Akeneo\Component\Batch\Item\ItemReaderInterface;
 use Akeneo\Component\Batch\Model\StepExecution;
 use Akeneo\Component\Batch\Step\StepExecutionAwareInterface;
@@ -15,7 +16,7 @@ use Basecom\Bundle\ShopwareConnectorBundle\Entity\Category;
  * Class ShopwareCategoryExportReader
  * @package Basecom\Bundle\ShopwareConnectorBundle\Reader
  */
-class ShopwareCategoryExportReader extends AbstractConfigurableStepElement implements
+class ShopwareCategoryExportReader implements
     ItemReaderInterface,
     StepExecutionAwareInterface
 {
@@ -45,7 +46,8 @@ class ShopwareCategoryExportReader extends AbstractConfigurableStepElement imple
     public function read()
     {
         if (null === $this->results) {
-            $this->results = $this->getResults();
+            $jobParameters = $this->stepExecution->getJobParameters();
+            $this->results = $this->getResults($jobParameters->get('rootCategory'));
         }
 
         if (null !== $result = $this->results->current()) {
@@ -59,21 +61,6 @@ class ShopwareCategoryExportReader extends AbstractConfigurableStepElement imple
     /**
      * {@inheritdoc}
      */
-    public function getConfigurationFields()
-    {
-        return [
-            'rootCategory' => [
-                'options' => [
-                    'label' => 'basecom_shopware_connector.export.rootCategory.label',
-                    'help'  => 'basecom_shopware_connector.export.rootCategory.help'
-                ]
-            ],
-        ];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function setStepExecution(StepExecution $stepExecution)
     {
         $this->stepExecution = $stepExecution;
@@ -82,10 +69,10 @@ class ShopwareCategoryExportReader extends AbstractConfigurableStepElement imple
     /**
      * @return \ArrayIterator
      */
-    protected function getResults()
+    protected function getResults($rootCategory)
     {
         /** @var Category $category */
-        $category = $this->categoryRepository->findOneByIdentifier($this->rootCategory);
+        $category = $this->categoryRepository->findOneByIdentifier($rootCategory);
         $categories = $this->categoryRepository->findBy(['root' => $category->getRoot()]);
 
         return new \ArrayIterator($categories);
