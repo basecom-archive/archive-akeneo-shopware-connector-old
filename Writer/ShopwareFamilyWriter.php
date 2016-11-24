@@ -2,7 +2,6 @@
 
 namespace Basecom\Bundle\ShopwareConnectorBundle\Writer;
 
-use Akeneo\Component\Batch\Item\AbstractConfigurableStepElement;
 use Akeneo\Component\Batch\Item\ItemWriterInterface;
 use Akeneo\Component\Batch\Model\StepExecution;
 use Akeneo\Component\Batch\Step\StepExecutionAwareInterface;
@@ -58,12 +57,14 @@ class ShopwareFamilyWriter implements ItemWriterInterface, StepExecutionAwareInt
     public function write(array $items)
     {
         $jobParameters = $this->stepExecution->getJobParameters();
-        $url = $jobParameters->get('url');
-        $userName = $jobParameters->get('userName');
-        $apiKey = $jobParameters->get('apiKey');
         $locale = $jobParameters->get('locale');
 
-        $apiClient = new ApiClient($url, $userName, $apiKey);
+        $apiClient = new ApiClient(
+            $jobParameters->get('url'),
+            $jobParameters->get('userName'),
+            $jobParameters->get('apiKey')
+        );
+
         /** @var Family $item */
         foreach ($items as $item) {
             $item->setLocale($locale);

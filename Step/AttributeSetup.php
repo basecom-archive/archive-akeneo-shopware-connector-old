@@ -2,10 +2,8 @@
 
 namespace Basecom\Bundle\ShopwareConnectorBundle\Step;
 
-use Akeneo\Component\Batch\Item\AbstractConfigurableStepElement;
 use Akeneo\Component\Batch\Model\StepExecution;
 use Akeneo\Component\Batch\Step\AbstractStep;
-use Akeneo\Component\Batch\Step\StepExecutionAwareInterface;
 use Basecom\Bundle\ShopwareConnectorBundle\Api\ApiClient;
 
 /**
@@ -30,13 +28,16 @@ class AttributeSetup extends AbstractStep
      */
     protected function doExecute(StepExecution $stepExecution)
     {
-        $parameters = $stepExecution->getJobParameters();
-        $url = $parameters->get('url');
-        $userName= $parameters->get('userName');
-        $apiKey = $parameters->get('apiKey');
-        $client = new ApiClient($url, $userName, $apiKey);
-        if($client) {
-            $jsonData = $client->get('attributes');
+        $jobParameters = $stepExecution->getJobParameters();
+
+        $apiClient = new ApiClient(
+            $jobParameters->get('url'),
+            $jobParameters->get('userName'),
+            $jobParameters->get('apiKey')
+        );
+
+        if($apiClient) {
+            $jsonData = $apiClient->get('attributes');
             $fp = fopen(__DIR__ . '/../Resources/config/additional_attributes.csv', 'w');
             foreach ($jsonData['data'] as $data) {
                 fputcsv($fp, $data, ";");

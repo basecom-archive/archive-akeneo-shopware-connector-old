@@ -8,8 +8,7 @@ services:
     basecom_shopware_connector.processor.shopware_family:
         class: '%basecom_shopware_connector.processor.shopware_family.class%'
 
-#    basecom_shopware_connector.processor.shopware_product:
-#        class: '%basecom_shopware_connector.processor.shopware_product.class%'
-#        arguments:
-#            - '@basecom_shopware_connector.serializer.shopware_product'
-#            - '@pim_catalog.repository.locale'
+    basecom_shopware_connector.processor.shopware_product:
+        class: '%basecom_shopware_connector.processor.shopware_product.class%'
+        arguments:
+            - '@basecom_shopware_connector.serializer.shopware_product'

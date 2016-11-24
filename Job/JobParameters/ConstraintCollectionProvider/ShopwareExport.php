@@ -46,7 +46,8 @@ class ShopwareExport implements ConstraintCollectionProviderInterface
     }
 
     /**
-     * @return boolean
+     * @param JobInterface $job
+     * @return bool
      */
     public function supports(JobInterface $job)
     {

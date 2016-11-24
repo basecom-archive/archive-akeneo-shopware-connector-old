@@ -11,12 +11,12 @@ use Basecom\Bundle\ShopwareConnectorBundle\Entity\FileInfo;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Pim\Bundle\CatalogBundle\Entity\Attribute;
-use Pim\Bundle\CatalogBundle\Repository\FamilyRepositoryInterface;
 use Pim\Component\Catalog\Model\AssociationInterface;
 use Pim\Component\Catalog\Model\AttributeOptionInterface;
 use Pim\Component\Catalog\Model\ProductInterface;
 use Pim\Component\Catalog\Model\ProductValueInterface;
 use Pim\Component\Catalog\Repository\AttributeRepositoryInterface;
+use Pim\Component\Catalog\Repository\FamilyRepositoryInterface;
 
 /**
  * Class ShopwareProductSerializer
@@ -212,7 +212,7 @@ class ShopwareProductSerializer
                 if ($attribute->getAttributeType() == "pim_catalog_image") {
                     /** @var FileInfo $media */
                     $fileInfo = $this->fileInfoRepository->find($value->getMedia());
-                    if ($fileInfo->getSwMediaId() == null) {
+                    if ($fileInfo && $fileInfo->getSwMediaId() == null) {
                         $path = $this->rootDir . "/file_storage/catalog/" . $value->getMedia()->getKey();
                         $type = pathinfo($path, PATHINFO_EXTENSION);
                         $data = file_get_contents($path);
@@ -222,7 +222,12 @@ class ShopwareProductSerializer
                             'file'        => $base64,
                             'description' => $value->getMedia()->getOriginalFilename(),
                         ];
-                        $media = $apiClient->post('media', $mediaArray);
+
+                        $media = $apiClient->post('media/', $mediaArray);
+
+                        if(!$media) {
+                            continue;
+                        }
                         $mediaId = $media['data']['id'];
                         $item['images'][$imageCount] = ['mediaId' => $mediaId];
                         $fileInfo->setSwMediaId($mediaId);
@@ -364,8 +369,8 @@ class ShopwareProductSerializer
                                 $currency);
                             break;
                         case 'price':
-                            $item['mainDetail']['prices'] = $this->getAttributeValue($attribute, $value, $locale,
-                                $currency);
+                            $item['mainDetail']['prices'][] = ['price' => $this->getAttributeValue($attribute, $value, $locale,
+                                $currency), 'customerGroupKey' => 'EK'];
                             break;
                         case 'tax':
                             $item['tax'] = $this->getAttributeValue($attribute, $value, $locale, $currency);
@@ -440,11 +445,11 @@ class ShopwareProductSerializer
                 return $value->getDatetime();
                 break;
             case 'prices':
-                return [
-                    [
-                        'price' => $value->getPrice($currency)->getData(),
-                    ]
-                ];
+                if($price = $value->getPrice($currency)) {
+                    return [$price->getData()];
+                } else {
+                    return [];
+                }
                 break;
             default:
                 break;

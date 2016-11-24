@@ -13,8 +13,9 @@ class ShopwareExport implements FormConfigurationProviderInterface
     protected $supportedJobNames;
 
     protected $localeRepository;
+
     /**
-     * @var CategoryRepository
+     * @var CategoryRepositoryInterface
      */
     protected $categoryRepository;
 
@@ -101,7 +102,8 @@ class ShopwareExport implements FormConfigurationProviderInterface
     }
 
     /**
-     * @return boolean
+     * @param JobInterface $job
+     * @return bool
      */
     public function supports(JobInterface $job)
     {

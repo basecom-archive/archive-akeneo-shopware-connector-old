@@ -1,3 +1,4 @@
 parameters:
     pim_catalog.entity.category.class:          Basecom\Bundle\ShopwareConnectorBundle\Entity\Category
     pim_catalog.entity.family.class:            Basecom\Bundle\ShopwareConnectorBundle\Entity\Family
+    akeneo_file_storage.model.file_info.class:  Basecom\Bundle\ShopwareConnectorBundle\Entity\FileInfo

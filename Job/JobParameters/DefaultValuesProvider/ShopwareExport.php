@@ -29,7 +29,8 @@ class ShopwareExport implements DefaultValuesProviderInterface
     }
 
     /**
-     * @return boolean
+     * @param JobInterface $job
+     * @return bool
      */
     public function supports(JobInterface $job)
     {
