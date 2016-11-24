@@ -76,7 +76,7 @@ class ExportProfileController extends BaseController
             }
         }
 
-        $template = 'BasecomShopwareConnectorBundle:ExportProfile:edit.html.twig';
+        $template = $this->jobTemplateProvider->getEditTemplate($jobInstance);
 
         $attributes = array_column(array_map('str_getcsv', file(__DIR__ . '/../Resources/config/additional_attributes.csv')), 0);
 

@@ -85,6 +85,7 @@ class ApiClient
         $result   = curl_exec($this->cURL);
         $httpCode = curl_getinfo($this->cURL, CURLINFO_HTTP_CODE);
 
+
         return $this->prepareResponse($result, $httpCode);
     }
 
