@@ -12,7 +12,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Pim\Bundle\CatalogBundle\Entity\Attribute;
 use Pim\Component\Catalog\Model\AssociationInterface;
+use Pim\Component\Catalog\Model\AttributeInterface;
 use Pim\Component\Catalog\Model\AttributeOptionInterface;
+use Pim\Component\Catalog\Model\GroupInterface;
 use Pim\Component\Catalog\Model\ProductInterface;
 use Pim\Component\Catalog\Model\ProductValueInterface;
 use Pim\Component\Catalog\Repository\AttributeRepositoryInterface;
@@ -46,11 +48,11 @@ class ShopwareProductSerializer
      * ShopwareProductSerializer constructor.
      *
      * @param AttributeRepositoryInterface $attributeRepository
-     * @param FamilyRepositoryInterface    $familyRepository
-     * @param CategoryRepositoryInterface  $categoryRepository
-     * @param FileInfoRepositoryInterface  $fileInfoRepository
-     * @param EntityManagerInterface       $entityManager
-     * @param string                       $rootDir
+     * @param FamilyRepositoryInterface $familyRepository
+     * @param CategoryRepositoryInterface $categoryRepository
+     * @param FileInfoRepositoryInterface $fileInfoRepository
+     * @param EntityManagerInterface $entityManager
+     * @param string $rootDir
      */
     public function __construct(
         AttributeRepositoryInterface $attributeRepository,
@@ -59,7 +61,8 @@ class ShopwareProductSerializer
         FileInfoRepositoryInterface $fileInfoRepository,
         EntityManagerInterface $entityManager,
         $rootDir
-    ) {
+    )
+    {
         $this->attributeRepository = $attributeRepository;
         $this->familyRepository = $familyRepository;
         $this->categoryRepository = $categoryRepository;
@@ -73,7 +76,7 @@ class ShopwareProductSerializer
      * @param                  $attributeMapping
      * @param                  $locale
      * @param                  $filterAttributes
-     * @param ApiClient        $apiClient
+     * @param ApiClient $apiClient
      * @param                  $currency
      *
      * @return array
@@ -85,13 +88,16 @@ class ShopwareProductSerializer
         $filterAttributes,
         ApiClient $apiClient,
         $currency
-    ) {
+    )
+    {
         $similar = $attributeMapping['similar'];
         $related = $attributeMapping['related'];
         unset($attributeMapping['similar']);
         unset($attributeMapping['related']);
         $item = $this->serializeValues($product->getValues(), $product->getAttributes(), $attributeMapping, $locale,
             $apiClient, $filterAttributes, $currency);
+
+        $item = $this->createVariantGroups($product, $item, $attributeMapping, $currency);
         $item['mainDetail']['active'] = $item['active'] = $product->isEnabled();
         $item['categories'] = $this->serializeCategories($product->getCategories(), $locale);
         $associations = $this->serializeAssociations($product, $similar, $related);
@@ -120,7 +126,7 @@ class ShopwareProductSerializer
             $category = $this->categoryRepository->find($category->getId());
             $category->setLocale($locale);
             $categories[$category->getSwId()] = [
-                'id'   => $category->getSwId(),
+                'id' => $category->getSwId(),
                 'name' => $category->getLabel(),
             ];
         }
@@ -157,7 +163,7 @@ class ShopwareProductSerializer
         $family = $this->familyRepository->find($familyId);
         $family->setLocale($locale);
         $propertyGroup = [
-            'id'   => (int)$family->getSwId(),
+            'id' => (int)$family->getSwId(),
             'name' => $family->getLabel(),
         ];
 
@@ -179,12 +185,12 @@ class ShopwareProductSerializer
 
     /**
      * @param ArrayCollection $values
-     * @param array           $attributes
-     * @param array           $attributeMapping
-     * @param string          $locale
-     * @param ApiClient       $apiClient
-     * @param string          $filterAttributes
-     * @param string          $currency
+     * @param array $attributes
+     * @param array $attributeMapping
+     * @param string $locale
+     * @param ApiClient $apiClient
+     * @param string $filterAttributes
+     * @param string $currency
      *
      * @return array
      */
@@ -196,7 +202,8 @@ class ShopwareProductSerializer
         ApiClient $apiClient,
         $filterAttributes,
         $currency
-    ) {
+    )
+    {
         $item = [];
         $imageCount = 0;
         $propValueCount = 0;
@@ -212,22 +219,23 @@ class ShopwareProductSerializer
                 if ($attribute->getAttributeType() == "pim_catalog_image") {
                     /** @var FileInfo $media */
                     $fileInfo = $this->fileInfoRepository->find($value->getMedia());
-                    if ($fileInfo && $fileInfo->getSwMediaId() == null) {
+                    if ($fileInfo) {
                         $path = $this->rootDir . "/file_storage/catalog/" . $value->getMedia()->getKey();
                         $type = pathinfo($path, PATHINFO_EXTENSION);
                         $data = file_get_contents($path);
                         $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
                         $mediaArray = [
-                            'album'       => -1,
-                            'file'        => $base64,
+                            'album' => -1,
+                            'file' => $base64,
                             'description' => $value->getMedia()->getOriginalFilename(),
                         ];
 
                         $media = $apiClient->post('media/', $mediaArray);
 
-                        if(!$media) {
+                        if (!$media) {
                             continue;
                         }
+
                         $mediaId = $media['data']['id'];
                         $item['images'][$imageCount] = ['mediaId' => $mediaId];
                         $fileInfo->setSwMediaId($mediaId);
@@ -390,16 +398,17 @@ class ShopwareProductSerializer
                 }
             }
         }
+
         $this->entityManager->flush();
 
         return $item;
     }
 
     /**
-     * @param Attribute             $attribute
+     * @param Attribute $attribute
      * @param ProductValueInterface $value
-     * @param string                $locale
-     * @param string                $currency
+     * @param string $locale
+     * @param string $currency
      *
      * @return array|\Datetime|float|null|string
      */
@@ -445,7 +454,7 @@ class ShopwareProductSerializer
                 return $value->getDatetime();
                 break;
             case 'prices':
-                if($price = $value->getPrice($currency)) {
+                if ($price = $value->getPrice($currency)) {
                     return [$price->getData()];
                 } else {
                     return [];
@@ -460,8 +469,8 @@ class ShopwareProductSerializer
 
     /**
      * @param ProductInterface $product
-     * @param string           $similar
-     * @param string           $related
+     * @param string $similar
+     * @param string $related
      *
      * @return array
      */
@@ -471,12 +480,12 @@ class ShopwareProductSerializer
             'related' => null,
             'similar' => null,
         );
-        
-        if(null != $product->getAssociationForTypeCode($related)) {
+
+        if (null != $product->getAssociationForTypeCode($related)) {
             $related = $this->serializeRelated($product->getAssociationForTypeCode($related));
             $associations['related'] = $related;
         }
-        if(null != $product->getAssociationForTypeCode($similar)) {
+        if (null != $product->getAssociationForTypeCode($similar)) {
             $similar = $this->serializeSimilar($product->getAssociationForTypeCode($similar));
             $associations['similar'] = $similar;
         }
@@ -523,5 +532,59 @@ class ShopwareProductSerializer
         }
 
         return $related;
+    }
+
+    /**
+     * @param $product ProductInterface
+     * @param $item
+     * @param $attributeMapping
+     * @param $currency
+     * @return mixed
+     */
+    private function createVariantGroups($product, $item, $attributeMapping, $currency)
+    {
+        /** @var GroupInterface $variantGroup */
+        $variantGroup = $product->getVariantGroup();
+        $sku = $product->getIdentifier();
+
+        if ($variantGroup) {
+            $item['configuratorSet'] = ['groups' => []];
+            $item['configuratorSet']['taxId'] = (string) $product->getValue($attributeMapping['tax']);
+            $axisAttributes = $variantGroup->getAxisAttributes();
+            /** @var AttributeInterface $axis */
+            foreach ($axisAttributes as $key => $axis) {
+                $item['configuratorSet']['groups'][$key] = [
+                    'name' => $axis->getCode()
+                ];
+
+                foreach ($axis->getOptions() as $optionKey => $option) {
+                    $item['configuratorSet']['groups'][$key]['options'][$optionKey] = [
+                        'name' => (string)$option
+                    ];
+                }
+            }
+
+            $products = $variantGroup->getProducts();
+            $item['variants'] = [];
+            foreach ($products as $key => $product) {
+                $isMain = $sku == $product->getIdentifier();
+                $item['variants'][$key] = [
+                    'isMain' => $isMain,
+                    'number' => (string)$product->getValue($attributeMapping['articleNumber']),
+                    'inStock' => isset($attributeMapping['stock']) ? $attributeMapping['stock'] : 0,
+                    'additionalText' => (string)$product->getValue($attributeMapping['name']),
+                    'prices' => [['price' => $product->getValue($attributeMapping['price']) ? $product->getValue($attributeMapping['price'])->getPrice($currency)->getData() : 0, 'customerGroupKey' => 'EK']]
+                ];
+
+                foreach ($item['configuratorSet']['groups'] as $groupKey => $group) {
+                    $item['variants'][$key]['configuratorOptions'][$groupKey] = [
+                        'group' => $group['name'],
+                        'option' => (string)$product->getValue($group['name'])
+                    ];
+                }
+            }
+        }
+
+        return $item;
     }
 }

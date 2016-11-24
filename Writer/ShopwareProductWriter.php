@@ -47,7 +47,6 @@ class ShopwareProductWriter implements ItemWriterInterface, StepExecutionAwareIn
             $jobParameters->get('apiKey')
         );
 
-
         $response = $apiClient->put('articles/', $items);
 
         if(false === $response) {
