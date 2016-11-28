@@ -2,12 +2,13 @@
 
 namespace Basecom\Bundle\ShopwareConnectorBundle\Writer;
 
-use Akeneo\Component\Batch\Item\InvalidItemException;
 use Akeneo\Component\Batch\Item\ItemWriterInterface;
 use Akeneo\Component\Batch\Model\StepExecution;
 use Akeneo\Component\Batch\Step\StepExecutionAwareInterface;
 use Basecom\Bundle\ShopwareConnectorBundle\Api\ApiClient;
+use Basecom\Bundle\ShopwareConnectorBundle\Entity\Repository\ProductRepository;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * Posts all provided products to shopware via Rest API
@@ -33,6 +34,20 @@ class ShopwareProductWriter implements ItemWriterInterface, StepExecutionAwareIn
      * @var ArrayCollection
      */
     protected $attributes;
+    /**
+     * @var ProductRepository
+     */
+    private $productRepository;
+    /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+
+    public function __construct(ProductRepository $productRepository, EntityManagerInterface $entityManager)
+    {
+        $this->productRepository = $productRepository;
+        $this->entityManager = $entityManager;
+    }
 
     /**
      * {@inheritdoc}
@@ -47,11 +62,23 @@ class ShopwareProductWriter implements ItemWriterInterface, StepExecutionAwareIn
             $jobParameters->get('apiKey')
         );
 
-        $response = $apiClient->put('articles/', $items);
+        foreach($items as $item) {
+            $response = $apiClient->get('variants/'.$item['mainDetail']['number'].'?useNumberAsId=true');
 
-        if(false === $response) {
-            throw new \Exception('An error occured while upload a product to Shopware');
+            if($response['success'] === false) {
+                $response = $apiClient->post('articles/', $item);
+            } else {
+                $response = $apiClient->put('articles/'.$item['mainDetail']['number'].'?useNumberAsId=true', $item);
+            }
+
+            if($response['success']) {
+                $product = $this->productRepository->findOneByIdentifier($item['mainDetail']['number']);
+                $product->setSwProductId($response['data']['id']);
+                $this->entityManager->persist($product);
+            }
         }
+
+        $this->entityManager->flush();
     }
 
     public function setStepExecution(StepExecution $stepExecution)

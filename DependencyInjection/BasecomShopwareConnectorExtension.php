@@ -19,6 +19,7 @@ class BasecomShopwareConnectorExtension extends Extension
         $loader->load('jobs.yml');
         $loader->load('job_parameters.yml');
         $loader->load('steps.yml');
+        $loader->load('cleaners.yml');
         $loader->load('readers.yml');
         $loader->load('processors.yml');
         $loader->load('writers.yml');

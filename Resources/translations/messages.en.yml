@@ -32,12 +32,6 @@ basecom_shopware_connector:
     url:
       label: URL
       help:  Enter the Shopware API-URL
-    similar:
-      label: Similar items
-      help:  Enter the code of the Akeneo association type for similar items
-    related:
-      label: Accessory items
-      help:  Enter the code of the Akeneo association type for accessory items
     filterAttributes:
       label: Filter Attributes
       help:  Enter the Akeneo codes of the Filter attributes seperated by comma

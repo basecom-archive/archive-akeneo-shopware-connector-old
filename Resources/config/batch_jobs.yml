@@ -5,6 +5,8 @@ connector:
             title: basecom_shopware_connector.jobs.shopware_products_export.title
             type: export
             steps:
+                shopware.clean.products:
+                    title:          basecom_shopware_connector.jobs.shopware_products_export.clean_products.title
                 export_products:
                     title:          basecom_shopware_connector.jobs.shopware_products_export.export_products.title
                     services:

@@ -36,6 +36,10 @@ class ShopwareProductProcessor implements ItemProcessorInterface, StepExecutionA
      */
     public function process($item)
     {
+        if($item->isVariant()) {
+            return;
+        }
+
         $jobParameters = $this->stepExecution->getJobParameters();
         $locale = $jobParameters->get('locale');
 
@@ -49,7 +53,7 @@ class ShopwareProductProcessor implements ItemProcessorInterface, StepExecutionA
 
         return $this->serializer->serialize($item, $attributeMapping,
             $locale, $jobParameters->get('filterAttributes'), $apiClient,
-            $jobParameters->get('currency'));
+            $jobParameters->get('currency'), $jobParameters);
     }
 
     /**
@@ -94,9 +98,7 @@ class ShopwareProductProcessor implements ItemProcessorInterface, StepExecutionA
             'price'            => $jobParameters->get('price'),
             'pseudoPrice'      => $jobParameters->get('pseudoPrice'),
             'basePrice'        => $jobParameters->get('basePrice'),
-            'tax'              => $jobParameters->get('tax'),
-            'similar'          => $jobParameters->get('similar'),
-            'related'          => $jobParameters->get('related')
+            'tax'              => $jobParameters->get('tax')
         ];
         $attributes = explode(";", $jobParameters->get('attr'));
         foreach ($attributes as $attribute) {

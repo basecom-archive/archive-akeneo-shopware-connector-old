@@ -20,3 +20,6 @@ services:
 
     basecom_shopware_connector.writer.shopware_product:
         class: '%basecom_shopware_connector.writer.shopware_product.class%'
+        arguments:
+            - '@pim_catalog.repository.product'
+            - '@doctrine.orm.entity_manager'

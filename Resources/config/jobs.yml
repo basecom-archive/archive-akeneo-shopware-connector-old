@@ -20,6 +20,7 @@ services:
             - '@event_dispatcher'
             - '@akeneo_batch.job_repository'
             -
+                - '@basecom_shopware_connector.cleaner.shopware'
                 - '@basecom_shopware_connector.step.export_products'
         tags:
             - { name: akeneo_batch.job, connector: 'Shopware Connector', type: '%pim_connector.job.export_type%' }

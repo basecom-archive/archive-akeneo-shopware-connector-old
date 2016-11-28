@@ -78,8 +78,6 @@ class ProductExport implements ConstraintCollectionProviderInterface, DefaultVal
                     new NotBlank(['groups' => 'Execution'])
                 ],
                 'currency' => [],
-                'similar' => [],
-                'related' => [],
                 'filterAttributes' => [],
                 'supplier' => [
                     new NotBlank(['groups' => 'Execution'])
@@ -142,8 +140,6 @@ class ProductExport implements ConstraintCollectionProviderInterface, DefaultVal
             'channel' => '',
             'locale' => '',
             'currency' => '',
-            'similar' => '',
-            'related' => '',
             'filterAttributes' => '',
             'supplier' => '',
             'name' => '',
@@ -244,18 +240,6 @@ class ProductExport implements ConstraintCollectionProviderInterface, DefaultVal
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.currency.label',
                     'help'  => 'basecom_shopware_connector.export.currency.label'
-                ]
-            ],
-            'similar'          => [
-                'options' => [
-                    'label' => 'basecom_shopware_connector.export.similar.label',
-                    'help'  => 'basecom_shopware_connector.export.similar.help'
-                ]
-            ],
-            'related'          => [
-                'options' => [
-                    'label' => 'basecom_shopware_connector.export.related.label',
-                    'help'  => 'basecom_shopware_connector.export.related.help'
                 ]
             ],
             'filterAttributes' => [
