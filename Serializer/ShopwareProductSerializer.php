@@ -103,6 +103,7 @@ class ShopwareProductSerializer
         }
 
         $item = $this->createVariantGroups($product, $item, $attributeMapping, $currency);
+        $item['hasSwId'] = null !== $product->getSwProductId();
 
         return $item;
     }
