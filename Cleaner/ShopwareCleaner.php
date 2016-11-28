@@ -62,11 +62,11 @@ class ShopwareCleaner extends AbstractStep
             $jobParameters->get('apiKey')
         );
 
-        $this->cleanProducts();
-        $this->cleanProductMedia();
+        $this->cleanProducts($stepExecution);
+        $this->cleanProductMedia($stepExecution);
     }
 
-    protected function cleanProducts()
+    protected function cleanProducts(StepExecution $stepExecution)
     {
         $articles = $this->apiClient->get('articles/');
         $articleIds = array_column($articles['data'], 'id');
@@ -76,11 +76,15 @@ class ShopwareCleaner extends AbstractStep
         {
             if(!in_array($article, $productIdsToKeep)) {
                 $result = $this->apiClient->delete('articles/'.$article);
+
+                if($result['success']) {
+                    $stepExecution->incrementSummaryInfo('product deleted');
+                }
             }
         }
     }
 
-    protected function cleanProductMedia()
+    protected function cleanProductMedia(StepExecution $stepExecution)
     {
         $media = $this->apiClient->get('media/');
         $mediaIds = array_column($media['data'], 'id');
@@ -94,6 +98,10 @@ class ShopwareCleaner extends AbstractStep
         foreach($mediaIdsToDelete as $mediaToDelete)
         {
             $result = $this->apiClient->delete('media/'.$mediaToDelete['swMediaId']);
+
+            if($result['success']) {
+                $stepExecution->incrementSummaryInfo('media deleted');
+            }
         }
     }
 }
