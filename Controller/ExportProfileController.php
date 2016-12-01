@@ -78,7 +78,9 @@ class ExportProfileController extends BaseController
 
         $template = $this->jobTemplateProvider->getEditTemplate($jobInstance);
 
-        $attributes = array_column(array_map('str_getcsv', file(__DIR__ . '/../Resources/config/additional_attributes.csv')), 0);
+        $additionalAttributesPath = __DIR__ . '/../Resources/config/additional_attributes.csv';
+
+        $attributes = file_exists($additionalAttributesPath) ? array_column(array_map('str_getcsv', file($additionalAttributesPath)), 0) : [];
 
         $attributes = $this->mapValuesToAttributes($attributes, $jobInstance->getRawParameters());
 
@@ -94,7 +96,7 @@ class ExportProfileController extends BaseController
 
     protected function mapValuesToAttributes($attributes, $values)
     {
-        if($values['attr'] === null) {
+        if(!isset($values['attr']) || $values['attr'] === null) {
             return $attributes;
         }
 

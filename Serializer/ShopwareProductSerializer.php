@@ -3,15 +3,15 @@
 namespace Basecom\Bundle\ShopwareConnectorBundle\Serializer;
 
 use Akeneo\Component\Classification\Repository\CategoryRepositoryInterface;
-use Akeneo\Component\FileStorage\Repository\FileInfoRepositoryInterface;
 use Basecom\Bundle\ShopwareConnectorBundle\Api\ApiClient;
+use Basecom\Bundle\ShopwareConnectorBundle\Api\Media\CommunityMediaWriter;
+use Basecom\Bundle\ShopwareConnectorBundle\Api\Media\EnterpriseMediaWriter;
 use Basecom\Bundle\ShopwareConnectorBundle\Entity\Category;
 use Basecom\Bundle\ShopwareConnectorBundle\Entity\Family;
 use Basecom\Bundle\ShopwareConnectorBundle\Entity\FileInfo;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Pim\Bundle\CatalogBundle\Entity\Attribute;
-use Pim\Component\Catalog\Model\AssociationInterface;
 use Pim\Component\Catalog\Model\AttributeInterface;
 use Pim\Component\Catalog\Model\AttributeOptionInterface;
 use Pim\Component\Catalog\Model\GroupInterface;
@@ -35,14 +35,10 @@ class ShopwareProductSerializer
     /** @var CategoryRepositoryInterface */
     protected $categoryRepository;
 
-    /** @var FileInfoRepositoryInterface */
-    protected $fileInfoRepository;
 
     /** @var EntityManagerInterface */
     protected $entityManager;
-
-    /** @var string */
-    protected $rootDir;
+    private $mediaWriter;
 
     /**
      * ShopwareProductSerializer constructor.
@@ -50,25 +46,22 @@ class ShopwareProductSerializer
      * @param AttributeRepositoryInterface $attributeRepository
      * @param FamilyRepositoryInterface $familyRepository
      * @param CategoryRepositoryInterface $categoryRepository
-     * @param FileInfoRepositoryInterface $fileInfoRepository
      * @param EntityManagerInterface $entityManager
-     * @param string $rootDir
+     * @param CommunityMediaWriter|EnterpriseMediaWriter $mediaWriter
      */
     public function __construct(
         AttributeRepositoryInterface $attributeRepository,
         FamilyRepositoryInterface $familyRepository,
         CategoryRepositoryInterface $categoryRepository,
-        FileInfoRepositoryInterface $fileInfoRepository,
         EntityManagerInterface $entityManager,
-        $rootDir
+        $mediaWriter
     )
     {
         $this->attributeRepository = $attributeRepository;
         $this->familyRepository = $familyRepository;
         $this->categoryRepository = $categoryRepository;
-        $this->rootDir = $rootDir;
-        $this->fileInfoRepository = $fileInfoRepository;
         $this->entityManager = $entityManager;
+        $this->mediaWriter = $mediaWriter;
     }
 
     /**
@@ -202,8 +195,6 @@ class ShopwareProductSerializer
     )
     {
         $item = [];
-        $imageCount = 0;
-        $propValueCount = 0;
         $attributes = $this->serializeAttributes($attributes);
 
         /** @var ProductValueInterface $value */
@@ -213,38 +204,14 @@ class ShopwareProductSerializer
                 $attribute = $this->attributeRepository->find($value->getAttribute()->getId());
                 $attribute->setLocale($locale);
 
-                if ($attribute->getAttributeType() == "pim_catalog_image") {
+                if (
+                    "pim_catalog_image" === $attribute->getAttributeType() ||
+                    "pim_assets_collection" === $attribute->getAttributeType()
+                ) {
+                    $item['__options_images']['replace'] = true;
+
                     /** @var FileInfo $media */
-                    $fileInfo = $this->fileInfoRepository->find($value->getMedia());
-                    if ($fileInfo) {
-                        $path = $this->rootDir . "/file_storage/catalog/" . $value->getMedia()->getKey();
-                        $type = pathinfo($path, PATHINFO_EXTENSION);
-                        $data = file_get_contents($path);
-                        $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
-                        $mediaId = $fileInfo->getSwMediaId();
-                        if(!$mediaId) {
-                            $mediaArray = [
-                                'album' => -1,
-                                'file' => $base64,
-                                'description' => $value->getMedia()->getOriginalFilename(),
-                            ];
-
-                            $media = $apiClient->post('media/', $mediaArray);
-
-                            if (!$media) {
-                                continue;
-                            }
-                            $mediaId = $media['data']['id'];
-
-                            $fileInfo->setSwMediaId($mediaId);
-                            $this->entityManager->persist($fileInfo);
-
-                        }
-
-                        $item['__options_images']['replace'] = true;
-                        $item['images'][] = ['mediaId' => $mediaId];
-
-                    }
+                    $item = $this->mediaWriter->sendMedia($value, $apiClient, $item);
                 }
 
                 if (in_array($attribute->getCode(), $this->serializeFilterAttributes($filterAttributes))) {
@@ -260,15 +227,13 @@ class ShopwareProductSerializer
                             $propValue['option']['filterable'] = true;
                             $propValue['value'] = $option->getOptionValue()->getValue();
                             $propValue['position'] = $option->getSortOrder();
-                            $item['propertyValues'][$propValueCount] = $propValue;
-                            $propValueCount++;
+                            $item['propertyValues'][] = $propValue;
                         }
                     } else {
                         $propValue['option']['name'] = $attribute->getLabel();
                         $propValue['option']['filterable'] = true;
                         $propValue['value'] = $this->getAttributeValue($attribute, $value, $locale, $currency);
-                        $item['propertyValues'][$propValueCount] = $propValue;
-                        $propValueCount++;
+                        $item['propertyValues'][] = $propValue;
                     }
                 }
 
@@ -401,6 +366,7 @@ class ShopwareProductSerializer
                 }
             }
         }
+        die(var_dump($item['images']));
 
         $this->entityManager->flush();
 

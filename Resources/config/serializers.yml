@@ -7,6 +7,5 @@ services:
             - '@pim_catalog.repository.attribute'
             - '@pim_catalog.repository.family'
             - '@pim_catalog.repository.category'
-            - '@akeneo_file_storage.repository.file_info'
             - '@doctrine.orm.entity_manager'
-            - '%kernel.root_dir%'
+            - '@basecom_shopware_connector.api.shopware_media_writer'

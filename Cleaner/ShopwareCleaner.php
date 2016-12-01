@@ -9,6 +9,7 @@ use Akeneo\Component\FileStorage\Repository\FileInfoRepositoryInterface;
 use Basecom\Bundle\ShopwareConnectorBundle\Api\ApiClient;
 use Basecom\Bundle\ShopwareConnectorBundle\Entity\Repository\FileInfoRepository;
 use Basecom\Bundle\ShopwareConnectorBundle\Entity\Repository\ProductRepository;
+use Doctrine\ORM\Query\ResultSetMapping;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class ShopwareCleaner extends AbstractStep
@@ -29,6 +30,7 @@ class ShopwareCleaner extends AbstractStep
 
     /**
      * ShopwareCleaner constructor.
+     *
      * @param string $name
      * @param EventDispatcherInterface $eventDispatcher
      * @param JobRepositoryInterface $jobRepository
@@ -66,9 +68,15 @@ class ShopwareCleaner extends AbstractStep
         $this->cleanProductMedia($stepExecution);
     }
 
+    /**
+     * @param StepExecution $stepExecution
+     * @return bool
+     */
     protected function cleanProducts(StepExecution $stepExecution)
     {
         $articles = $this->apiClient->get('articles/');
+        if(!$articles || !$articles['success']) return false;
+
         $articleIds = array_column($articles['data'], 'id');
         $productIdsToKeep = array_column($this->productRepository->findIdByNotInSwId($articleIds), 'swProductId');
 
@@ -84,23 +92,32 @@ class ShopwareCleaner extends AbstractStep
         }
     }
 
+    /**
+     * @param StepExecution $stepExecution
+     * @return bool
+     */
     protected function cleanProductMedia(StepExecution $stepExecution)
     {
         $media = $this->apiClient->get('media/');
-        $mediaIds = array_column($media['data'], 'id');
-        $productMedia = $this->productRepository->findProductMediaWithSwId($mediaIds);
+
+        if(!$media || !$media['success']) return false;
+
+        /**
+         * Enterprise Query
+         * SELECT fileinfo.swMediaId FROM akeneo_file_storage_file_info fileinfo LEFT JOIN pimee_product_asset_variation av ON fileinfo.id = av.file_info_id LEFT JOIN pimee_product_asset_reference ref ON av.reference_id = ref.id LEFT JOIN pim_catalog_product_value_asset valas ON valas.asset_id = ref.asset_id LEFT JOIN pim_catalog_product_value prodval ON prodval.id = valas.value_id LEFT JOIN pim_catalog_product prod ON prod.id = prodval.entity_id WHERE fileinfo.swMediaId IS NOT NULL AND prod.swProductId IS NOT NULL
+         */
+        $productMedia = $this->productRepository->findProductMediaWithSwId();
         if(!empty($productMedia)) {
             $productMedia = array_column($productMedia, 'swMediaId');
         }
 
-        $mediaIdsToDelete = $this->fileInfoRepository->findMediaIdsNotInProducts($productMedia, $mediaIds);
+        foreach($media['data'] as $singleMedia) {
+            if(-1 === $singleMedia['albumId'] && !in_array($singleMedia['id'], $productMedia)) {
+                $result = $this->apiClient->delete('media/'.$singleMedia['id']);
 
-        foreach($mediaIdsToDelete as $mediaToDelete)
-        {
-            $result = $this->apiClient->delete('media/'.$mediaToDelete['swMediaId']);
-
-            if($result['success']) {
-                $stepExecution->incrementSummaryInfo('media deleted');
+                if($result['success']) {
+                    $stepExecution->incrementSummaryInfo('media deleted');
+                }
             }
         }
     }

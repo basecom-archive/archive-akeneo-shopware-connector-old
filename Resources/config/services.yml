@@ -1,0 +1,11 @@
+parameters:
+    basecom_shopware_connector.api.shopware_media_writer.class: Basecom\Bundle\ShopwareConnectorBundle\Api\Media\CommunityMediaWriter
+    basecom_shopware_connector.api.shopware_media_writer_enterprise.class: Basecom\Bundle\ShopwareConnectorBundle\Api\Media\EnterpriseMediaWriter
+
+services:
+    basecom_shopware_connector.api.shopware_media_writer:
+        class: "%basecom_shopware_connector.api.shopware_media_writer.class%"
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@akeneo_file_storage.repository.file_info'
+            - '%kernel.root_dir%'

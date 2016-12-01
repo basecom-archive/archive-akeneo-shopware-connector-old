@@ -25,7 +25,7 @@ class ProductRepository extends BaseRepository
         return $qb->getQuery()->getResult(AbstractQuery::HYDRATE_ARRAY);
     }
 
-    public function findProductMediaWithSwId(array $mediaIds)
+    public function findProductMediaWithSwId()
     {
         $qb = $this->createQueryBuilder('Product');
         $this->addJoinToValueTables($qb);
@@ -37,10 +37,6 @@ class ProductRepository extends BaseRepository
         $qb->andWhere(
             $qb->expr()->isNotNull('Product.swProductId')
         );
-        $qb->andWhere(
-            $qb->expr()->in('FileInfo.swMediaId', ':swIds')
-        );
-        $qb->setParameter(':swIds', $mediaIds);
 
         return $qb->getQuery()->getResult(AbstractQuery::HYDRATE_ARRAY);
     }
