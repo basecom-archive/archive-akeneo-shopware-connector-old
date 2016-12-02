@@ -4,7 +4,7 @@ parameters:
 
 services:
     basecom_shopware_connector.api.shopware_media_writer:
-        class: "%basecom_shopware_connector.api.shopware_media_writer.class%"
+        class: "%basecom_shopware_connector.api.shopware_media_writer_enterprise.class%"
         arguments:
             - '@doctrine.orm.entity_manager'
             - '@akeneo_file_storage.repository.file_info'
