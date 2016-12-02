@@ -102,11 +102,9 @@ class ShopwareCleaner extends AbstractStep
 
         if(!$media || !$media['success']) return false;
 
-        /**
-         * Enterprise Query
-         * SELECT fileinfo.swMediaId FROM akeneo_file_storage_file_info fileinfo LEFT JOIN pimee_product_asset_variation av ON fileinfo.id = av.file_info_id LEFT JOIN pimee_product_asset_reference ref ON av.reference_id = ref.id LEFT JOIN pim_catalog_product_value_asset valas ON valas.asset_id = ref.asset_id LEFT JOIN pim_catalog_product_value prodval ON prodval.id = valas.value_id LEFT JOIN pim_catalog_product prod ON prod.id = prodval.entity_id WHERE fileinfo.swMediaId IS NOT NULL AND prod.swProductId IS NOT NULL
-         */
         $productMedia = $this->productRepository->findProductMediaWithSwId();
+        $productMedia = array_merge($this->fileInfoRepository->findAllAssetFileInfo(), $productMedia);
+
         if(!empty($productMedia)) {
             $productMedia = array_column($productMedia, 'swMediaId');
         }

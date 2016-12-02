@@ -214,6 +214,7 @@ class ShopwareProductSerializer
                     $item = $this->mediaWriter->sendMedia($value, $apiClient, $item);
                 }
 
+
                 if (in_array($attribute->getCode(), $this->serializeFilterAttributes($filterAttributes))) {
                     /** @var Attribute $attribute */
                     $attribute = $this->attributeRepository->find($value->getAttribute()->getId());
@@ -366,7 +367,6 @@ class ShopwareProductSerializer
                 }
             }
         }
-        die(var_dump($item['images']));
 
         $this->entityManager->flush();
 

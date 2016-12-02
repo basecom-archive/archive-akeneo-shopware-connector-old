@@ -42,7 +42,12 @@ class CommunityMediaWriter
      */
     public function sendMedia($value, $apiClient, $item)
     {
-        if(!$value->getMedia()) return $item;
+        if(!$value->getMedia()) {
+            if(!isset($item['images'])) {
+                $item['images'] = [];
+            }
+            return $item;
+        }
         $fileInfo = $this->fileInfoRepository->find($value->getMedia());
         if ($fileInfo) {
             $path = $this->rootDir . "/file_storage/catalog/" . $value->getMedia()->getKey();
