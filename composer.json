@@ -5,7 +5,7 @@
     "license": "OSL-3.0",
     "authors": [
         {
-            "name": "your_name <your_email_adress>"
+            "name": "Amir El Sayed <elsayed@basecom.de>"
         }
     ],
     "repositories": [
@@ -16,7 +16,7 @@
         }
     ],
     "require": {
-        "akeneo/pim-community-dev": ">=1.5.2"
+        "akeneo/pim-community-dev": "~1.6.2"
     },
     "autoload": {
         "psr-4": {
