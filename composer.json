@@ -1,7 +1,7 @@
 {
     "name": "basecom/shopware-connector",
     "type": "symfony-bundle",
-    "description": "your description",
+    "description": "Akeneo to Shopware Connector - Export only",
     "license": "OSL-3.0",
     "authors": [
         {
@@ -26,5 +26,10 @@
     },
     "config": {
         "bin-dir": "bin"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-ee": "akeneo-1.6_enterprise"
+        }
     }
 }
