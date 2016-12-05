@@ -1,0 +1,12 @@
+parameters:
+    basecom_shopware_connector.cleaner.shopware.class: Basecom\Bundle\ShopwareConnectorBundle\Cleaner\ShopwareCleaner
+
+services:
+    basecom_shopware_connector.cleaner.shopware:
+        class: "%basecom_shopware_connector.cleaner.shopware.class%"
+        arguments:
+            - 'shopware.clean.products'
+            - '@event_dispatcher'
+            - '@akeneo_batch.job_repository'
+            - '@pim_catalog.repository.product'
+            - '@akeneo_file_storage.repository.file_info'

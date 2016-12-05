@@ -30,8 +30,8 @@ class ExportProfileController extends BaseController
         return $this->templating->renderResponse(
             'PimImportExportBundle:ExportProfile:index.html.twig',
             [
-                'jobType'    => $this->getJobType(),
-                'connectors' => $this->connectorRegistry->getJobs($this->getJobType())
+                'jobType'       => $this->getJobType(),
+                'connectors'    => $this->jobRegistry->allByType($this->getJobType())
             ]
         );
     }
@@ -42,7 +42,7 @@ class ExportProfileController extends BaseController
      * @AclAncestor("pim_importexport_export_profile_edit")
      *
      * @param Request $request
-     * @param int     $id
+     * @param int $id
      *
      * @return Response
      */
@@ -56,9 +56,10 @@ class ExportProfileController extends BaseController
             return $this->redirectToIndexView();
         }
 
+
         $this->eventDispatcher->dispatch(JobProfileEvents::PRE_EDIT, new GenericEvent($jobInstance));
 
-        $form = $this->formFactory->create($this->jobInstanceType, $jobInstance);
+        $form = $this->formFactory->create($this->jobInstanceFormType, $jobInstance);
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
@@ -75,18 +76,48 @@ class ExportProfileController extends BaseController
             }
         }
 
-        if (null === $template = $jobInstance->getJob()->getEditTemplate()) {
-            $template = 'BasecomShopwareConnectorBundle:ExportProfile:edit.html.twig';
-        }
-        $attributes = array_map('str_getcsv', file(__DIR__ . '/../Resources/config/additional_attributes.csv'));
+        $template = $this->jobTemplateProvider->getEditTemplate($jobInstance);
+
+        $attributes = array_column(array_map('str_getcsv', file(__DIR__ . '/../Resources/config/additional_attributes.csv')), 0);
+
+        $attributes = $this->mapValuesToAttributes($attributes, $jobInstance->getRawParameters());
 
         return $this->templating->renderResponse(
             $template,
             [
-                'jobInstance' => $jobInstance,
-                'form'        => $form->createView(),
-                'attributes'  => $attributes,
+                'jobInstance'   => $jobInstance,
+                'form'          => $form->createView(),
+                'attributes'    => $attributes,
             ]
         );
     }
+
+    /**
+     * @param $attributes
+     * @param $values
+     * @return mixed
+     */
+    protected function mapValuesToAttributes($attributes, $values)
+    {
+        if ($values['attr'] === null) {
+            return $attributes;
+        }
+
+        $valueArray = explode(';', $values['attr']);
+
+        foreach ($attributes as $key => $attribute) {
+            $attributeArray = explode(';', $attribute);
+
+            foreach ($valueArray as $singleValue) {
+                $value = explode(':', $singleValue);
+
+                if ($value[0] == $attributeArray[0]) {
+                    $attributes[$key] .= ';' . $value[1];
+                }
+            }
+        }
+
+        return $attributes;
+    }
 }
+

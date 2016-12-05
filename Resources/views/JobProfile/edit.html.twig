@@ -1,25 +1,62 @@
 {% extends 'PimEnrichBundle::layout.html.twig' %}
 {% import 'PimDataGridBundle::macros.html.twig' as dataGrid %}
-{% set title =  (entityName ~ '.edit')|trans ~ ' - ' ~ jobInstance.label ~ ' [' ~ jobInstance.code ~ ']'  %}
 
 {% block content %}
-    {% if jobInstance.alias == 'shopware_products_export' %}
+    {% if jobInstance.jobName == 'shopware_product_export' %}
         {% block javascript %}
             <script>
                 $(document).ready(function(){
                     $(".btn-submit").click(function(){
-                        var attrInput = "";
-                        {% for attribute in attributes %}
-                            var attrName = "{{ attribute[0] }}".split(';')[0];
-                            attrInput += attrName+":" + $("#{{ attribute[0] }}".split(";")[0]).val()+";";
-                        {% endfor %}
-                        $("#pim_import_export_jobInstance_job_steps_0_processor_attr").val(attrInput);
+                        var attrInput = [];
+
+                        $('.shopware-connector-input').each(function() {
+                            var attrName = $(this).data("name");
+                            var attrValue = $(this).val();
+                            attrInput.push(attrName+":"+attrValue);
+                        });
+                        attrInput = attrInput.join(';');
+
+                        $("#pim_import_export_jobInstance_parameters_attr").val(attrInput);
                     });
+
+                    {% block javascripts %}
+                    var text = '';
+                    {% for attribute in attributes %}
+                        var attrName = "{{ attribute|split(';')[0] }}";
+                        var attrLabel = "{{ attribute|split(';')[1] }}";
+                        {% if attribute|split(';')[2] is defined %}
+                            var value = "{{ attribute|split(';')[2] }}";
+                        {% else %}
+                            var value = "";
+                        {% endif %}
+                        text = text +
+                                '<div class="control-group">'+
+                                    '<label class="control-label" for="'+attrName+'">'+attrLabel+'</label>'+
+                                    '<div class="controls">'+
+                                        '<input type="text" id="shopware-connector-'+attrName+'" class="input-large shopware-connector-input" data-name="'+attrName+'" value="'+value+'"/>'+
+                                        '<div class="icons-container">'+
+                                            '<i class="icon-info-sign" data-toggle="tooltip" data-placement="right" data-original-title="Enter the code of the Akeneo attribute"></i>'+
+                                        '</div>'+
+                                    '</div>'+
+                                '</div>';
+                    {% endfor %}
+                    {% endblock %}
+
+                    $('#pim_import_export-job_profile-tab-property').append(
+                        '<div class="tabsections">' +
+                            '<div class="tabsection">' +
+                                '<div class="tabsection-title">Zusätzliche Attribute</div>' +
+                                    '<div class="tabsection-content">' +
+                                        text +
+                                    '</div>' +
+                                '</div>' +
+                            '</div>' +
+                        '</div>'
+                    );
                 });
             </script>
         {% endblock %}
     {% endif %}
-    {{ JSFV(form) }}
     {{ form_start(form, {
         'action': actionRoute,
         'attr': {
@@ -28,107 +65,88 @@
         }
     }) }}
 
-    {% set left %}
-        <ul class="inline">
-            <li>{{ 'Job'|trans }}: {{ jobInstance.job.name|trans }}</li>
-            <li>{{ 'Connector'|trans }}: {{ jobInstance.connector|trans }}</li>
-        </ul>
-    {% endset %}
+    {% include 'PimImportExportBundle:JobProfile:_edit_headers.html.twig' with {'form': form} %}
 
-    {% set buttons %}
-        {{ elements.backLink(indexRoute) }}
-        {{ elements.deleteLink(removeRoute, removeAcl, indexRoute, removeMessage, removeSuccessMessage) }}
-        {{ elements.submitBtn('', 'ok') }}
-    {% endset %}
+    {% include 'PimImportExportBundle:JobProfile:_form.html.twig' %}
 
-    {{ elements.page_header(title, buttons, null, left, elements.updated(form.vars.id)) }}
+    {#<div class="row-fluid tab-content">#}
+        {#<div class="tab-pane active" id="general-properties">#}
 
-    {{ elements.form_errors(form) }}
+            {#{% set properties %}#}
+                {#{{ form_row(form.code) }}#}
+                {#{{ form_row(form.label) }}#}
+            {#{% endset %}#}
+            {#{{ elements.accordion({ 'pane.accordion.properties': properties }, 1) }}#}
+            {#{% set globalSettings %}#}
+                {#{% for step in form.job.steps %}#}
+                    {#{% for child in step.children %}#}
+                        {#{% if jobInstance.alias == 'shopware_products_export' and child.children.attr is defined %}#}
+                            {#{% for childChild in child.children %}#}
+                                {#{% if childChild.vars.name == "attr" %}#}
+                                    {#{{ form_row(childChild) }}#}
+                                    {#<div id="article-attributes"></div>#}
+                                    {#{% block javascripts %}#}
+                                    {#<script>#}
+                                        {#var values = "{{ childChild.vars.value }}";#}
+                                        {#values = values.split(';');#}
+                                        {#var attributeIterator = 0;#}
+                                        {#{% for attribute in attributes %}#}
+                                        {#if(typeof values[attributeIterator] !== 'undefined') {#}
+                                            {#var value = values[attributeIterator].split(':');#}
+                                            {#var attrName = "{{ attribute[0] }}".split(';')[0];#}
+                                            {#var attrLabel = "{{ attribute[0] }}".split(';')[1];#}
+                                            {#if (typeof value[1] == 'undefined') {#}
+                                                {#value[1] = "";#}
+                                            {#}#}
+                                            {#var text = '<div class="control-group">'+#}
+                                                    {#'<label class="control-label" for="'+attrName+'">'+attrLabel+'</label>'+#}
+                                                    {#'<div class="controls">'+#}
+                                                    {#'<input type="text" id="'+attrName+'" class="input-large" value="'+value[1]+'"/>'+#}
+                                                    {#'<div class="icons-container">'+#}
+                                                    {#'<i class="icon-info-sign" data-toggle="tooltip" data-placement="right" data-original-title="Enter the code of the Akeneo attribute"></i>'+#}
+                                                    {#'</div>'+#}
+                                                    {#'</div>'+#}
+                                                    {#'</div>';#}
+                                            {#$('#article-attributes').append(text);#}
+                                            {#attributeIterator++;#}
+                                        {#} else {#}
+                                            {#var attrName = "{{ attribute[0] }}".split(';')[0];#}
+                                            {#var attrLabel = "{{ attribute[0] }}".split(';')[1];#}
+                                            {#var text = '<div class="control-group">'+#}
+                                                    {#'<label class="control-label" for="'+attrName+'">'+attrLabel+'</label>'+#}
+                                                    {#'<div class="controls">'+#}
+                                                    {#'<input type="text" id="'+attrName+'" class="input-large"/>'+#}
+                                                    {#'<div class="icons-container">'+#}
+                                                    {#'<i class="icon-info-sign" data-toggle="tooltip" data-placement="right" data-original-title="Enter the code of the Akeneo attribute"></i>'+#}
+                                                    {#'</div>'+#}
+                                                    {#'</div>'+#}
+                                                    {#'</div>';#}
+                                            {#$('#article-attributes').append(text);#}
+                                            {#attributeIterator++;#}
+                                        {#}#}
+                                        {#{% endfor %}#}
+                                    {#</script>#}
+                                    {#{% endblock %}#}
 
-    {% set navbarTabs = ['General properties'] %}
-    {% if resource_granted('pim_importexport_' ~ form.vars.value.type ~ '_profile_history') %}
-        {% set navbarTabs = navbarTabs|merge(['History']) %}
-    {% endif %}
+                                {#{% else %}#}
+                                    {#{{ form_row(childChild) }}#}
+                                {#{% endif %}#}
+                            {#{% endfor %}#}
+                        {#{% else %}#}
+                            {#{{ form_widget(child) }}#}
+                        {#{% endif %}#}
+                    {#{% endfor %}#}
+                {#{% endfor %}#}
+            {#{% endset %}#}
+            {#{{ elements.accordion({ 'pane.accordion.global_settings': globalSettings }, 2) }}#}
+        {#</div>#}
 
-    {{ elements.form_navbar(navbarTabs, '') }}
+        {#{% if resource_granted('pim_importexport_' ~ form.vars.value.type ~ '_profile_history') %}#}
+            {#<div class="tab-pane" id="history">#}
+                {#{{ dataGrid.renderHistoryGrid(form.vars.value) }}#}
+            {#</div>#}
+        {#{% endif %}#}
+    {#</div>#}
 
-    <div class="row-fluid tab-content">
-        <div class="tab-pane active" id="general-properties">
-
-            {% set properties %}
-                {{ form_row(form.code) }}
-                {{ form_row(form.label) }}
-            {% endset %}
-            {{ elements.accordion({ 'pane.accordion.properties': properties }, 1) }}
-            {% set globalSettings %}
-                {% for step in form.job.steps %}
-                    {% for child in step.children %}
-                        {% if jobInstance.alias == 'shopware_products_export' and child.children.attr is defined %}
-                            {% for childChild in child.children %}
-                                {% if childChild.vars.name == "attr" %}
-                                    {{ form_row(childChild) }}
-                                    <div id="article-attributes"></div>
-                                    {% block javascripts %}
-                                    <script>
-                                        var values = "{{ childChild.vars.value }}";
-                                        values = values.split(';');
-                                        var attributeIterator = 0;
-                                        {% for attribute in attributes %}
-                                        if(typeof values[attributeIterator] !== 'undefined') {
-                                            var value = values[attributeIterator].split(':');
-                                            var attrName = "{{ attribute[0] }}".split(';')[0];
-                                            var attrLabel = "{{ attribute[0] }}".split(';')[1];
-                                            if (typeof value[1] == 'undefined') {
-                                                value[1] = "";
-                                            }
-                                            var text = '<div class="control-group">'+
-                                                    '<label class="control-label" for="'+attrName+'">'+attrLabel+'</label>'+
-                                                    '<div class="controls">'+
-                                                    '<input type="text" id="'+attrName+'" class="input-large" value="'+value[1]+'"/>'+
-                                                    '<div class="icons-container">'+
-                                                    '<i class="icon-info-sign" data-toggle="tooltip" data-placement="right" data-original-title="Enter the code of the Akeneo attribute"></i>'+
-                                                    '</div>'+
-                                                    '</div>'+
-                                                    '</div>';
-                                            $('#article-attributes').append(text);
-                                            attributeIterator++;
-                                        } else {
-                                            var attrName = "{{ attribute[0] }}".split(';')[0];
-                                            var attrLabel = "{{ attribute[0] }}".split(';')[1];
-                                            var text = '<div class="control-group">'+
-                                                    '<label class="control-label" for="'+attrName+'">'+attrLabel+'</label>'+
-                                                    '<div class="controls">'+
-                                                    '<input type="text" id="'+attrName+'" class="input-large"/>'+
-                                                    '<div class="icons-container">'+
-                                                    '<i class="icon-info-sign" data-toggle="tooltip" data-placement="right" data-original-title="Enter the code of the Akeneo attribute"></i>'+
-                                                    '</div>'+
-                                                    '</div>'+
-                                                    '</div>';
-                                            $('#article-attributes').append(text);
-                                            attributeIterator++;
-                                        }
-                                        {% endfor %}
-                                    </script>
-                                    {% endblock %}
-
-                                {% else %}
-                                    {{ form_row(childChild) }}
-                                {% endif %}
-                            {% endfor %}
-                        {% else %}
-                            {{ form_widget(child) }}
-                        {% endif %}
-                    {% endfor %}
-                {% endfor %}
-            {% endset %}
-            {{ elements.accordion({ 'pane.accordion.global_settings': globalSettings }, 2) }}
-        </div>
-
-        {% if resource_granted('pim_importexport_' ~ form.vars.value.type ~ '_profile_history') %}
-            <div class="tab-pane" id="history">
-                {{ dataGrid.renderHistoryGrid(form.vars.value) }}
-            </div>
-        {% endif %}
-    </div>
     {{ form_end(form) }}
 {% endblock %}

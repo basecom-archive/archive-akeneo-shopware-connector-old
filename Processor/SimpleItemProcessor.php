@@ -2,23 +2,17 @@
 
 namespace Basecom\Bundle\ShopwareConnectorBundle\Processor;
 
-use Akeneo\Component\Batch\Item\AbstractConfigurableStepElement;
 use Akeneo\Component\Batch\Item\ItemProcessorInterface;
 use Akeneo\Component\Batch\Model\StepExecution;
 use Akeneo\Component\Batch\Step\StepExecutionAwareInterface;
 
-/**
- * processes the category for the export to shopware.
- *
- * Class ShopwareCategoryProcessor
- */
-class ShopwareCategoryProcessor extends AbstractConfigurableStepElement implements ItemProcessorInterface, StepExecutionAwareInterface
+class SimpleItemProcessor implements ItemProcessorInterface, StepExecutionAwareInterface
 {
     /** @var StepExecution */
     protected $stepExecution;
 
     /**
-     * processes the category for the export.
+     * processes the category for the export
      *
      * @param mixed $item
      *
@@ -35,13 +29,5 @@ class ShopwareCategoryProcessor extends AbstractConfigurableStepElement implemen
     public function setStepExecution(StepExecution $stepExecution)
     {
         $this->stepExecution = $stepExecution;
-    }
-
-    /**
-     * @return array
-     */
-    public function getConfigurationFields()
-    {
-        return [];
     }
 }

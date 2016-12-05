@@ -1,2 +1,0 @@
-parameters:
-    akeneo_file_storage.model.file_info.class:  Basecom\Bundle\ShopwareConnectorBundle\Entity\FileInfo

@@ -2,19 +2,21 @@
 
 namespace Basecom\Bundle\ShopwareConnectorBundle\Writer;
 
-use Akeneo\Component\Batch\Item\AbstractConfigurableStepElement;
 use Akeneo\Component\Batch\Item\ItemWriterInterface;
 use Akeneo\Component\Batch\Model\StepExecution;
 use Akeneo\Component\Batch\Step\StepExecutionAwareInterface;
 use Basecom\Bundle\ShopwareConnectorBundle\Api\ApiClient;
+use Basecom\Bundle\ShopwareConnectorBundle\Entity\Repository\ProductRepository;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
- * Posts all provided products to shopware via Rest API.
+ * Posts all provided products to shopware via Rest API
  *
  * Class ShopwareProductWriter
+ * @package Basecom\Bundle\ShopwareConnectorBundle\Writer
  */
-class ShopwareProductWriter extends AbstractConfigurableStepElement implements ItemWriterInterface, StepExecutionAwareInterface
+class ShopwareProductWriter implements ItemWriterInterface, StepExecutionAwareInterface
 {
     /** @var string */
     protected $apiKey;
@@ -28,132 +30,62 @@ class ShopwareProductWriter extends AbstractConfigurableStepElement implements I
     /** @var StepExecution */
     protected $stepExecution;
 
-    /** @var ApiClient */
-    protected $apiClient;
-
     /**
      * @var ArrayCollection
      */
     protected $attributes;
+    /**
+     * @var ProductRepository
+     */
+    private $productRepository;
+    /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+
+    public function __construct(ProductRepository $productRepository, EntityManagerInterface $entityManager)
+    {
+        $this->productRepository = $productRepository;
+        $this->entityManager = $entityManager;
+    }
 
     /**
      * {@inheritdoc}
      */
     public function write(array $items)
     {
-        $this->apiClient = new ApiClient($this->url, $this->userName, $this->apiKey);
-        $this->apiClient->put('articles/', $items);
+        $jobParameters = $this->stepExecution->getJobParameters();
+
+        $apiClient = new ApiClient(
+            $jobParameters->get('url'),
+            $jobParameters->get('userName'),
+            $jobParameters->get('apiKey')
+        );
+
+        foreach ($items as $item) {
+
+            if (!$item['hasSwId']) {
+                $response = $apiClient->post('articles/', $item);
+            } else {
+                $response = $apiClient->put('articles/' . $item['mainDetail']['number'] . '?useNumberAsId=true', $item);
+            }
+
+            if ($response['success']) {
+                $this->stepExecution->incrementSummaryInfo('write');
+
+                if (!$item['hasSwId']) {
+                    $product = $this->productRepository->findOneByIdentifier($item['mainDetail']['number']);
+                    $product->setSwProductId($response['data']['id']);
+                    $this->entityManager->persist($product);
+                }
+            }
+        }
+
+        $this->entityManager->flush();
     }
 
     public function setStepExecution(StepExecution $stepExecution)
     {
         $this->stepExecution = $stepExecution;
-    }
-
-    /**
-     * @return string
-     */
-    public function getApiKey()
-    {
-        return $this->apiKey;
-    }
-
-    /**
-     * @param string $apiKey
-     */
-    public function setApiKey($apiKey)
-    {
-        $this->apiKey = $apiKey;
-    }
-
-    /**
-     * @return string
-     */
-    public function getUserName()
-    {
-        return $this->userName;
-    }
-
-    /**
-     * @param string $userName
-     */
-    public function setUserName($userName)
-    {
-        $this->userName = $userName;
-    }
-
-    /**
-     * @return string
-     */
-    public function getUrl()
-    {
-        return $this->url;
-    }
-
-    /**
-     * @param string $url
-     */
-    public function setUrl($url)
-    {
-        $this->url = $url;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getApiClient()
-    {
-        return $this->apiClient;
-    }
-
-    /**
-     * @param mixed $apiClient
-     */
-    public function setApiClient($apiClient)
-    {
-        $this->apiClient = $apiClient;
-    }
-
-    /**
-     * @return ArrayCollection
-     */
-    public function getAttributes()
-    {
-        return $this->attributes;
-    }
-
-    /**
-     * @param ArrayCollection $attributes
-     */
-    public function setAttributes($attributes)
-    {
-        $this->attributes = $attributes;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getConfigurationFields()
-    {
-        return [
-            'apiKey'   => [
-                'options' => [
-                    'label' => 'basecom_shopware_connector.export.apiKey.label',
-                    'help'  => 'basecom_shopware_connector.export.apiKey.help',
-                ],
-            ],
-            'userName' => [
-                'options' => [
-                    'label' => 'basecom_shopware_connector.export.userName.label',
-                    'help'  => 'basecom_shopware_connector.export.userName.help',
-                ],
-            ],
-            'url'      => [
-                'options' => [
-                    'label' => 'basecom_shopware_connector.export.url.label',
-                    'help'  => 'basecom_shopware_connector.export.url.help',
-                ],
-            ],
-        ];
     }
 }

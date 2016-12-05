@@ -1,0 +1,13 @@
+Basecom\Bundle\ShopwareConnectorBundle\Entity\Product:
+    type: entity
+    table: pim_catalog_product
+    repositoryClass: Basecom\Bundle\ShopwareConnectorBundle\Entity\Repository\ProductRepository
+    fields:
+        isVariant:
+            type: integer
+            nullable: false
+            unique: false
+        swProductId:
+            type: integer
+            nullable: true
+            unique: true

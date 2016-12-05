@@ -32,12 +32,6 @@ basecom_shopware_connector:
     url:
       label: URL
       help:  Geben Sie die Shopware API-URL ein
-    similar:
-      label: Ähnliche Artikel
-      help:  Geben Sie hier den code des Akeneo-Association Typs für ähnliche Artikel ein
-    related:
-      label: Zubehör Artikel
-      help:  Geben Sie hier den code des Akeneo-Association Type für Zubehör Artikel ein
     filterAttributes:
       label: Filter Attribute
       help:  Geben Sie die Akeneo-codes der Filterattribute getrennt durch Kommata ein

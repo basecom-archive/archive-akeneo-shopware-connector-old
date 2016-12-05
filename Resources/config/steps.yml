@@ -1,6 +1,40 @@
 parameters:
-    basecom_shopware_connector.step.setup_attributes.class:   Basecom\Bundle\ShopwareConnectorBundle\Step\SetupAttributesStep
-    basecom_shopware_connector.handler.attribute_setup.class: Basecom\Bundle\ShopwareConnectorBundle\Handler\AttributeSetupHandler
+    basecom_shopware_connector.handler.attribute_setup.class: Basecom\Bundle\ShopwareConnectorBundle\Step\AttributeSetup
+
 services:
+    basecom_shopware_connector.step.export_categories:
+        class: '%pim_connector.step.item_step.class%'
+        arguments:
+            - 'shopware_export_categories_step'
+            - '@event_dispatcher'
+            - '@akeneo_batch.job_repository'
+            - '@basecom_shopware_connector.reader.shopware_category_export'
+            - '@basecom_shopware_connector.processor.simple_item'
+            - '@basecom_shopware_connector.writer.shopware_category'
+
+    basecom_shopware_connector.step.export_families:
+        class: '%pim_connector.step.item_step.class%'
+        arguments:
+            - 'shopware_export_families_step'
+            - '@event_dispatcher'
+            - '@akeneo_batch.job_repository'
+            - '@basecom_shopware_connector.reader.shopware_family_export'
+            - '@basecom_shopware_connector.processor.simple_item'
+            - '@basecom_shopware_connector.writer.shopware_family'
+
+    basecom_shopware_connector.step.export_products:
+        class: '%pim_connector.step.item_step.class%'
+        arguments:
+            - 'shopware_export_products_step'
+            - '@event_dispatcher'
+            - '@akeneo_batch.job_repository'
+            - '@basecom_shopware_connector.reader.shopware_product_export'
+            - '@basecom_shopware_connector.processor.shopware_product'
+            - '@basecom_shopware_connector.writer.shopware_product'
+
     basecom_shopware_connector.handler.attribute_setup:
         class: '%basecom_shopware_connector.handler.attribute_setup.class%'
+        arguments:
+            - 'shopware_attribute_setup_step'
+            - '@event_dispatcher'
+            - '@akeneo_batch.job_repository'

@@ -1,0 +1,8 @@
+job_templates:
+    shopware_export:
+        templates:
+            edit: "BasecomShopwareConnectorBundle:BasecomExportProfile:edit.html.twig"
+
+    shopware_product_export:
+        templates:
+            edit: "BasecomShopwareConnectorBundle:BasecomExportProfile:edit.html.twig"
