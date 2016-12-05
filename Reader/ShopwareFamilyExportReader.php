@@ -11,6 +11,7 @@ use Pim\Component\Catalog\Repository\FamilyRepositoryInterface;
  * Fetches all Families and hands them over to the processor.
  *
  * Class ShopwareFamilyExportReader
+ * @package Basecom\Bundle\ShopwareConnectorBundle\Reader
  */
 class ShopwareFamilyExportReader implements
     ItemReaderInterface,

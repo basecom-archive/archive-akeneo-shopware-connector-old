@@ -9,14 +9,15 @@ use Akeneo\Component\FileStorage\Model\FileInfo as PimFileInfo;
  * the Shopware mediaId.
  *
  * Class FileInfo
+ * @package Basecom\Bundle\ShopwareConnectorBundle\Entity
  */
 class FileInfo extends PimFileInfo
 {
-    /** @var int */
+    /** @var integer */
     protected $swMediaId;
 
     /**
-     * @return int
+     * @return integer
      */
     public function getSwMediaId()
     {
@@ -24,7 +25,7 @@ class FileInfo extends PimFileInfo
     }
 
     /**
-     * @param int $swMediaId
+     * @param integer $swMediaId
      */
     public function setSwMediaId($swMediaId)
     {

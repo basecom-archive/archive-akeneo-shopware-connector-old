@@ -16,11 +16,11 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * edit-template with an additional argument
  *
  * Class ExportProfileController
+ * @package Basecom\Bundle\ShopwareConnectorBundle\Controller
  */
 class ExportProfileController extends BaseController
 {
     /**
-     * Edit a job instance.
      * @AclAncestor("pim_importexport_export_profile_index")
      *
      * @return Response

@@ -38,7 +38,7 @@ class Product extends PimProduct
     }
 
     /**
-     * @return int
+     * @return integer
      */
     public function getSwProductId()
     {
@@ -46,7 +46,7 @@ class Product extends PimProduct
     }
 
     /**
-     * @param int $swProductId
+     * @param integer $swProductId
      */
     public function setSwProductId($swProductId)
     {

@@ -9,18 +9,19 @@ use Pim\Bundle\CatalogBundle\Entity\Category as PimCategory;
  * the Shopware category ID.
  *
  * Class Category
+ * @package Basecom\Bundle\ShopwareConnectorBundle\Entity
  */
 class Category extends PimCategory
 {
     /**
-     * Shopware Category ID.
+     * Shopware Category ID
      *
-     * @var int
+     * @var integer
      */
     protected $swId;
 
     /**
-     * @return int
+     * @return integer
      */
     public function getSwId()
     {
@@ -28,7 +29,7 @@ class Category extends PimCategory
     }
 
     /**
-     * @param int $swId
+     * @param integer $swId
      */
     public function setSwId($swId)
     {

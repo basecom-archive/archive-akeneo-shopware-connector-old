@@ -9,6 +9,7 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
  * Class BasecomShopwareConnectorExtension.
+ * @package Basecom\Bundle\ShopwareConnectorBundle\DependencyInjection
  */
 class BasecomShopwareConnectorExtension extends Extension
 {

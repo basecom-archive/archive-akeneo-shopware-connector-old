@@ -9,18 +9,19 @@ use Pim\Bundle\CatalogBundle\Entity\Family as PimFamily;
  * the Shopware propertyGroup ID.
  *
  * Class Family
+ * @package Basecom\Bundle\ShopwareConnectorBundle\Entity
  */
 class Family extends PimFamily
 {
     /**
-     * Shopware PropertyGroup ID.
+     * Shopware PropertyGroup ID
      *
-     * @var int
+     * @var integer
      */
     protected $swId;
 
     /**
-     * @return int
+     * @return integer
      */
     public function getSwId()
     {
@@ -28,7 +29,7 @@ class Family extends PimFamily
     }
 
     /**
-     * @param int $swId
+     * @param integer $swId
      */
     public function setSwId($swId)
     {
