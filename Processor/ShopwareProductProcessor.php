@@ -37,7 +37,7 @@ class ShopwareProductProcessor implements ItemProcessorInterface, StepExecutionA
     public function process($item)
     {
         if($item->isVariant()) {
-            return;
+            return null;
         }
 
         $jobParameters = $this->stepExecution->getJobParameters();

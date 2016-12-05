@@ -202,8 +202,6 @@ class ShopwareProductSerializer
     )
     {
         $item = [];
-        $imageCount = 0;
-        $propValueCount = 0;
         $attributes = $this->serializeAttributes($attributes);
 
         /** @var ProductValueInterface $value */
@@ -260,15 +258,13 @@ class ShopwareProductSerializer
                             $propValue['option']['filterable'] = true;
                             $propValue['value'] = $option->getOptionValue()->getValue();
                             $propValue['position'] = $option->getSortOrder();
-                            $item['propertyValues'][$propValueCount] = $propValue;
-                            $propValueCount++;
+                            $item['propertyValues'][] = $propValue;
                         }
                     } else {
                         $propValue['option']['name'] = $attribute->getLabel();
                         $propValue['option']['filterable'] = true;
                         $propValue['value'] = $this->getAttributeValue($attribute, $value, $locale, $currency);
-                        $item['propertyValues'][$propValueCount] = $propValue;
-                        $propValueCount++;
+                        $item['propertyValues'][] = $propValue;
                     }
                 }
 

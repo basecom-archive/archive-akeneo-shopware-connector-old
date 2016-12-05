@@ -6,18 +6,14 @@ use Akeneo\Component\Batch\Item\ItemProcessorInterface;
 use Akeneo\Component\Batch\Model\StepExecution;
 use Akeneo\Component\Batch\Step\StepExecutionAwareInterface;
 
-/**
- * processes the family for the export to shopware
- *
- * Class ShopwareFamilyProcessor
- * @package Basecom\Bundle\ShopwareConnectorBundle\Processor
- */
-class ShopwareFamilyProcessor implements ItemProcessorInterface, StepExecutionAwareInterface
+class SimpleItemProcessor implements ItemProcessorInterface, StepExecutionAwareInterface
 {
     /** @var StepExecution */
     protected $stepExecution;
 
     /**
+     * processes the category for the export
+     *
      * @param mixed $item
      *
      * @return mixed

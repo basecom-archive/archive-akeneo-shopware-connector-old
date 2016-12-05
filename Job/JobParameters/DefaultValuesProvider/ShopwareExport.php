@@ -5,10 +5,18 @@ namespace Basecom\Bundle\ShopwareConnectorBundle\Job\JobParameters\DefaultValues
 use Akeneo\Component\Batch\Job\JobInterface;
 use Akeneo\Component\Batch\Job\JobParameters\DefaultValuesProviderInterface;
 
+/**
+ * Class ShopwareExport
+ * @package Basecom\Bundle\ShopwareConnectorBundle\Job\JobParameters\DefaultValuesProvider
+ */
 class ShopwareExport implements DefaultValuesProviderInterface
 {
     protected $supportedJobNames;
 
+    /**
+     * ShopwareExport constructor.
+     * @param $supportedJobNames
+     */
     public function __construct($supportedJobNames)
     {
         $this->supportedJobNames = $supportedJobNames;
@@ -20,11 +28,11 @@ class ShopwareExport implements DefaultValuesProviderInterface
     public function getDefaultValues()
     {
         return [
-            'rootCategory' => '',
-            'apiKey' => '',
-            'userName' => '',
-            'url' => '',
-            'locale' => ''
+            'rootCategory'  => '',
+            'apiKey'        => '',
+            'userName'      => '',
+            'url'           => '',
+            'locale'        => ''
         ];
     }
 

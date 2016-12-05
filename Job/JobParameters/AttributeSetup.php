@@ -10,6 +10,10 @@ use Symfony\Component\Validator\Constraints\Collection;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Url;
 
+/**
+ * Class AttributeSetup
+ * @package Basecom\Bundle\ShopwareConnectorBundle\Job\JobParameters
+ */
 class AttributeSetup implements ConstraintCollectionProviderInterface, DefaultValuesProviderInterface, FormConfigurationProviderInterface
 {
     /**
@@ -34,7 +38,8 @@ class AttributeSetup implements ConstraintCollectionProviderInterface, DefaultVa
     }
 
     /**
-     * @return boolean
+     * @param JobInterface $job
+     * @return bool
      */
     public function supports(JobInterface $job)
     {
@@ -47,9 +52,9 @@ class AttributeSetup implements ConstraintCollectionProviderInterface, DefaultVa
     public function getDefaultValues()
     {
         return [
-            'apiKey' => '',
-            'userName' => '',
-            'url' => ''
+            'apiKey'    => '',
+            'userName'  => '',
+            'url'       => ''
         ];
     }
 
@@ -59,23 +64,23 @@ class AttributeSetup implements ConstraintCollectionProviderInterface, DefaultVa
     public function getFormConfiguration()
     {
         return [
-            'url'      => [
+            'url' => [
                 'type' => 'url',
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.url.label',
-                    'help'  => 'basecom_shopware_connector.export.url.help'
+                    'help' => 'basecom_shopware_connector.export.url.help'
                 ]
             ],
             'userName' => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.userName.label',
-                    'help'  => 'basecom_shopware_connector.export.userName.help'
+                    'help' => 'basecom_shopware_connector.export.userName.help'
                 ]
             ],
-            'apiKey'   => [
+            'apiKey' => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.apiKey.label',
-                    'help'  => 'basecom_shopware_connector.export.apiKey.help'
+                    'help' => 'basecom_shopware_connector.export.apiKey.help'
                 ]
             ]
         ];

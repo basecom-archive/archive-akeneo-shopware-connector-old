@@ -4,6 +4,10 @@ namespace Basecom\Bundle\ShopwareConnectorBundle\Entity\Repository;
 
 use Akeneo\Bundle\FileStorageBundle\Doctrine\ORM\Repository\FileInfoRepository as BaseRepository;
 
+/**
+ * Class FileInfoRepository
+ * @package Basecom\Bundle\ShopwareConnectorBundle\Entity\Repository
+ */
 class FileInfoRepository extends BaseRepository
 {
     public function findMediaIdsNotInProducts($inProduct, $swIds)
@@ -17,7 +21,7 @@ class FileInfoRepository extends BaseRepository
             $qb->expr()->in('FileInfo.swMediaId', $swIds)
         );
 
-        if(!empty($inProduct)) {
+        if (!empty($inProduct)) {
             $qb->andWhere(
                 $qb->expr()->notIn('FileInfo.swMediaId', $inProduct)
             );

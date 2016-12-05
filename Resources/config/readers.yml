@@ -1,10 +1,9 @@
 parameters:
-    basecom_shopware_connector.reader.shopware_family_export.class:     Basecom\Bundle\ShopwareConnectorBundle\Reader\ShopwareFamilyExportReader
     basecom_shopware_connector.reader.shopware_product_export.class:    Basecom\Bundle\ShopwareConnectorBundle\Reader\ShopwareProductExportReader
     basecom_shopware_connector.reader.shopware_category_export.class:   Basecom\Bundle\ShopwareConnectorBundle\Reader\ShopwareCategoryExportReader
 services:
     basecom_shopware_connector.reader.shopware_family_export:
-        class: '%basecom_shopware_connector.reader.shopware_family_export.class%'
+        class: '%pim_connector.reader.database.class%'
         arguments:
             - '@pim_catalog.repository.family'
 

@@ -11,6 +11,12 @@ use Basecom\Bundle\ShopwareConnectorBundle\Entity\Repository\FileInfoRepository;
 use Basecom\Bundle\ShopwareConnectorBundle\Entity\Repository\ProductRepository;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
+/**
+ * Deletes all products and media which are referenced in Akeneo by the corresponding Shopware ID
+ *
+ * Class ShopwareCleaner
+ * @package Basecom\Bundle\ShopwareConnectorBundle\Cleaner
+ */
 class ShopwareCleaner extends AbstractStep
 {
     /**
@@ -66,40 +72,44 @@ class ShopwareCleaner extends AbstractStep
         $this->cleanProductMedia($stepExecution);
     }
 
+    /**
+     * @param StepExecution $stepExecution
+     */
     protected function cleanProducts(StepExecution $stepExecution)
     {
         $articles = $this->apiClient->get('articles/');
         $articleIds = array_column($articles['data'], 'id');
         $productIdsToKeep = array_column($this->productRepository->findIdByNotInSwId($articleIds), 'swProductId');
 
-        foreach($articleIds as $article)
-        {
-            if(!in_array($article, $productIdsToKeep)) {
-                $result = $this->apiClient->delete('articles/'.$article);
+        foreach ($articleIds as $article) {
+            if (!in_array($article, $productIdsToKeep)) {
+                $result = $this->apiClient->delete('articles/' . $article);
 
-                if($result['success']) {
+                if ($result['success']) {
                     $stepExecution->incrementSummaryInfo('product deleted');
                 }
             }
         }
     }
 
+    /**
+     * @param StepExecution $stepExecution
+     */
     protected function cleanProductMedia(StepExecution $stepExecution)
     {
         $media = $this->apiClient->get('media/');
         $mediaIds = array_column($media['data'], 'id');
         $productMedia = $this->productRepository->findProductMediaWithSwId($mediaIds);
-        if(!empty($productMedia)) {
+        if (!empty($productMedia)) {
             $productMedia = array_column($productMedia, 'swMediaId');
         }
 
         $mediaIdsToDelete = $this->fileInfoRepository->findMediaIdsNotInProducts($productMedia, $mediaIds);
 
-        foreach($mediaIdsToDelete as $mediaToDelete)
-        {
-            $result = $this->apiClient->delete('media/'.$mediaToDelete['swMediaId']);
+        foreach ($mediaIdsToDelete as $mediaToDelete) {
+            $result = $this->apiClient->delete('media/' . $mediaToDelete['swMediaId']);
 
-            if($result['success']) {
+            if ($result['success']) {
                 $stepExecution->incrementSummaryInfo('media deleted');
             }
         }

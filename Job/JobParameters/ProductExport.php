@@ -1,13 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: amirelsayed
- * Date: 11/10/16
- * Time: 10:52
- */
 
 namespace Basecom\Bundle\ShopwareConnectorBundle\Job\JobParameters;
-
 
 use Akeneo\Component\Batch\Job\JobInterface;
 use Akeneo\Component\Batch\Job\JobParameters\ConstraintCollectionProviderInterface;
@@ -21,10 +14,12 @@ use Symfony\Component\Validator\Constraints\Collection;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Url;
 
+/**
+ * Class ProductExport
+ * @package Basecom\Bundle\ShopwareConnectorBundle\Job\JobParameters
+ */
 class ProductExport implements ConstraintCollectionProviderInterface, DefaultValuesProviderInterface, FormConfigurationProviderInterface
 {
-
-
     /**
      * @var CategoryRepositoryInterface
      */
@@ -40,6 +35,12 @@ class ProductExport implements ConstraintCollectionProviderInterface, DefaultVal
      */
     protected $localeRepository;
 
+    /**
+     * ProductExport constructor.
+     * @param CategoryRepositoryInterface $categoryRepository
+     * @param ChannelRepositoryInterface $channelRepository
+     * @param LocaleRepositoryInterface $localeRepository
+     */
     public function __construct(
         CategoryRepositoryInterface $categoryRepository,
         ChannelRepositoryInterface $channelRepository,
@@ -96,33 +97,33 @@ class ProductExport implements ConstraintCollectionProviderInterface, DefaultVal
                 'price' => [
                     new NotBlank(['groups' => 'Execution'])
                 ],
-                'descriptionLong' => [],
-                'metaTitle' => [],
-                'description' => [],
-                'keywords' => [],
-                'purchaseUnit' => [],
-                'referenceUnit' => [],
-                'packUnit' => [],
-                'notification' => [],
-                'shippingTime' => [],
-                'inStock' => [],
-                'stockMin' => [],
-                'releaseDate' => [],
-                'pseudoSales' => [],
-                'pseudoPrice' => [],
-                'basePrice' => [],
-                'minPurchase' => [],
-                'purchaseSteps' => [],
-                'maxPurchase' => [],
-                'weight' => [],
-                'shippingFree' => [],
-                'highlight' => [],
-                'lastStock' => [],
-                'ean' => [],
-                'width' => [],
-                'height' => [],
-                'len' => [],
-                'attr' => []
+                'descriptionLong'   => [],
+                'metaTitle'         => [],
+                'description'       => [],
+                'keywords'          => [],
+                'purchaseUnit'      => [],
+                'referenceUnit'     => [],
+                'packUnit'          => [],
+                'notification'      => [],
+                'shippingTime'      => [],
+                'inStock'           => [],
+                'stockMin'          => [],
+                'releaseDate'       => [],
+                'pseudoSales'       => [],
+                'pseudoPrice'       => [],
+                'basePrice'         => [],
+                'minPurchase'       => [],
+                'purchaseSteps'     => [],
+                'maxPurchase'       => [],
+                'weight'            => [],
+                'shippingFree'      => [],
+                'highlight'         => [],
+                'lastStock'         => [],
+                'ean'               => [],
+                'width'             => [],
+                'height'            => [],
+                'len'               => [],
+                'attr'              => []
             ]
         ]);
     }
@@ -133,48 +134,48 @@ class ProductExport implements ConstraintCollectionProviderInterface, DefaultVal
     public function getDefaultValues()
     {
         return [
-            'apiKey' => '',
-            'userName' => '',
-            'url' => '',
-            'rootCategory' => '',
-            'channel' => '',
-            'locale' => '',
-            'currency' => '',
-            'filterAttributes' => '',
-            'supplier' => '',
-            'name' => '',
-            'articleNumber' => '',
-            'tax' => '',
-            'template' => '',
-            'priceGroupActive' => '',
-            'price' => '',
-            'descriptionLong' => '',
-            'metaTitle' => '',
-            'description' => '',
-            'keywords' => '',
-            'purchaseUnit' => '',
-            'referenceUnit' => '',
-            'packUnit' => '',
-            'notification' => '',
-            'shippingTime' => '',
-            'inStock' => '',
-            'stockMin' => '',
-            'releaseDate' => '',
-            'pseudoSales' => '',
-            'pseudoPrice' => '',
-            'basePrice' => '',
-            'minPurchase' => '',
-            'purchaseSteps' => '',
-            'maxPurchase' => '',
-            'weight' => '',
-            'shippingFree' => '',
-            'highlight' => '',
-            'lastStock' => '',
-            'ean' => '',
-            'width' => '',
-            'height' => '',
-            'len' => '',
-            'attr' => ''
+            'apiKey'            => '',
+            'userName'          => '',
+            'url'               => '',
+            'rootCategory'      => '',
+            'channel'           => '',
+            'locale'            => '',
+            'currency'          => '',
+            'filterAttributes'  => '',
+            'supplier'          => '',
+            'name'              => '',
+            'articleNumber'     => '',
+            'tax'               => '',
+            'template'          => '',
+            'priceGroupActive'  => '',
+            'price'             => '',
+            'descriptionLong'   => '',
+            'metaTitle'         => '',
+            'description'       => '',
+            'keywords'          => '',
+            'purchaseUnit'      => '',
+            'referenceUnit'     => '',
+            'packUnit'          => '',
+            'notification'      => '',
+            'shippingTime'      => '',
+            'inStock'           => '',
+            'stockMin'          => '',
+            'releaseDate'       => '',
+            'pseudoSales'       => '',
+            'pseudoPrice'       => '',
+            'basePrice'         => '',
+            'minPurchase'       => '',
+            'purchaseSteps'     => '',
+            'maxPurchase'       => '',
+            'weight'            => '',
+            'shippingFree'      => '',
+            'highlight'         => '',
+            'lastStock'         => '',
+            'ean'               => '',
+            'width'             => '',
+            'height'            => '',
+            'len'               => '',
+            'attr'              => ''
         ];
     }
 

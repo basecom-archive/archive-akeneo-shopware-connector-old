@@ -9,9 +9,9 @@ namespace Basecom\Bundle\ShopwareConnectorBundle\Api;
  */
 class ApiClient
 {
-    const METHOD_GET    = 'GET';
-    const METHOD_PUT    = 'PUT';
-    const METHOD_POST   = 'POST';
+    const METHOD_GET = 'GET';
+    const METHOD_PUT = 'PUT';
+    const METHOD_POST = 'POST';
     const METHOD_DELETE = 'DELETE';
     /**
      * Holds all valid methodes for API calls.
@@ -34,36 +34,37 @@ class ApiClient
      * @param $username
      * @param $apiKey
      */
-    public function __construct($apiUrl, $username, $apiKey) {
-    $this->apiUrl = rtrim($apiUrl, '/') . '/';
-    //Initializes the cURL instance
-    $this->cURL = curl_init();
-    curl_setopt($this->cURL, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($this->cURL, CURLOPT_FOLLOWLOCATION, false);
-    curl_setopt($this->cURL, CURLOPT_USERAGENT, 'Shopware ApiClient');
-    curl_setopt($this->cURL, CURLOPT_HTTPAUTH, CURLAUTH_DIGEST);
-    curl_setopt($this->cURL, CURLOPT_USERPWD, $username . ':' . $apiKey);
-    curl_setopt($this->cURL, CURLOPT_HTTPHEADER, array(
-        'Content-Type: application/json; 
+    public function __construct($apiUrl, $username, $apiKey)
+    {
+        $this->apiUrl = rtrim($apiUrl, '/') . '/';
+        //Initializes the cURL instance
+        $this->cURL = curl_init();
+        curl_setopt($this->cURL, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($this->cURL, CURLOPT_FOLLOWLOCATION, false);
+        curl_setopt($this->cURL, CURLOPT_USERAGENT, 'Shopware ApiClient');
+        curl_setopt($this->cURL, CURLOPT_HTTPAUTH, CURLAUTH_DIGEST);
+        curl_setopt($this->cURL, CURLOPT_USERPWD, $username . ':' . $apiKey);
+        curl_setopt($this->cURL, CURLOPT_HTTPHEADER, array(
+            'Content-Type: application/json; 
          charset=utf-8;
          qop=auth;
          cnonce="17289d3348dfc6f2";
          opaque="d75db7b160fe72d1346d2bd1f67bfd10";
          nonce="73dd363a242fcd9db88e54f86c1ae089"',
-    ));
-}
+        ));
+    }
 
     /**
      * Calls the Shopware API.
      *
      * @param        $url
      * @param string $method
-     * @param array  $data
-     * @param array  $params
+     * @param array $data
+     * @param array $params
      *
      * @throws \Exception
      *
-     * @return mixed|void
+     * @return mixed
      */
     public function call($url, $method = self::METHOD_GET, $data = array(), $params = array())
     {
@@ -82,11 +83,10 @@ class ApiClient
         curl_setopt($this->cURL, CURLOPT_POSTFIELDS, $dataString);
         curl_setopt($this->cURL, CURLINFO_HEADER_OUT, true);
 
-        $result   = curl_exec($this->cURL);
-        $httpCode = curl_getinfo($this->cURL, CURLINFO_HTTP_CODE);
+        $result = curl_exec($this->cURL);
 
 
-        return $this->prepareResponse($result, $httpCode);
+        return $this->prepareResponse($result);
     }
 
 
@@ -98,7 +98,7 @@ class ApiClient
      *
      * @throws \Exception
      *
-     * @return mixed|void
+     * @return mixed
      */
     public function get($url, $params = [])
     {
@@ -114,7 +114,7 @@ class ApiClient
      *
      * @throws \Exception
      *
-     * @return mixed|void
+     * @return mixed
      */
     public function post($url, $data = [], $params = [])
     {
@@ -130,7 +130,7 @@ class ApiClient
      *
      * @throws \Exception
      *
-     * @return mixed|void
+     * @return mixed
      */
     public function put($url, $data = [], $params = [])
     {
@@ -145,7 +145,7 @@ class ApiClient
      *
      * @throws \Exception
      *
-     * @return mixed|void
+     * @return mixed
      */
     public function delete($url, $params = [])
     {
@@ -156,11 +156,10 @@ class ApiClient
      * Delivers Shopware Response to an API call.
      *
      * @param $result
-     * @param $httpCode
      *
-     * @return mixed|void
+     * @return mixed
      */
-    protected function prepareResponse($result, $httpCode)
+    protected function prepareResponse($result)
     {
         if (null === $decodedResult = json_decode($result, true)) {
             return false;
