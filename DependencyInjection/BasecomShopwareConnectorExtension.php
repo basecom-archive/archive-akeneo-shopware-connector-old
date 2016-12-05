@@ -8,7 +8,7 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
- * Class BasecomShopwareConnectorExtension
+ * Class BasecomShopwareConnectorExtension.
  * @package Basecom\Bundle\ShopwareConnectorBundle\DependencyInjection
  */
 class BasecomShopwareConnectorExtension extends Extension
@@ -27,5 +27,6 @@ class BasecomShopwareConnectorExtension extends Extension
         $loader->load('serializers.yml');
         $loader->load('controllers.yml');
         $loader->load('services.yml');
+        $loader->load('attribute_mapping.yml');
     }
 }

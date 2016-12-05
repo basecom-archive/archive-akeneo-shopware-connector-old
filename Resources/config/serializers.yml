@@ -9,3 +9,4 @@ services:
             - '@pim_catalog.repository.category'
             - '@doctrine.orm.entity_manager'
             - '@basecom_shopware_connector.api.shopware_media_writer'
+            - '%api_attribute_mapping%'

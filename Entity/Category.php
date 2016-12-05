@@ -6,7 +6,7 @@ use Pim\Bundle\CatalogBundle\Entity\Category as PimCategory;
 
 /**
  * Overrides original Category entity to add
- * the Shopware category ID
+ * the Shopware category ID.
  *
  * Class Category
  * @package Basecom\Bundle\ShopwareConnectorBundle\Entity
@@ -21,7 +21,7 @@ class Category extends PimCategory
     protected $swId;
 
     /**
-     * @return int
+     * @return integer
      */
     public function getSwId()
     {
@@ -29,7 +29,7 @@ class Category extends PimCategory
     }
 
     /**
-     * @param int $swId
+     * @param integer $swId
      */
     public function setSwId($swId)
     {
