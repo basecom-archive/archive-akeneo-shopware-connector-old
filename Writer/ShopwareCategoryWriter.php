@@ -41,7 +41,7 @@ class ShopwareCategoryWriter extends AbstractConfigurableStepElement implements 
     protected $entityManager;
 
     /** @var LocaleRepositoryInterface */
-    protected $localeManager;
+    protected $localeRepository;
 
     /**
      * ShopwareCategoryWriter constructor.
@@ -50,27 +50,29 @@ class ShopwareCategoryWriter extends AbstractConfigurableStepElement implements 
      * @param EntityManager             $entityManager
      * @param LocaleRepositoryInterface $localeManager
      */
-    public function __construct(CategoryRepository $categoryRepository, EntityManager $entityManager, LocaleRepositoryInterface $localeManager)
-    {
+    public function __construct(
+        CategoryRepository $categoryRepository,
+        EntityManager $entityManager,
+        LocaleRepositoryInterface $localeManager
+    ) {
         $this->categoryRepository = $categoryRepository;
-        $this->entityManager      = $entityManager;
-        $this->localeManager      = $localeManager;
+        $this->entityManager = $entityManager;
+        $this->localeRepository = $localeManager;
     }
 
     /**
      * posts categories to Shopware.
      *
-     * @param array $items
+     * @param Category[] $items
      */
     public function write(array $items)
     {
         $apiClient = new ApiClient($this->url, $this->userName, $this->apiKey);
 
-        /** @var Category $item */
         foreach ($items as $item) {
-            $item->setLocale($this->localeManager->getActivatedLocaleCodes()[$this->locale]);
+            $item->setLocale($this->localeRepository->getActivatedLocaleCodes()[$this->locale]);
             $parent = 1;
-            if ($item->getParent() != null && $item->getParent()->getSwId() != null) {
+            if (null !== $item->getParent() && null !== $item->getParent()->getSwId()) {
                 $parent = $item->getParent()->getSwId();
             }
             $swCategory = [
@@ -80,8 +82,8 @@ class ShopwareCategoryWriter extends AbstractConfigurableStepElement implements 
                 'blog'             => false,
                 'showFilterGroups' => true,
             ];
-            if ($item->getSwId() != null) {
-                if (null == $apiClient->put('categories/'.$item->getSwId(), $swCategory)) {
+            if (null !== $item->getSwId()) {
+                if (null == $apiClient->put('categories/' . $item->getSwId(), $swCategory)) {
                     $category = $apiClient->post('categories', $swCategory);
                     $item->setSwId($category['data']['id']);
                     $this->entityManager->persist($item);
@@ -162,17 +164,17 @@ class ShopwareCategoryWriter extends AbstractConfigurableStepElement implements 
     /**
      * @return LocaleRepositoryInterface
      */
-    public function getLocaleManager()
+    public function getLocaleRepository()
     {
-        return $this->localeManager;
+        return $this->localeRepository;
     }
 
     /**
-     * @param LocaleRepositoryInterface $localeManager
+     * @param LocaleRepositoryInterface $localeRepository
      */
-    public function setLocaleManager($localeManager)
+    public function setLocaleRepository($localeRepository)
     {
-        $this->localeManager = $localeManager;
+        $this->localeRepository = $localeRepository;
     }
 
     /**
@@ -189,17 +191,17 @@ class ShopwareCategoryWriter extends AbstractConfigurableStepElement implements 
     public function getConfigurationFields()
     {
         return [
-            'locale' => [
+            'locale'   => [
                 'type'    => 'choice',
                 'options' => [
-                    'choices'  => $this->localeManager->getActivatedLocaleCodes(),
+                    'choices'  => $this->localeRepository->getActivatedLocaleCodes(),
                     'required' => true,
                     'select2'  => true,
                     'label'    => 'basecom_shopware_connector.export.locale.label',
-                    'help'     => 'basecom_shopware_connector.export.locale.help',
-                ],
+                    'help'     => 'basecom_shopware_connector.export.locale.help'
+                ]
             ],
-            'url' => [
+            'url'      => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.url.label',
                     'help'  => 'basecom_shopware_connector.export.url.help',
@@ -211,7 +213,7 @@ class ShopwareCategoryWriter extends AbstractConfigurableStepElement implements 
                     'help'  => 'basecom_shopware_connector.export.userName.help',
                 ],
             ],
-            'apiKey' => [
+            'apiKey'   => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.apiKey.label',
                     'help'  => 'basecom_shopware_connector.export.apiKey.help',

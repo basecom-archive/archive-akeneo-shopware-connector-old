@@ -28,6 +28,7 @@ class ShopwareProductWriter extends AbstractConfigurableStepElement implements I
     /** @var StepExecution */
     protected $stepExecution;
 
+    /** @var ApiClient */
     protected $apiClient;
 
     /**
@@ -135,7 +136,7 @@ class ShopwareProductWriter extends AbstractConfigurableStepElement implements I
     public function getConfigurationFields()
     {
         return [
-            'apiKey' => [
+            'apiKey'   => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.apiKey.label',
                     'help'  => 'basecom_shopware_connector.export.apiKey.help',
@@ -147,7 +148,7 @@ class ShopwareProductWriter extends AbstractConfigurableStepElement implements I
                     'help'  => 'basecom_shopware_connector.export.userName.help',
                 ],
             ],
-            'url' => [
+            'url'      => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.url.label',
                     'help'  => 'basecom_shopware_connector.export.url.help',

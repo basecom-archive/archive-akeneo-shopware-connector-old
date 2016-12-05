@@ -9,9 +9,9 @@ namespace Basecom\Bundle\ShopwareConnectorBundle\Api;
  */
 class ApiClient
 {
-    const METHODE_GET    = 'GET';
-    const METHODE_PUT    = 'PUT';
-    const METHODE_POST   = 'POST';
+    const METHODE_GET = 'GET';
+    const METHODE_PUT = 'PUT';
+    const METHODE_POST = 'POST';
     const METHODE_DELETE = 'DELETE';
     /**
      * Holds all valid methodes for API calls.
@@ -36,13 +36,13 @@ class ApiClient
      */
     public function __construct($apiUrl, $username, $apiKey)
     {
-        $this->apiUrl = rtrim($apiUrl, '/').'/';
+        $this->apiUrl = rtrim($apiUrl, '/') . '/';
         //Initializes the cURL instance
         $this->cURL = curl_init();
         curl_setopt($this->cURL, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($this->cURL, CURLOPT_FOLLOWLOCATION, false);
         curl_setopt($this->cURL, CURLOPT_HTTPAUTH, CURLAUTH_DIGEST);
-        curl_setopt($this->cURL, CURLOPT_USERPWD, $username.':'.$apiKey);
+        curl_setopt($this->cURL, CURLOPT_USERPWD, $username . ':' . $apiKey);
         curl_setopt($this->cURL, CURLOPT_HTTPHEADER, [
             'Content-Type: application/json; charset=utf-8',
         ]);
@@ -51,7 +51,7 @@ class ApiClient
     /**
      * Calls the Shopware API.
      *
-     * @param $url
+     * @param        $url
      * @param string $method
      * @param array  $data
      * @param array  $params
@@ -63,19 +63,19 @@ class ApiClient
     public function call($url, $method = self::METHODE_GET, $data = [], $params = [])
     {
         if (!in_array($method, $this->validMethods)) {
-            throw new \Exception('Invalid HTTP-Methode: '.$method);
+            throw new \Exception('Invalid HTTP-Methode: ' . $method);
         }
         $queryString = '';
         if (!empty($params)) {
             $queryString = http_build_query($params);
         }
-        $url        = rtrim($url, '?').'?';
-        $url        = $this->apiUrl.$url.$queryString;
+        $url = rtrim($url, '?') . '?';
+        $url = $this->apiUrl . $url . $queryString;
         $dataString = json_encode($data);
         curl_setopt($this->cURL, CURLOPT_URL, $url);
         curl_setopt($this->cURL, CURLOPT_CUSTOMREQUEST, $method);
         curl_setopt($this->cURL, CURLOPT_POSTFIELDS, $dataString);
-        $result   = curl_exec($this->cURL);
+        $result = curl_exec($this->cURL);
         $httpCode = curl_getinfo($this->cURL, CURLINFO_HTTP_CODE);
 
         return $this->prepareResponse($result, $httpCode);
@@ -84,7 +84,7 @@ class ApiClient
     /**
      * Calls the Shopware API with GET parameter.
      *
-     * @param $url
+     * @param       $url
      * @param array $params
      *
      * @throws \Exception
@@ -99,7 +99,7 @@ class ApiClient
     /**
      * Calls the Shopware API with POST parameter.
      *
-     * @param $url
+     * @param       $url
      * @param array $data
      * @param array $params
      *
@@ -115,7 +115,7 @@ class ApiClient
     /**
      * Calls the Shopware API with PUT parameter.
      *
-     * @param $url
+     * @param       $url
      * @param array $data
      * @param array $params
      *
@@ -131,7 +131,7 @@ class ApiClient
     /**
      * Calls the Shopware API with DELETE parameter.
      *
-     * @param $url
+     * @param       $url
      * @param array $params
      *
      * @throws \Exception
@@ -144,7 +144,7 @@ class ApiClient
     }
 
     /**
-     * Delivers Shopwares Response to an API call.
+     * Delivers Shopware Response to an API call.
      *
      * @param $result
      * @param $httpCode
@@ -163,9 +163,9 @@ class ApiClient
                 JSON_ERROR_SYNTAX    => 'Syntaxerror',
             ];
             echo '<h2>Could not decode json</h2>';
-            echo 'json_last_error: '.$jsonErrors[json_last_error()];
+            echo 'json_last_error: ' . $jsonErrors[json_last_error()];
             echo '<br>Raw:<br>';
-            echo '<pre>'.print_r($result, true).'</pre>';
+            echo '<pre>' . print_r($result, true) . '</pre>';
 
             return;
         }
@@ -178,11 +178,11 @@ class ApiClient
 
         if (!$decodedResult['success']) {
             echo '<h2>No Success</h2>';
-            echo '<p>'.$decodedResult['message'].'</p>';
+            echo '<p>' . $decodedResult['message'] . '</p>';
 
             return;
         }
-        echo '<h2>Success</h2>'."\n";
+        echo '<h2>Success</h2>' . "\n";
 
         return $decodedResult;
     }

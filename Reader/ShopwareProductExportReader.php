@@ -2,14 +2,14 @@
 
 namespace Basecom\Bundle\ShopwareConnectorBundle\Reader;
 
-use Akeneo\Bundle\ClassificationBundle\Doctrine\ORM\Repository\CategoryRepository;
 use Akeneo\Component\Batch\Item\AbstractConfigurableStepElement;
 use Akeneo\Component\Batch\Item\ItemReaderInterface;
 use Akeneo\Component\Batch\Model\StepExecution;
 use Akeneo\Component\Batch\Step\StepExecutionAwareInterface;
+use Akeneo\Component\Classification\Repository\CategoryRepositoryInterface;
 use Basecom\Bundle\ShopwareConnectorBundle\Entity\Category;
-use Pim\Bundle\CatalogBundle\Doctrine\ORM\Repository\ProductRepository;
 use Pim\Bundle\CatalogBundle\Manager\ChannelManager;
+use Pim\Bundle\CatalogBundle\Repository\ProductRepositoryInterface;
 use Pim\Component\Catalog\Model\Product;
 
 /**
@@ -24,17 +24,14 @@ class ShopwareProductExportReader extends AbstractConfigurableStepElement implem
     /** @var StepExecution */
     protected $stepExecution;
 
-    /** @var ProductRepository */
+    /** @var ProductRepositoryInterface */
     protected $productRepository;
 
-    /** @var CategoryRepository */
+    /** @var CategoryRepositoryInterface */
     protected $categoryRepository;
 
     /** @var \ArrayIterator */
     protected $results;
-
-    /** @var bool Checks if all attributes are sent to the processor */
-    protected $isExecuted = false;
 
     /** @var ChannelManager */
     protected $channelManager;
@@ -48,13 +45,22 @@ class ShopwareProductExportReader extends AbstractConfigurableStepElement implem
     /**
      * ShopwareProductExportReader constructor.
      *
+<<<<<<< HEAD
      * @param ProductRepository $productRepository
+=======
+     * @param ProductRepositoryInterface  $productRepository
+     * @param CategoryRepositoryInterface $categoryRepository
+     * @param ChannelManager              $channelManager
+>>>>>>> develop
      */
-    public function __construct(ProductRepository $productRepository, CategoryRepository $categoryRepository, ChannelManager $channelManager)
-    {
-        $this->productRepository  = $productRepository;
+    public function __construct(
+        ProductRepositoryInterface $productRepository,
+        CategoryRepositoryInterface $categoryRepository,
+        ChannelManager $channelManager
+    ) {
+        $this->productRepository = $productRepository;
         $this->categoryRepository = $categoryRepository;
-        $this->channelManager     = $channelManager;
+        $this->channelManager = $channelManager;
     }
 
     /**
@@ -62,9 +68,8 @@ class ShopwareProductExportReader extends AbstractConfigurableStepElement implem
      */
     public function read()
     {
-        if (!$this->isExecuted) {
-            $this->isExecuted = true;
-            $this->results    = $this->getResults();
+        if (null === $this->results) {
+            $this->results = $this->getResults();
         }
 
         if (null !== $result = $this->results->current()) {
@@ -95,7 +100,7 @@ class ShopwareProductExportReader extends AbstractConfigurableStepElement implem
                     'help'  => 'basecom_shopware_connector.export.rootCategory.help',
                 ],
             ],
-            'channel' => [
+            'channel'      => [
                 'type'    => 'choice',
                 'options' => [
                     'choices'  => $this->channelManager->getChannelChoices(),
@@ -115,11 +120,11 @@ class ShopwareProductExportReader extends AbstractConfigurableStepElement implem
     {
         /** @var Category $rootCategory */
         $rootCategory = $this->categoryRepository->findOneByIdentifier($this->rootCategory);
-        $categories   = $this->categoryRepository->findAll();
-        $products     = [];
+        $categories = $this->categoryRepository->findAll();
+        $products = [];
         /** @var Category $category */
         foreach ($categories as $category) {
-            if ($category->getRoot() == $rootCategory->getId()) {
+            if ($category->getRoot() === $rootCategory->getId()) {
                 /** @var Product $product */
                 foreach ($this->productRepository->findAll() as $product) {
                     if (in_array($category->getCode(), $product->getCategoryCodes())) {

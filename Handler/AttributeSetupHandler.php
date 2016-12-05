@@ -2,7 +2,9 @@
 
 namespace Basecom\Bundle\ShopwareConnectorBundle\Handler;
 
+use Akeneo\Component\Batch\Item\AbstractConfigurableStepElement;
 use Akeneo\Component\Batch\Model\StepExecution;
+use Akeneo\Component\Batch\Step\StepExecutionAwareInterface;
 use Basecom\Bundle\ShopwareConnectorBundle\Api\ApiClient;
 
 /**
@@ -11,8 +13,7 @@ use Basecom\Bundle\ShopwareConnectorBundle\Api\ApiClient;
  *
  * Class AttributeSetupHandler
  */
-// ToDo: use Statements für die Klassen
-class AttributeSetupHandler extends \Akeneo\Component\Batch\Item\AbstractConfigurableStepElement implements \Akeneo\Component\Batch\Step\StepExecutionAwareInterface
+class AttributeSetupHandler extends AbstractConfigurableStepElement implements StepExecutionAwareInterface
 {
     /**
      * @var StepExecution
@@ -48,9 +49,9 @@ class AttributeSetupHandler extends \Akeneo\Component\Batch\Item\AbstractConfigu
     {
         $client   = new ApiClient($this->url, $this->userName, $this->apiKey);
         $jsonData = $client->get('attributes');
-        $fp       = fopen(__DIR__.'/../Resources/config/additional_attributes.csv', 'w');
+        $fp = fopen(__DIR__ . '/../Resources/config/additional_attributes.csv', 'w');
         foreach ($jsonData['data'] as $data) {
-            fputcsv($fp, $data, ';');
+            fputcsv($fp, $data, ";");
         }
         fclose($fp);
     }
@@ -71,7 +72,7 @@ class AttributeSetupHandler extends \Akeneo\Component\Batch\Item\AbstractConfigu
     public function getConfigurationFields()
     {
         return [
-            'apiKey' => [
+            'apiKey'   => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.apiKey.label',
                     'help'  => 'basecom_shopware_connector.export.apiKey.help',
@@ -83,7 +84,7 @@ class AttributeSetupHandler extends \Akeneo\Component\Batch\Item\AbstractConfigu
                     'help'  => 'basecom_shopware_connector.export.userName.help',
                 ],
             ],
-            'url' => [
+            'url'      => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.url.label',
                     'help'  => 'basecom_shopware_connector.export.url.help',

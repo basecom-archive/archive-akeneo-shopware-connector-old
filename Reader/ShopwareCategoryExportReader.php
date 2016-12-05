@@ -24,12 +24,10 @@ class ShopwareCategoryExportReader extends AbstractConfigurableStepElement imple
     /** @var StepExecution */
     protected $stepExecution;
 
-    /** @var bool Checks if all categories are sent to the processor */
-    protected $isExecuted = false;
-
     /** @var \ArrayIterator */
     protected $results;
 
+    /** @var string */
     protected $rootCategory;
 
     /**
@@ -45,9 +43,7 @@ class ShopwareCategoryExportReader extends AbstractConfigurableStepElement imple
      */
     public function read()
     {
-        if (!$this->isExecuted) {
-            $this->isExecuted = true;
-
+        if (null === $this->results) {
             $this->results = $this->getResults();
         }
 
@@ -88,7 +84,7 @@ class ShopwareCategoryExportReader extends AbstractConfigurableStepElement imple
     protected function getResults()
     {
         /** @var Category $category */
-        $category   = $this->categoryRepository->findOneByIdentifier($this->rootCategory);
+        $category = $this->categoryRepository->findOneByIdentifier($this->rootCategory);
         $categories = $this->categoryRepository->findBy(['root' => $category->getRoot()]);
 
         return new \ArrayIterator($categories);

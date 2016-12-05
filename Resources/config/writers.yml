@@ -5,15 +5,15 @@ parameters:
     basecom_shopware_connector.writer.shopware_product_image.class: Basecom\Bundle\ShopwareConnectorBundle\Writer\ShopwareProductImageWriter
 services:
     basecom_shopware_connector.writer.shopware_category:
-        class: %basecom_shopware_connector.writer.shopware_category.class%
+        class: '%basecom_shopware_connector.writer.shopware_category.class%'
         arguments:
             - '@pim_catalog.repository.category'
             - '@doctrine.orm.entity_manager'
             - '@pim_catalog.repository.locale'
     basecom_shopware_connector.writer.shopware_family:
-        class: %basecom_shopware_connector.writer.shopware_family.class%
+        class: '%basecom_shopware_connector.writer.shopware_family.class%'
         arguments:
             - '@doctrine.orm.entity_manager'
             - '@pim_catalog.repository.locale'
     basecom_shopware_connector.writer.shopware_product:
-        class: %basecom_shopware_connector.writer.shopware_product.class%
+        class: '%basecom_shopware_connector.writer.shopware_product.class%'

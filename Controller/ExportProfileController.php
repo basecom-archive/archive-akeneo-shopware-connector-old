@@ -2,16 +2,18 @@
 
 namespace Basecom\Bundle\ShopwareConnectorBundle\Controller;
 
+use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
 use Pim\Bundle\EnrichBundle\Flash\Message;
 use Pim\Bundle\ImportExportBundle\Controller\ExportProfileController as BaseController;
 use Pim\Bundle\ImportExportBundle\Event\JobProfileEvents;
 use Symfony\Component\EventDispatcher\GenericEvent;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Overrides the original ExportProfileController class to provide the JobProfile
- * edit-template with an additional argument *.
+ * edit-template with an additional argument
  *
  * Class ExportProfileController
  */
@@ -19,11 +21,30 @@ class ExportProfileController extends BaseController
 {
     /**
      * Edit a job instance.
+     * @AclAncestor("pim_importexport_export_profile_index")
+     *
+     * @return Response
+     */
+    public function indexAction()
+    {
+        return $this->templating->renderResponse(
+            'PimImportExportBundle:ExportProfile:index.html.twig',
+            [
+                'jobType'    => $this->getJobType(),
+                'connectors' => $this->connectorRegistry->getJobs($this->getJobType())
+            ]
+        );
+    }
+
+    /**
+     * Edit a job instance
+     *
+     * @AclAncestor("pim_importexport_export_profile_edit")
      *
      * @param Request $request
      * @param int     $id
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function editAction(Request $request, $id)
     {
@@ -45,6 +66,8 @@ class ExportProfileController extends BaseController
                 $this->entityManager->persist($jobInstance);
                 $this->entityManager->flush();
 
+                $this->eventDispatcher->dispatch(JobProfileEvents::POST_EDIT, new GenericEvent($jobInstance));
+
                 $this->request->getSession()->getFlashBag()
                     ->add('success', new Message(sprintf('flash.%s.updated', $this->getJobType())));
 
@@ -52,12 +75,10 @@ class ExportProfileController extends BaseController
             }
         }
 
-        $this->eventDispatcher->dispatch(JobProfileEvents::POST_EDIT, new GenericEvent($jobInstance));
-
         if (null === $template = $jobInstance->getJob()->getEditTemplate()) {
-            $template = sprintf('PimImportExportBundle:%sProfile:edit.html.twig', ucfirst($this->getJobType()));
+            $template = 'BasecomShopwareConnectorBundle:ExportProfile:edit.html.twig';
         }
-        $attributes = array_map('str_getcsv', file(__DIR__.'/../Resources/config/additional_attributes.csv'));
+        $attributes = array_map('str_getcsv', file(__DIR__ . '/../Resources/config/additional_attributes.csv'));
 
         return $this->templating->renderResponse(
             $template,

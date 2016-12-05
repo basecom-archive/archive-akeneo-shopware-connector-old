@@ -4,11 +4,11 @@ parameters:
     basecom_shopware_connector.processor.shopware_product.class:        Basecom\Bundle\ShopwareConnectorBundle\Processor\ShopwareProductProcessor
 services:
     basecom_shopware_connector.processor.shopware_category:
-        class: %basecom_shopware_connector.processor.shopware_category.class%
+        class: '%basecom_shopware_connector.processor.shopware_category.class%'
     basecom_shopware_connector.processor.shopware_family:
-        class: %basecom_shopware_connector.processor.shopware_family.class%
+        class: '%basecom_shopware_connector.processor.shopware_family.class%'
     basecom_shopware_connector.processor.shopware_product:
-        class: %basecom_shopware_connector.processor.shopware_product.class%
+        class: '%basecom_shopware_connector.processor.shopware_product.class%'
         arguments:
             - '@basecom_shopware_connector.serializer.shopware_product'
             - '@pim_catalog.repository.locale'

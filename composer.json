@@ -1,0 +1,33 @@
+{
+    "name": "basecom/shopware-connector",
+    "type": "symfony-bundle",
+    "description": "your description",
+    "license": "OSL-3.0",
+    "authors": [
+        {
+            "name": "your_name <your_email_adress>"
+        }
+    ],
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/akeneo/pim-community-dev.git",
+            "branch": "master"
+        }
+    ],
+    "require": {
+        "akeneo/pim-community-dev": "~1.5.2",
+        "doctrine/migrations": "1.0.0-alpha3@alpha"
+    },
+    "require-dev": {
+        "fabpot/php-cs-fixer": "^1.11"
+    },
+    "autoload": {
+        "psr-4": {
+            "Basecom\\Bundle\\ShopwareConnectorBundle\\": ""
+        }
+    },
+    "config": {
+        "bin-dir": "bin"
+    }
+}

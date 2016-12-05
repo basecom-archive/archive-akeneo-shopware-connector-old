@@ -33,8 +33,8 @@ class ShopwareFamilyWriter extends AbstractConfigurableStepElement implements It
     /** @var EntityManager $entityManager */
     protected $entityManager;
 
-    /** @var LocaleRepositoryInterface $localeManager */
-    protected $localeManager;
+    /** @var LocaleRepositoryInterface $localeRepository */
+    protected $localeRepository;
 
     /** @var string */
     protected $locale;
@@ -48,7 +48,7 @@ class ShopwareFamilyWriter extends AbstractConfigurableStepElement implements It
     public function __construct(EntityManager $entityManager, LocaleRepositoryInterface $localeManager)
     {
         $this->entityManager = $entityManager;
-        $this->localeManager = $localeManager;
+        $this->localeRepository = $localeManager;
     }
 
     /**
@@ -59,15 +59,15 @@ class ShopwareFamilyWriter extends AbstractConfigurableStepElement implements It
         $apiClient = new ApiClient($this->url, $this->userName, $this->apiKey);
         /** @var Family $item */
         foreach ($items as $item) {
-            $item->setLocale($this->localeManager->getActivatedLocaleCodes()[$this->locale]);
+            $item->setLocale($this->localeRepository->getActivatedLocaleCodes()[$this->locale]);
             $set = [
                 'name'       => $item->getLabel(),
                 'position'   => 0,
                 'comparable' => true,
-                'sortMode'   => 0,
+                'sortMode'   => 0
             ];
-            if ($item->getSwId() != null) {
-                if (null == $apiClient->put('propertyGroups/'.$item->getSwId(), $set)) {
+            if (null !== $item->getSwId()) {
+                if (null == $apiClient->put('propertyGroups/' . $item->getSwId(), $set)) {
                     $family = $apiClient->post('propertyGroups/', $set);
                     $item->setSwId($family['data']['id']);
                     $this->entityManager->persist($item);
@@ -159,7 +159,7 @@ class ShopwareFamilyWriter extends AbstractConfigurableStepElement implements It
     public function getConfigurationFields()
     {
         return [
-            'apiKey' => [
+            'apiKey'   => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.apiKey.label',
                     'help'  => 'basecom_shopware_connector.export.apiKey.help',
@@ -171,21 +171,21 @@ class ShopwareFamilyWriter extends AbstractConfigurableStepElement implements It
                     'help'  => 'basecom_shopware_connector.export.userName.help',
                 ],
             ],
-            'url' => [
+            'url'      => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.url.label',
                     'help'  => 'basecom_shopware_connector.export.url.help',
                 ],
             ],
-            'locale' => [
+            'locale'   => [
                 'type'    => 'choice',
                 'options' => [
-                    'choices'  => $this->localeManager->getActivatedLocaleCodes(),
+                    'choices'  => $this->localeRepository->getActivatedLocaleCodes(),
                     'required' => true,
                     'select2'  => true,
                     'label'    => 'basecom_shopware_connector.export.locale.label',
-                    'help'     => 'basecom_shopware_connector.export.locale.help',
-                ],
+                    'help'     => 'basecom_shopware_connector.export.locale.help'
+                ]
             ],
         ];
     }
