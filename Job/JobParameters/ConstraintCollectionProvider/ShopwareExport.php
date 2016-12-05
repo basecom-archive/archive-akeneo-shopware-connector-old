@@ -9,6 +9,10 @@ use Symfony\Component\Validator\Constraints\Locale;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Url;
 
+/**
+ * Class ShopwareExport
+ * @package Basecom\Bundle\ShopwareConnectorBundle\Job\JobParameters\ConstraintCollectionProvider
+ */
 class ShopwareExport implements ConstraintCollectionProviderInterface
 {
     protected $supportedJobNames;

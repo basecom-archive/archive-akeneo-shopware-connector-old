@@ -9,7 +9,7 @@ services:
             - '@event_dispatcher'
             - '@akeneo_batch.job_repository'
             - '@basecom_shopware_connector.reader.shopware_category_export'
-            - '@basecom_shopware_connector.processor.shopware_category'
+            - '@basecom_shopware_connector.processor.simple_item'
             - '@basecom_shopware_connector.writer.shopware_category'
 
     basecom_shopware_connector.step.export_families:
@@ -19,7 +19,7 @@ services:
             - '@event_dispatcher'
             - '@akeneo_batch.job_repository'
             - '@basecom_shopware_connector.reader.shopware_family_export'
-            - '@basecom_shopware_connector.processor.shopware_family'
+            - '@basecom_shopware_connector.processor.simple_item'
             - '@basecom_shopware_connector.writer.shopware_family'
 
     basecom_shopware_connector.step.export_products:

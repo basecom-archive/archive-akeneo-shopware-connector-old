@@ -5,6 +5,10 @@ namespace Basecom\Bundle\ShopwareConnectorBundle\Entity\Repository;
 use Doctrine\ORM\AbstractQuery;
 use Pim\Bundle\CatalogBundle\Doctrine\ORM\Repository\ProductRepository as BaseRepository;
 
+/**
+ * Class ProductRepository
+ * @package Basecom\Bundle\ShopwareConnectorBundle\Entity\Repository
+ */
 class ProductRepository extends BaseRepository
 {
     /**
@@ -15,11 +19,11 @@ class ProductRepository extends BaseRepository
         $qb = $this->createQueryBuilder('Product');
         $this->addJoinToValueTables($qb);
         $rootAlias = current($qb->getRootAliases());
-        $qb->select($rootAlias.'.swProductId');
+        $qb->select($rootAlias . '.swProductId');
         $qb->andWhere(
-            $qb->expr()->in($rootAlias.'.swProductId', ':swIds')
+            $qb->expr()->in($rootAlias . '.swProductId', ':swIds')
         );
-        $qb->addGroupBy($rootAlias.'.id');
+        $qb->addGroupBy($rootAlias . '.id');
         $qb->setParameter(':swIds', $swIds);
 
         return $qb->getQuery()->getResult(AbstractQuery::HYDRATE_ARRAY);
@@ -39,19 +43,5 @@ class ProductRepository extends BaseRepository
         );
 
         return $qb->getQuery()->getResult(AbstractQuery::HYDRATE_ARRAY);
-    }
-
-    public function findOneBySwId($swId)
-    {
-        $pqb = $this->queryBuilderFactory->create();
-        $pqb->addFilter('swProductId', '=', $swId);
-        $qb = $pqb->getQueryBuilder();
-        $result = $qb->getQuery()->execute();
-
-        if (empty($result)) {
-            return null;
-        }
-
-        return reset($result);
     }
 }

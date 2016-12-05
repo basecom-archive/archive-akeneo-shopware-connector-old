@@ -12,7 +12,7 @@ use Pim\Component\Catalog\Model\Product as PimProduct;
 class Product extends PimProduct
 {
     /**
-     * Identifier if product should be able to send variants to shopware
+     * Identifier if product should be able to send variants to Shopware
      *
      * @var boolean
      */

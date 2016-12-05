@@ -8,10 +8,17 @@ use Pim\Bundle\CatalogBundle\Entity\Category;
 use Pim\Bundle\ImportExportBundle\JobParameters\FormConfigurationProviderInterface;
 use Pim\Component\Catalog\Repository\LocaleRepositoryInterface;
 
+/**
+ * Class ShopwareExport
+ * @package Basecom\Bundle\ShopwareConnectorBundle\Job\JobParameters\FormConfigurationProvider
+ */
 class ShopwareExport implements FormConfigurationProviderInterface
 {
     protected $supportedJobNames;
 
+    /**
+     * @var LocaleRepositoryInterface
+     */
     protected $localeRepository;
 
     /**
@@ -36,47 +43,50 @@ class ShopwareExport implements FormConfigurationProviderInterface
                 'type' => 'choice',
                 'options' => [
                     'choices' => $this->getCategoryChoices(),
-                    'select2'  => true,
+                    'select2' => true,
                     'label' => 'basecom_shopware_connector.export.rootCategory.label',
-                    'help'  => 'basecom_shopware_connector.export.rootCategory.help',
+                    'help' => 'basecom_shopware_connector.export.rootCategory.help',
                     'required' => true
                 ]
             ],
-            'locale'   => [
-                'type'    => 'choice',
+            'locale' => [
+                'type' => 'choice',
                 'options' => [
-                    'choices'  => $this->parseActivatedLocaleCodes(),
+                    'choices' => $this->parseActivatedLocaleCodes(),
                     'required' => true,
-                    'select2'  => true,
-                    'label'    => 'basecom_shopware_connector.export.locale.label',
-                    'help'     => 'basecom_shopware_connector.export.locale.help'
+                    'select2' => true,
+                    'label' => 'basecom_shopware_connector.export.locale.label',
+                    'help' => 'basecom_shopware_connector.export.locale.help'
                 ]
             ],
-            'url'      => [
+            'url' => [
                 'type' => 'url',
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.url.label',
-                    'help'  => 'basecom_shopware_connector.export.url.help',
+                    'help' => 'basecom_shopware_connector.export.url.help',
                     'required' => true
                 ]
             ],
             'userName' => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.userName.label',
-                    'help'  => 'basecom_shopware_connector.export.userName.help',
+                    'help' => 'basecom_shopware_connector.export.userName.help',
                     'required' => true
                 ]
             ],
-            'apiKey'   => [
+            'apiKey' => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.apiKey.label',
-                    'help'  => 'basecom_shopware_connector.export.apiKey.help',
+                    'help' => 'basecom_shopware_connector.export.apiKey.help',
                     'required' => true
                 ]
             ]
         ];
     }
 
+    /**
+     * @return array
+     */
     protected function parseActivatedLocaleCodes()
     {
         $localeArray = $this->localeRepository->getActivatedLocaleCodes();
@@ -88,12 +98,13 @@ class ShopwareExport implements FormConfigurationProviderInterface
     /**
      * @return array
      */
-    protected function getCategoryChoices() {
+    protected function getCategoryChoices()
+    {
         $categoryChoices = [];
         $trees = $this->categoryRepository->getTrees();
 
         /** @var Category $tree */
-        foreach($trees as $tree) {
+        foreach ($trees as $tree) {
             $tree->setLocale('en_US');
             $categoryChoices[$tree->getCode()] = $tree->getLabel();
         }

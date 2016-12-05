@@ -30,8 +30,8 @@ class ExportProfileController extends BaseController
         return $this->templating->renderResponse(
             'PimImportExportBundle:ExportProfile:index.html.twig',
             [
-                'jobType'    => $this->getJobType(),
-                'connectors' => $this->jobRegistry->allByType($this->getJobType())
+                'jobType'       => $this->getJobType(),
+                'connectors'    => $this->jobRegistry->allByType($this->getJobType())
             ]
         );
     }
@@ -42,7 +42,7 @@ class ExportProfileController extends BaseController
      * @AclAncestor("pim_importexport_export_profile_edit")
      *
      * @param Request $request
-     * @param int     $id
+     * @param int $id
      *
      * @return Response
      */
@@ -87,13 +87,18 @@ class ExportProfileController extends BaseController
         return $this->templating->renderResponse(
             $template,
             [
-                'jobInstance' => $jobInstance,
-                'form'        => $form->createView(),
-                'attributes'  => $attributes,
+                'jobInstance'   => $jobInstance,
+                'form'          => $form->createView(),
+                'attributes'    => $attributes,
             ]
         );
     }
 
+    /**
+     * @param $attributes
+     * @param $values
+     * @return mixed
+     */
     protected function mapValuesToAttributes($attributes, $values)
     {
         if(!isset($values['attr']) || $values['attr'] === null) {
@@ -102,14 +107,14 @@ class ExportProfileController extends BaseController
 
         $valueArray = explode(';', $values['attr']);
 
-        foreach($attributes as $key => $attribute) {
+        foreach ($attributes as $key => $attribute) {
             $attributeArray = explode(';', $attribute);
 
-            foreach($valueArray as $singleValue) {
+            foreach ($valueArray as $singleValue) {
                 $value = explode(':', $singleValue);
 
-                if($value[0] == $attributeArray[0]) {
-                    $attributes[$key] .= ';'.$value[1];
+                if ($value[0] == $attributeArray[0]) {
+                    $attributes[$key] .= ';' . $value[1];
                 }
             }
         }

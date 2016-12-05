@@ -12,6 +12,12 @@ use Basecom\Bundle\ShopwareConnectorBundle\Entity\Repository\ProductRepository;
 use Doctrine\ORM\Query\ResultSetMapping;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
+/**
+ * Deletes all products and media which are referenced in Akeneo by the corresponding Shopware ID
+ *
+ * Class ShopwareCleaner
+ * @package Basecom\Bundle\ShopwareConnectorBundle\Cleaner
+ */
 class ShopwareCleaner extends AbstractStep
 {
     /**
@@ -80,12 +86,11 @@ class ShopwareCleaner extends AbstractStep
         $articleIds = array_column($articles['data'], 'id');
         $productIdsToKeep = array_column($this->productRepository->findIdByNotInSwId($articleIds), 'swProductId');
 
-        foreach($articleIds as $article)
-        {
-            if(!in_array($article, $productIdsToKeep)) {
-                $result = $this->apiClient->delete('articles/'.$article);
+        foreach ($articleIds as $article) {
+            if (!in_array($article, $productIdsToKeep)) {
+                $result = $this->apiClient->delete('articles/' . $article);
 
-                if($result['success']) {
+                if ($result['success']) {
                     $stepExecution->incrementSummaryInfo('product deleted');
                 }
             }

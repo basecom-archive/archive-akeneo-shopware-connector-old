@@ -62,18 +62,18 @@ class ShopwareProductWriter implements ItemWriterInterface, StepExecutionAwareIn
             $jobParameters->get('apiKey')
         );
 
-        foreach($items as $item) {
+        foreach ($items as $item) {
 
-            if(!$item['hasSwId']) {
+            if (!$item['hasSwId']) {
                 $response = $apiClient->post('articles/', $item);
             } else {
-                $response = $apiClient->put('articles/'.$item['mainDetail']['number'].'?useNumberAsId=true', $item);
+                $response = $apiClient->put('articles/' . $item['mainDetail']['number'] . '?useNumberAsId=true', $item);
             }
 
-            if($response['success']) {
+            if ($response['success']) {
                 $this->stepExecution->incrementSummaryInfo('write');
 
-                if(!$item['hasSwId']) {
+                if (!$item['hasSwId']) {
                     $product = $this->productRepository->findOneByIdentifier($item['mainDetail']['number']);
                     $product->setSwProductId($response['data']['id']);
                     $this->entityManager->persist($product);

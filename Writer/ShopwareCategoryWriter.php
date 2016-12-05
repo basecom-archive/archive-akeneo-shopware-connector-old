@@ -77,6 +77,9 @@ class ShopwareCategoryWriter implements ItemWriterInterface, StepExecutionAwareI
         );
 
 
+        /**
+         * @var Category $item
+         */
         foreach ($items as $item) {
             $item->setLocale($locale);
             $parent = 1;
