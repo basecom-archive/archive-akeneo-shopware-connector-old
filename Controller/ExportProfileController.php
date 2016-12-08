@@ -60,6 +60,7 @@ class ExportProfileController extends BaseController
         $this->eventDispatcher->dispatch(JobProfileEvents::PRE_EDIT, new GenericEvent($jobInstance));
 
         $form = $this->formFactory->create($this->jobInstanceFormType, $jobInstance);
+        $job = $this->jobRegistry->get($jobInstance->getJobName());
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
@@ -88,6 +89,7 @@ class ExportProfileController extends BaseController
                 'jobInstance'   => $jobInstance,
                 'form'          => $form->createView(),
                 'attributes'    => $attributes,
+                'job'           => $job
             ]
         );
     }
@@ -99,7 +101,7 @@ class ExportProfileController extends BaseController
      */
     protected function mapValuesToAttributes($attributes, $values)
     {
-        if ($values['attr'] === null) {
+        if (!isset($values['attr']) || $values['attr'] === null) {
             return $attributes;
         }
 

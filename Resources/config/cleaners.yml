@@ -5,7 +5,7 @@ services:
     basecom_shopware_connector.cleaner.shopware:
         class: "%basecom_shopware_connector.cleaner.shopware.class%"
         arguments:
-            - 'shopware.clean.products'
+            - 'shopware_clean'
             - '@event_dispatcher'
             - '@akeneo_batch.job_repository'
             - '@pim_catalog.repository.product'

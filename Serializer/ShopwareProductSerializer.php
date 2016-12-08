@@ -256,8 +256,6 @@ class ShopwareProductSerializer
             }
         }
 
-        die(var_dump($item));
-
         $this->entityManager->flush();
 
         return $item;
@@ -386,6 +384,15 @@ class ShopwareProductSerializer
         return $item;
     }
 
+    /**
+     * @param $item
+     * @param $shopwareAttribute
+     * @param $attribute
+     * @param $value
+     * @param $locale
+     * @param $currency
+     * @return array
+     */
     protected function setAttributeValue($item, $shopwareAttribute, $attribute, $value, $locale, $currency)
     {
         if($shopwareAttribute == 'price') {
@@ -415,6 +422,11 @@ class ShopwareProductSerializer
         return $item;
     }
 
+    /**
+     * @param $item
+     * @param $key
+     * @param $data
+     */
     private function walkAttributeMapping(&$item, $key, $data) {
         if(!is_array($item)) {
             $item = $this->getAttributeValue($data['attribute'], $data['value'], $data['locale'], $data['currency']);
