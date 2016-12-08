@@ -131,3 +131,19 @@ basecom_shopware_connector:
     attr:
       label: Additional fields
       help:  Enter the code of the Akeneo attribute
+batch_jobs.shopware_attribute_setup:
+    label: Shopware Attribute Setup
+    shopware_attribute_setup_step:
+        label: Setup Attributes
+batch_jobs.shopware_export:
+    label: Shopware Export
+    shopware_export_categories_step:
+        label: Export Akeneo Categories
+    shopware_export_families_step:
+        label: Export Akeneo Families
+batch_jobs.shopware_product_export:
+    label: Shopware Product Export
+    shopware_clean:
+        label: Clean Shopware
+    shopware_export_products_step:
+        label: Export Akeneo Products
