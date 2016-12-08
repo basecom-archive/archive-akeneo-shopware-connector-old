@@ -1,0 +1,32 @@
+parameters:
+    api_attribute_mapping:
+        articleNumber: { mainDetail: { number: '' } }
+        inStock: { mainDetail: { inStock: '' } }
+        stockMin: { mainDetail: { stockMin: '' } }
+        weight: { mainDetail: { weight: '' } }
+        len: { mainDetail: { len: '' } }
+        height: { mainDetail: { height: '' } }
+        ean: { mainDetail: { ean: '' } }
+        minPurchase: { mainDetail: { minPurchase: '' } }
+        purchaseSteps: { mainDetail: { purchaseSteps: '' } }
+        maxPurchase: { mainDetail: { maxPurchase: '' } }
+        purchaseUnit: { mainDetail: { purchaseUnit: '' } }
+        referenceUnit: { mainDetail: { referenceUnit: '' } }
+        packUnit: { mainDetail: { packUnit: '' } }
+        shippingFree: { mainDetail: { shippingFree: '' } }
+        releaseDate: { mainDetail: { releaseDate: '' } }
+        shippingTime: { mainDetail: { shippingTime: '' } }
+        width: { mainDetail: { width: '' } }
+        name: { name: '' }
+        description: { description: '' }
+        descriptionLong: { descriptionLong: '' }
+        pseudoSales: { pseudoSales: '' }
+        highlight: { highlight: '' }
+        keywords: { keywords: '' }
+        metaTitle: { metaTitle: '' }
+        priceGroupActive: { priceGroupActive: '' }
+        lastStock: { lastStock: '' }
+        notification: { notification: '' }
+        template: { template: '' }
+        supplier: { supplier: '' }
+        tax: { tax: '' }
