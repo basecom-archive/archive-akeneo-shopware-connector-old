@@ -1,11 +1,15 @@
-# 2.0.0
-##Features
+# Enterprise Edition
+## 1.0.0-ee
+- Added Enterprise asset support for images
+# Community Edition
+## 2.0.0
+###Features
 - Added media support
 - Added variant support 
 - Removed similar and cross product support
-## BC breaks
+### BC breaks
 - Dropped Akeneo < 1.6 support
 
-# 2.0.1
-##Bug Fixes
+## 2.0.1
+###Bug Fixes
 - Fixed some merging errors

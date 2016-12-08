@@ -1,10 +1,9 @@
 # Akeneo To Shopware Connector
 ## Requirements
 
-| ShopwareConnectorBundle | Akeneo PIM Community Edition |
+| ShopwareConnectorBundle | Akeneo PIM Enterprise Edition |
 |:--------------------:|:----------------------------:|
-| v1.0.*               | v1.4.\*, v1.5.\*             |
-| v2.*                 | v1.6.*                       |
+| v1.*-ee                 | v1.6.*                       |
 
 ## Installation
 Enable the bundle in the `app/AppKernel.php` file in the `registerBundles()` method:
