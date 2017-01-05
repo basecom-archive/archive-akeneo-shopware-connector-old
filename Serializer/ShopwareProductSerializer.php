@@ -5,7 +5,6 @@ namespace Basecom\Bundle\ShopwareConnectorBundle\Serializer;
 use Akeneo\Component\Classification\Repository\CategoryRepositoryInterface;
 use Basecom\Bundle\ShopwareConnectorBundle\Api\ApiClient;
 use Basecom\Bundle\ShopwareConnectorBundle\Api\Media\CommunityMediaWriter;
-use Basecom\Bundle\ShopwareConnectorBundle\Api\Media\EnterpriseMediaWriter;
 use Basecom\Bundle\ShopwareConnectorBundle\Entity\Category;
 use Basecom\Bundle\ShopwareConnectorBundle\Entity\Family;
 use Basecom\Bundle\ShopwareConnectorBundle\Entity\FileInfo;
