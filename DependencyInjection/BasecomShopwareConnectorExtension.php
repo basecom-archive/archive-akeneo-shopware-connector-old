@@ -27,6 +27,5 @@ class BasecomShopwareConnectorExtension extends Extension
         $loader->load('serializers.yml');
         $loader->load('controllers.yml');
         $loader->load('services.yml');
-        $loader->load('attribute_mapping.yml');
     }
 }

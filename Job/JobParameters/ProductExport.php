@@ -89,9 +89,9 @@ class ProductExport implements ConstraintCollectionProviderInterface, DefaultVal
                 'articleNumber' => [
                     new NotBlank(['groups' => 'Execution'])
                 ],
-                'tax' => [
-                    new NotBlank(['groups' => 'Execution'])
-                ],
+//                'tax' => [
+//                    new NotBlank(['groups' => 'Execution'])
+//                ],
                 'template' => [],
                 'priceGroupActive' => [],
                 'price' => [
@@ -145,7 +145,7 @@ class ProductExport implements ConstraintCollectionProviderInterface, DefaultVal
             'supplier'          => '',
             'name'              => '',
             'articleNumber'     => '',
-            'tax'               => '',
+//            'tax'               => '',
             'template'          => '',
             'priceGroupActive'  => '',
             'price'             => '',
@@ -270,13 +270,13 @@ class ProductExport implements ConstraintCollectionProviderInterface, DefaultVal
                     'required' => true
                 ]
             ],
-            'tax'              => [
-                'options' => [
-                    'label' => 'basecom_shopware_connector.export.tax.label',
-                    'help'  => 'basecom_shopware_connector.export.tax.help',
-                    'required' => true
-                ]
-            ],
+//            'tax'              => [
+//                'options' => [
+//                    'label' => 'basecom_shopware_connector.export.tax.label',
+//                    'help'  => 'basecom_shopware_connector.export.tax.help',
+//                    'required' => true
+//                ]
+//            ],
             'template'         => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.template.label',
