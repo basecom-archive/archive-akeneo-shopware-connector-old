@@ -60,6 +60,7 @@ class ExportProfileController extends BaseController
         $this->eventDispatcher->dispatch(JobProfileEvents::PRE_EDIT, new GenericEvent($jobInstance));
 
         $form = $this->formFactory->create($this->jobInstanceFormType, $jobInstance);
+        $job = $this->jobRegistry->get($jobInstance->getJobName());
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
@@ -78,9 +79,7 @@ class ExportProfileController extends BaseController
 
         $template = $this->jobTemplateProvider->getEditTemplate($jobInstance);
 
-        $additionalAttributesPath = __DIR__ . '/../Resources/config/additional_attributes.csv';
-
-        $attributes = file_exists($additionalAttributesPath) ? array_column(array_map('str_getcsv', file($additionalAttributesPath)), 0) : [];
+        $attributes = array_column(array_map('str_getcsv', file(__DIR__ . '/../Resources/config/additional_attributes.csv')), 0);
 
         $attributes = $this->mapValuesToAttributes($attributes, $jobInstance->getRawParameters());
 
@@ -90,6 +89,7 @@ class ExportProfileController extends BaseController
                 'jobInstance'   => $jobInstance,
                 'form'          => $form->createView(),
                 'attributes'    => $attributes,
+                'job'           => $job
             ]
         );
     }
@@ -101,7 +101,7 @@ class ExportProfileController extends BaseController
      */
     protected function mapValuesToAttributes($attributes, $values)
     {
-        if(!isset($values['attr']) || $values['attr'] === null) {
+        if (!isset($values['attr']) || $values['attr'] === null) {
             return $attributes;
         }
 

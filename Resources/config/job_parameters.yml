@@ -42,9 +42,13 @@ services:
     basecom_shopware_connector.job.job_parameters.constraint_collection_provider.product_export:
         class: '%basecom_shopware_connector.job.job_parameters.constraint_collection_provider.product_export.class%'
         arguments:
+            - '@pim_user.context.user'
             - '@pim_catalog.repository.category'
             - '@pim_catalog.repository.channel'
             - '@pim_catalog.repository.locale'
+            - '@pim_catalog.repository.attribute'
+            - '@pim_catalog.repository.currency'
+            - '@pim_catalog.repository.association_type'
         tags:
             - { name: akeneo_batch.job.job_parameters.constraint_collection_provider }
             - { name: akeneo_batch.job.job_parameters.default_values_provider }

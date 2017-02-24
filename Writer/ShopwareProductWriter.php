@@ -62,8 +62,17 @@ class ShopwareProductWriter implements ItemWriterInterface, StepExecutionAwareIn
             $jobParameters->get('apiKey')
         );
 
-        foreach ($items as $item) {
+        $itemsWithAssociations = [];
 
+        foreach ($items as $key => $item) {
+            if(count($item['similar']) > 0 || count($item['related']) > 0) {
+                $itemsWithAssociations[] = $item;
+                unset($items[$key]);
+            }
+        }
+
+        $items = array_merge($items, $itemsWithAssociations);
+        foreach ($items as $key => $item) {
             if (!$item['hasSwId']) {
                 $response = $apiClient->post('articles/', $item);
             } else {

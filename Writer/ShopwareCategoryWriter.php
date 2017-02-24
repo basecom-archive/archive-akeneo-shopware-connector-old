@@ -94,11 +94,17 @@ class ShopwareCategoryWriter implements ItemWriterInterface, StepExecutionAwareI
                 'showFilterGroups' => true,
             ];
             if (null !== $item->getSwId()) {
-                $category = $apiClient->put('categories/' . $item->getSwId(), $swCategory);
+                if (null == $apiClient->put('categories/' . $item->getSwId(), $swCategory)) {
+                    $category = $apiClient->post('categories', $swCategory);
+                    $item->setSwId($category['data']['id']);
+                    $this->stepExecution->incrementSummaryInfo('write');
+                } else {
+                    $item->setSwId(null);
+                }
+
+                $this->entityManager->persist($item);
             } else {
                 $category = $apiClient->post('categories', $swCategory);
-            }
-            if(isset($category['data']['id'])) {
                 $item->setSwId($category['data']['id']);
                 $this->entityManager->persist($item);
                 $this->stepExecution->incrementSummaryInfo('write');
