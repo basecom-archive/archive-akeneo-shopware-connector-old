@@ -7,9 +7,14 @@ use Akeneo\Component\Batch\Job\JobParameters\ConstraintCollectionProviderInterfa
 use Akeneo\Component\Batch\Job\JobParameters\DefaultValuesProviderInterface;
 use Akeneo\Component\Classification\Repository\CategoryRepositoryInterface;
 use Pim\Bundle\CatalogBundle\Entity\Category;
+use Pim\Bundle\EnrichBundle\Doctrine\ORM\Repository\AttributeRepository;
 use Pim\Bundle\ImportExportBundle\JobParameters\FormConfigurationProviderInterface;
+use Pim\Bundle\UserBundle\Context\UserContext;
+use Pim\Component\Catalog\Repository\AttributeRepositoryInterface;
 use Pim\Component\Catalog\Repository\ChannelRepositoryInterface;
+use Pim\Component\Catalog\Repository\CurrencyRepositoryInterface;
 use Pim\Component\Catalog\Repository\LocaleRepositoryInterface;
+use Pim\Component\Enrich\Provider\TranslatedLabelsProviderInterface;
 use Symfony\Component\Validator\Constraints\Collection;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Url;
@@ -34,22 +39,47 @@ class ProductExport implements ConstraintCollectionProviderInterface, DefaultVal
      * @var LocaleRepositoryInterface
      */
     protected $localeRepository;
+    /**
+     * @var AttributeRepositoryInterface
+     */
+    private $attributeRepository;
+    /**
+     * @var CurrencyRepositoryInterface
+     */
+    private $currencyRepository;
+    /**
+     * @var UserContext
+     */
+    private $userContext;
+    /**
+     * @var array
+     */
+    private $attributeChoices;
 
     /**
      * ProductExport constructor.
+     * @param UserContext $userContext
      * @param CategoryRepositoryInterface $categoryRepository
      * @param ChannelRepositoryInterface $channelRepository
      * @param LocaleRepositoryInterface $localeRepository
+     * @param AttributeRepositoryInterface $attributeRepository
+     * @param CurrencyRepositoryInterface $currencyRepository
      */
     public function __construct(
+        UserContext $userContext,
         CategoryRepositoryInterface $categoryRepository,
         ChannelRepositoryInterface $channelRepository,
-        LocaleRepositoryInterface $localeRepository
+        LocaleRepositoryInterface $localeRepository,
+        AttributeRepositoryInterface $attributeRepository,
+        CurrencyRepositoryInterface $currencyRepository
     )
     {
         $this->categoryRepository = $categoryRepository;
         $this->channelRepository = $channelRepository;
         $this->localeRepository = $localeRepository;
+        $this->attributeRepository = $attributeRepository;
+        $this->currencyRepository = $currencyRepository;
+        $this->userContext = $userContext;
     }
 
     /**
@@ -238,7 +268,11 @@ class ProductExport implements ConstraintCollectionProviderInterface, DefaultVal
                 ]
             ],
             'currency' => [
+                'type' => 'choice',
                 'options' => [
+                    'required' => true,
+                    'select2'  => true,
+                    'choices' => $this->parseActivatedCurrencyCodes(),
                     'label' => 'basecom_shopware_connector.export.currency.label',
                     'help'  => 'basecom_shopware_connector.export.currency.label'
                 ]
@@ -250,33 +284,35 @@ class ProductExport implements ConstraintCollectionProviderInterface, DefaultVal
                 ]
             ],
             'supplier'         => [
+                'type' => 'choice',
                 'options' => [
+                    'select2'  => true,
+                    'choices' => $this->getAttributeChoices(),
                     'label' => 'basecom_shopware_connector.export.supplier.label',
                     'help'  => 'basecom_shopware_connector.export.supplier.help',
                     'required' => true
                 ]
             ],
             'name'             => [
+                'type' => 'choice',
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.name.label',
                     'help'  => 'basecom_shopware_connector.export.name.help',
-                    'required' => true
+                    'required' => true,
+                    'select2'  => true,
+                    'choices' => $this->getAttributeChoices()
                 ]
             ],
             'articleNumber'    => [
+                'type' => 'choice',
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.articleNumber.label',
                     'help'  => 'basecom_shopware_connector.export.articleNumber.help',
-                    'required' => true
+                    'required' => true,
+                    'select2'  => true,
+                    'choices' => $this->getAttributeChoices()
                 ]
             ],
-//            'tax'              => [
-//                'options' => [
-//                    'label' => 'basecom_shopware_connector.export.tax.label',
-//                    'help'  => 'basecom_shopware_connector.export.tax.help',
-//                    'required' => true
-//                ]
-//            ],
             'template'         => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.template.label',
@@ -290,34 +326,49 @@ class ProductExport implements ConstraintCollectionProviderInterface, DefaultVal
                 ]
             ],
             'price'            => [
+                'type' => 'choice',
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.price.label',
                     'help'  => 'basecom_shopware_connector.export.price.help',
-                    'required' => true
+                    'required' => true,
+                    'select2'  => true,
+                    'choices' => $this->getAttributeChoices()
                 ]
             ],
             'descriptionLong'  => [
+                'type' => 'choice',
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.descriptionLong.label',
-                    'help'  => 'basecom_shopware_connector.export.descriptionLong.help'
+                    'help'  => 'basecom_shopware_connector.export.descriptionLong.help',
+                    'select2'  => true,
+                    'choices' => $this->getAttributeChoices()
                 ]
             ],
             'metaTitle'        => [
+                'type' => 'choice',
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.metaTitle.label',
-                    'help'  => 'basecom_shopware_connector.export.metaTitle.help'
+                    'help'  => 'basecom_shopware_connector.export.metaTitle.help',
+                    'select2'  => true,
+                    'choices' => $this->getAttributeChoices()
                 ]
             ],
             'description'      => [
+                'type' => 'choice',
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.description.label',
-                    'help'  => 'basecom_shopware_connector.export.description.help'
+                    'help'  => 'basecom_shopware_connector.export.description.help',
+                    'select2'  => true,
+                    'choices' => $this->getAttributeChoices()
                 ]
             ],
             'keywords'         => [
+                'type' => 'choice',
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.keywords.label',
-                    'help'  => 'basecom_shopware_connector.export.keywords.help'
+                    'help'  => 'basecom_shopware_connector.export.keywords.help',
+                    'select2'  => true,
+                    'choices' => $this->getAttributeChoices()
                 ]
             ],
             'purchaseUnit'     => [
@@ -375,15 +426,21 @@ class ProductExport implements ConstraintCollectionProviderInterface, DefaultVal
                 ]
             ],
             'pseudoPrice'      => [
+                'type' => 'choice',
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.pseudoPrice.label',
-                    'help'  => 'basecom_shopware_connector.export.pseudoPrice.help'
+                    'help'  => 'basecom_shopware_connector.export.pseudoPrice.help',
+                    'select2'  => true,
+                    'choices' => $this->getAttributeChoices()
                 ]
             ],
             'basePrice'      => [
+                'type' => 'choice',
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.basePrice.label',
-                    'help'  => 'basecom_shopware_connector.export.basePrice.help'
+                    'help'  => 'basecom_shopware_connector.export.basePrice.help',
+                    'select2'  => true,
+                    'choices' => $this->getAttributeChoices()
                 ]
             ],
             'minPurchase'      => [
@@ -405,15 +462,21 @@ class ProductExport implements ConstraintCollectionProviderInterface, DefaultVal
                 ]
             ],
             'weight'           => [
+                'type' => 'choice',
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.weight.label',
-                    'help'  => 'basecom_shopware_connector.export.weight.help'
+                    'help'  => 'basecom_shopware_connector.export.weight.help',
+                    'select2'  => true,
+                    'choices' => $this->getAttributeChoices()
                 ]
             ],
             'shippingFree'     => [
+                'type' => 'choice',
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.shippingFree.label',
-                    'help'  => 'basecom_shopware_connector.export.shippingFree.help'
+                    'help'  => 'basecom_shopware_connector.export.shippingFree.help',
+                    'select2'  => true,
+                    'choices' => $this->getAttributeChoices()
                 ]
             ],
             'highlight'        => [
@@ -429,21 +492,30 @@ class ProductExport implements ConstraintCollectionProviderInterface, DefaultVal
                 ]
             ],
             'ean'              => [
+                'type' => 'choice',
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.ean.label',
-                    'help'  => 'basecom_shopware_connector.export.ean.help'
+                    'help'  => 'basecom_shopware_connector.export.ean.help',
+                    'select2'  => true,
+                    'choices' => $this->getAttributeChoices()
                 ]
             ],
             'width'            => [
+                'type' => 'choice',
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.width.label',
-                    'help'  => 'basecom_shopware_connector.export.width.help'
+                    'help'  => 'basecom_shopware_connector.export.width.help',
+                    'select2'  => true,
+                    'choices' => $this->getAttributeChoices()
                 ]
             ],
             'height'           => [
+                'type' => 'choice',
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.height.label',
-                    'help'  => 'basecom_shopware_connector.export.height.help'
+                    'help'  => 'basecom_shopware_connector.export.height.help',
+                    'select2'  => true,
+                    'choices' => $this->getAttributeChoices()
                 ]
             ],
             'len'              => [
@@ -483,6 +555,23 @@ class ProductExport implements ConstraintCollectionProviderInterface, DefaultVal
         $localeArray = $this->localeRepository->getActivatedLocaleCodes();
 
         return array_combine($localeArray, $localeArray);
+    }
+
+    protected function parseActivatedCurrencyCodes()
+    {
+        $currencyArray = $this->currencyRepository->getActivatedCurrencyCodes();
+
+        return array_combine($currencyArray, $currencyArray);
+    }
+
+    protected function getAttributeChoices()
+    {
+        if(0 === count($this->attributeChoices)) {
+            $translatedLabels = $this->attributeRepository->getAttributesAsArray(true, $this->userContext->getCurrentLocaleCode());
+            $this->attributeChoices = array_column($translatedLabels, 'label', 'code');
+        }
+
+        return $this->attributeChoices;
     }
 
     /**
