@@ -11,6 +11,7 @@ use Basecom\Bundle\ShopwareConnectorBundle\Entity\FileInfo;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Pim\Bundle\CatalogBundle\Entity\Attribute;
+use Pim\Component\Catalog\Model\AssociationInterface;
 use Pim\Component\Catalog\Model\AttributeInterface;
 use Pim\Component\Catalog\Model\AttributeOptionInterface;
 use Pim\Component\Catalog\Model\GroupInterface;
@@ -88,6 +89,7 @@ class ShopwareProductSerializer
 
         $item['mainDetail']['active'] = $item['active'] = $product->isEnabled();
         $item['categories'] = $this->serializeCategories($product->getCategories(), $locale, $jobParameters->get('rootCategory'));
+        list($item['similar'], $item['related']) = $this->serializeAssociations($product, $attributeMapping['similar'], $attributeMapping['related']);
 
         if ($product->getFamily() != null) {
             $propertyGroup = $this->serializeFamily($product->getFamily()->getId(), $locale);
@@ -434,6 +436,66 @@ class ShopwareProductSerializer
         }
 
         return (string)$value;
+    }
+
+    /**
+     * @param ProductInterface $product
+     * @param string $similar
+     * @param string $related
+     *
+     * @return array
+     */
+    public function serializeAssociations(ProductInterface $product, $similar, $related)
+    {
+        if (null != $product->getAssociationForTypeCode($related)) {
+            $related = $this->serializeRelated($product->getAssociationForTypeCode($related));
+        }
+        if (null != $product->getAssociationForTypeCode($similar)) {
+            $similar = $this->serializeSimilar($product->getAssociationForTypeCode($similar));
+        }
+
+        return [$related, $similar];
+    }
+
+    /**
+     * @param AssociationInterface $association
+     *
+     * @return array
+     */
+    protected function serializeSimilar(AssociationInterface $association)
+    {
+        $similar = [];
+        if ($association === null) {
+            return $similar;
+        }
+        foreach ($association->getProducts() as $associationProduct) {
+            array_push($similar, [
+                'number' => (string)$associationProduct->getIdentifier(),
+            ]);
+        }
+
+        return $similar;
+    }
+
+    /**
+     * @param AssociationInterface $association
+     *
+     * @return array
+     */
+    protected function serializeRelated(AssociationInterface $association)
+    {
+        $related = [];
+        if ($association === null) {
+            return $related;
+        }
+        foreach ($association->getProducts() as $associationProduct) {
+            echo (string)$associationProduct->getIdentifier() . "\n\n";
+            array_push($related, [
+                'number' => (string)$associationProduct->getIdentifier(),
+            ]);
+        }
+
+        return $related;
     }
 
     /**

@@ -98,6 +98,8 @@ class ShopwareProductProcessor implements ItemProcessorInterface, StepExecutionA
             'price'            => $jobParameters->get('price'),
             'pseudoPrice'      => $jobParameters->get('pseudoPrice'),
             'basePrice'        => $jobParameters->get('basePrice'),
+            'related'          => $jobParameters->get('related'),
+            'similar'          => $jobParameters->get('similar'),
 //            'tax'              => $jobParameters->get('tax')
         ];
         $attributes = explode(";", $jobParameters->get('attr'));

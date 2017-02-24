@@ -78,12 +78,16 @@ class ShopwareFamilyWriter implements ItemWriterInterface, StepExecutionAwareInt
                 if (null == $apiClient->put('propertyGroups/' . $item->getSwId(), $set)) {
                     $family = $apiClient->post('propertyGroups/', $set);
                     $item->setSwId($family['data']['id']);
-                    $this->entityManager->persist($item);
+                    $this->stepExecution->incrementSummaryInfo('write');
+                } else {
+                    $item->setSwId(null);
                 }
+                $this->entityManager->persist($item);
             } else {
                 $family = $apiClient->post('propertyGroups/', $set);
                 $item->setSwId($family['data']['id']);
                 $this->entityManager->persist($item);
+                $this->stepExecution->incrementSummaryInfo('write');
             }
         }
         $this->entityManager->flush();

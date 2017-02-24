@@ -6,10 +6,12 @@ use Akeneo\Component\Batch\Job\JobInterface;
 use Akeneo\Component\Batch\Job\JobParameters\ConstraintCollectionProviderInterface;
 use Akeneo\Component\Batch\Job\JobParameters\DefaultValuesProviderInterface;
 use Akeneo\Component\Classification\Repository\CategoryRepositoryInterface;
+use Pim\Bundle\CatalogBundle\Entity\AssociationType;
 use Pim\Bundle\CatalogBundle\Entity\Category;
 use Pim\Bundle\EnrichBundle\Doctrine\ORM\Repository\AttributeRepository;
 use Pim\Bundle\ImportExportBundle\JobParameters\FormConfigurationProviderInterface;
 use Pim\Bundle\UserBundle\Context\UserContext;
+use Pim\Component\Catalog\Repository\AssociationTypeRepositoryInterface;
 use Pim\Component\Catalog\Repository\AttributeRepositoryInterface;
 use Pim\Component\Catalog\Repository\ChannelRepositoryInterface;
 use Pim\Component\Catalog\Repository\CurrencyRepositoryInterface;
@@ -55,6 +57,10 @@ class ProductExport implements ConstraintCollectionProviderInterface, DefaultVal
      * @var array
      */
     private $attributeChoices;
+    /**
+     * @var AssociationTypeRepositoryInterface
+     */
+    private $associationTypeRepository;
 
     /**
      * ProductExport constructor.
@@ -64,6 +70,7 @@ class ProductExport implements ConstraintCollectionProviderInterface, DefaultVal
      * @param LocaleRepositoryInterface $localeRepository
      * @param AttributeRepositoryInterface $attributeRepository
      * @param CurrencyRepositoryInterface $currencyRepository
+     * @param AssociationTypeRepositoryInterface $associationTypeRepository
      */
     public function __construct(
         UserContext $userContext,
@@ -71,7 +78,8 @@ class ProductExport implements ConstraintCollectionProviderInterface, DefaultVal
         ChannelRepositoryInterface $channelRepository,
         LocaleRepositoryInterface $localeRepository,
         AttributeRepositoryInterface $attributeRepository,
-        CurrencyRepositoryInterface $currencyRepository
+        CurrencyRepositoryInterface $currencyRepository,
+        AssociationTypeRepositoryInterface $associationTypeRepository
     )
     {
         $this->categoryRepository = $categoryRepository;
@@ -80,6 +88,7 @@ class ProductExport implements ConstraintCollectionProviderInterface, DefaultVal
         $this->attributeRepository = $attributeRepository;
         $this->currencyRepository = $currencyRepository;
         $this->userContext = $userContext;
+        $this->associationTypeRepository = $associationTypeRepository;
     }
 
     /**
@@ -109,6 +118,8 @@ class ProductExport implements ConstraintCollectionProviderInterface, DefaultVal
                     new NotBlank(['groups' => 'Execution'])
                 ],
                 'currency' => [],
+                'similar' => [],
+                'related' => [],
                 'filterAttributes' => [],
                 'supplier' => [
                     new NotBlank(['groups' => 'Execution'])
@@ -204,6 +215,8 @@ class ProductExport implements ConstraintCollectionProviderInterface, DefaultVal
             'ean'               => '',
             'width'             => '',
             'height'            => '',
+            'related'           => '',
+            'similar'           => '',
             'len'               => '',
             'attr'              => ''
         ];
@@ -275,6 +288,26 @@ class ProductExport implements ConstraintCollectionProviderInterface, DefaultVal
                     'choices' => $this->parseActivatedCurrencyCodes(),
                     'label' => 'basecom_shopware_connector.export.currency.label',
                     'help'  => 'basecom_shopware_connector.export.currency.label'
+                ]
+            ],
+            'similar'          => [
+                'type' => 'choice',
+                'options' => [
+                    'required' => true,
+                    'select2'  => true,
+                    'choices' => $this->getAssociationTypes(),
+                    'label' => 'basecom_shopware_connector.export.similar.label',
+                    'help'  => 'basecom_shopware_connector.export.similar.help'
+                ]
+            ],
+            'related'          => [
+                'type' => 'choice',
+                'options' => [
+                    'required' => true,
+                    'select2'  => true,
+                    'choices' => $this->getAssociationTypes(),
+                    'label' => 'basecom_shopware_connector.export.related.label',
+                    'help'  => 'basecom_shopware_connector.export.related.help'
                 ]
             ],
             'filterAttributes' => [
@@ -562,6 +595,21 @@ class ProductExport implements ConstraintCollectionProviderInterface, DefaultVal
         $currencyArray = $this->currencyRepository->getActivatedCurrencyCodes();
 
         return array_combine($currencyArray, $currencyArray);
+    }
+
+    protected function getAssociationTypes()
+    {
+        $assocArray = [];
+
+        $allAssocTypes = $this->associationTypeRepository->findAll();
+        /**
+         * @var $assocType AssociationType
+         */
+        foreach($allAssocTypes as $assocType) {
+            $assocArray[$assocType->getCode()] = $assocType->setLocale($this->userContext->getCurrentLocaleCode())->getLabel();
+        }
+
+        return $assocArray;
     }
 
     protected function getAttributeChoices()
