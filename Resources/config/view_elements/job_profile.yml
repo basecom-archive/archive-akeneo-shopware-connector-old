@@ -1,0 +1,13 @@
+parameters:
+     basecom_shopware_connector.view_element.job_profile.tab.job_mapping.template: 'BasecomShopwareConnectorBundle:BasecomExportProfile:Tab/job_mapping.html.twig'
+
+services:
+   basecom_shopware_connector.view_element.job_profile.export.tab.job_mapping_edit:
+       parent: pim_enrich.view_element.base
+       arguments:
+           - 'basecom_shopware_connector.job_profile.tab.job_mapping'
+           - '%basecom_shopware_connector.view_element.job_profile.tab.job_mapping.template%'
+       calls:
+            - [ addVisibilityChecker, ['@basecom_shopware_export.view_element.visibility_checker.job_name'] ]
+       tags:
+           - { name: pim_enrich.view_element, type: pim_import_export_jobInstance.export.form_tab, position: 100 }

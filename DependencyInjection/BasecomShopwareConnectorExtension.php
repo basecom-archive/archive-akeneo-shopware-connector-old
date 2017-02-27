@@ -27,5 +27,7 @@ class BasecomShopwareConnectorExtension extends Extension
         $loader->load('serializers.yml');
         $loader->load('controllers.yml');
         $loader->load('services.yml');
+        $loader->load('view_elements/job_profile.yml');
+        $loader->load('view_elements.yml');
     }
 }

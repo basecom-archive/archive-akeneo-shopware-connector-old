@@ -1,0 +1,6 @@
+parameters:
+    basecom_shopware_export.view_element.visibility_checker.job_name.class: Basecom\Bundle\ShopwareConnectorBundle\ViewElement\Checker\ShopwareExportVisibilityChecker
+
+services:
+    basecom_shopware_export.view_element.visibility_checker.job_name:
+        class: '%basecom_shopware_export.view_element.visibility_checker.job_name.class%'
