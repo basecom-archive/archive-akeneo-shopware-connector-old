@@ -16,6 +16,25 @@ Enable the bundle in the `app/AppKernel.php` file in the `registerBundles()` met
     ]
 ```
 
+Add the following to `akeneo_storage_utils` in the `app/config/config.yml` file:
+
+```yaml
+akeneo_storage_utils:
+    mapping_overrides:
+        -
+            original: Pim\Bundle\CatalogBundle\Entity\Category
+            override: Basecom\Bundle\ShopwareConnectorBundle\Entity\Category
+        -
+            original: Pim\Bundle\CatalogBundle\Entity\Family
+            override: Basecom\Bundle\ShopwareConnectorBundle\Entity\Family
+        -
+            original: Akeneo\Component\FileStorage\Model\FileInfo
+            override: Basecom\Bundle\ShopwareConnectorBundle\Entity\FileInfo
+        -
+            original: Pim\Component\Catalog\Model\Product
+            override: Basecom\Bundle\ShopwareConnectorBundle\Entity\Product
+```
+
 Clear you cache and update your database:
 
 ```bash
