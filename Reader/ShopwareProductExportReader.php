@@ -12,6 +12,8 @@ use Pim\Component\Catalog\Repository\ProductRepositoryInterface;
 use Pim\Component\Catalog\Model\Product;
 
 /**
+ * @author Amir El Sayed <elsayed@basecom.de>
+ *
  * Fetches all products for a category and hands them over to the processor
  *
  * Class ShopwareProductExportReader
@@ -91,10 +93,12 @@ class ShopwareProductExportReader implements
         $channel = $this->channelRepository->findOneByIdentifier($this->stepExecution->getJobParameters()->get('channel'));
         $qb = $this->productRepository->buildByChannelAndCompleteness($channel);
         $products = $qb->getQuery()->execute();
+        $locale = $this->stepExecution->getJobParameters()->get('locale');
         /** @var Category $category */
         foreach ($categories as $category) {
             /** @var Product $product */
             foreach ($products as $product) {
+                $product->setLocale($locale);
                 if (in_array($category->getCode(), $product->getCategoryCodes())) {
                     array_push($products, $product);
                 }

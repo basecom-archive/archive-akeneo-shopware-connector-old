@@ -5,6 +5,8 @@ namespace Basecom\Bundle\ShopwareConnectorBundle\Entity;
 use Pim\Component\Catalog\Model\Product as PimProduct;
 
 /**
+ * @author  Amir El Sayed <elsayed@basecom.de>
+ *
  * Class Product
  *
  * @package Basecom\Bundle\ShopwareConnectorBundle\Entity

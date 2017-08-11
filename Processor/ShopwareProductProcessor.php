@@ -9,6 +9,7 @@ use Basecom\Bundle\ShopwareConnectorBundle\Api\ApiClient;
 use Basecom\Bundle\ShopwareConnectorBundle\Serializer\ShopwareProductSerializer;
 
 /**
+ * @author Amir El Sayed <elsayed@basecom.de>
  * processes the product for the export to shopware
  *
  * Class ShopwareProductProcessor
@@ -27,7 +28,8 @@ class ShopwareProductProcessor implements ItemProcessorInterface, StepExecutionA
      *
      * @param ShopwareProductSerializer $serializer
      */
-    public function __construct(ShopwareProductSerializer $serializer) {
+    public function __construct(ShopwareProductSerializer $serializer)
+    {
         $this->serializer = $serializer;
     }
 
@@ -36,12 +38,11 @@ class ShopwareProductProcessor implements ItemProcessorInterface, StepExecutionA
      */
     public function process($item)
     {
-        if($item->isVariant()) {
+        if ($item->isVariant()) {
             return null;
         }
-
         $jobParameters = $this->stepExecution->getJobParameters();
-        $locale = $jobParameters->get('locale');
+        $locale        = $jobParameters->get('locale');
 
         $apiClient = new ApiClient(
             $jobParameters->get('url'),
@@ -100,9 +101,9 @@ class ShopwareProductProcessor implements ItemProcessorInterface, StepExecutionA
             'basePrice'        => $jobParameters->get('basePrice'),
             'related'          => $jobParameters->get('related'),
             'similar'          => $jobParameters->get('similar'),
-//            'tax'              => $jobParameters->get('tax')
+            //            'tax'              => $jobParameters->get('tax')
         ];
-        $attributes = explode(";", $jobParameters->get('attr'));
+        $attributes  = explode(";", $jobParameters->get('attr'));
         foreach ($attributes as $attribute) {
             $attr = explode(":", $attribute);
             if (isset($attr[1])) {

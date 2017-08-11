@@ -12,6 +12,8 @@ use Basecom\Bundle\ShopwareConnectorBundle\Entity\Repository\ProductRepository;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
+ * @author  Amir El Sayed <elsayed@basecom.de>
+ *
  * Deletes all products and media which are referenced in Akeneo by the corresponding Shopware ID
  *
  * Class ShopwareCleaner
@@ -35,16 +37,17 @@ class ShopwareCleaner extends AbstractStep
 
     /**
      * ShopwareCleaner constructor.
-     * @param string $name
-     * @param EventDispatcherInterface $eventDispatcher
-     * @param JobRepositoryInterface $jobRepository
-     * @param ProductRepository $productRepository
+     *
+     * @param string                      $name
+     * @param EventDispatcherInterface    $eventDispatcher
+     * @param JobRepositoryInterface      $jobRepository
+     * @param ProductRepository           $productRepository
      * @param FileInfoRepositoryInterface $fileInfoRepository
      */
     public function __construct($name, EventDispatcherInterface $eventDispatcher, JobRepositoryInterface $jobRepository, ProductRepository $productRepository, FileInfoRepositoryInterface $fileInfoRepository)
     {
         parent::__construct($name, $eventDispatcher, $jobRepository);
-        $this->productRepository = $productRepository;
+        $this->productRepository  = $productRepository;
         $this->fileInfoRepository = $fileInfoRepository;
     }
 
@@ -77,13 +80,13 @@ class ShopwareCleaner extends AbstractStep
      */
     protected function cleanProducts(StepExecution $stepExecution)
     {
-        $articles = $this->apiClient->get('articles/');
-        $articleIds = array_column($articles['data'], 'id');
+        $articles         = $this->apiClient->get('articles/');
+        $articleIds       = array_column($articles['data'], 'id');
         $productIdsToKeep = array_column($this->productRepository->findIdByNotInSwId($articleIds), 'swProductId');
 
         foreach ($articleIds as $article) {
             if (!in_array($article, $productIdsToKeep)) {
-                $result = $this->apiClient->delete('articles/' . $article);
+                $result = $this->apiClient->delete('articles/'.$article);
 
                 if ($result['success']) {
                     $stepExecution->incrementSummaryInfo('product deleted');
@@ -97,8 +100,8 @@ class ShopwareCleaner extends AbstractStep
      */
     protected function cleanProductMedia(StepExecution $stepExecution)
     {
-        $media = $this->apiClient->get('media/');
-        $mediaIds = array_column($media['data'], 'id');
+        $media        = $this->apiClient->get('media/');
+        $mediaIds     = array_column($media['data'], 'id');
         $productMedia = $this->productRepository->findProductMediaWithSwId($mediaIds);
         if (!empty($productMedia)) {
             $productMedia = array_column($productMedia, 'swMediaId');
@@ -107,7 +110,7 @@ class ShopwareCleaner extends AbstractStep
         $mediaIdsToDelete = $this->fileInfoRepository->findMediaIdsNotInProducts($productMedia, $mediaIds);
 
         foreach ($mediaIdsToDelete as $mediaToDelete) {
-            $result = $this->apiClient->delete('media/' . $mediaToDelete['swMediaId']);
+            $result = $this->apiClient->delete('media/'.$mediaToDelete['swMediaId']);
 
             if ($result['success']) {
                 $stepExecution->incrementSummaryInfo('media deleted');

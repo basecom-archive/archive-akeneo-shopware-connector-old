@@ -6,6 +6,8 @@ use Doctrine\ORM\AbstractQuery;
 use Pim\Bundle\CatalogBundle\Doctrine\ORM\Repository\ProductRepository as BaseRepository;
 
 /**
+ * @author  Amir El Sayed <elsayed@basecom.de>
+ *
  * Class ProductRepository
  * @package Basecom\Bundle\ShopwareConnectorBundle\Entity\Repository
  */
@@ -19,16 +21,21 @@ class ProductRepository extends BaseRepository
         $qb = $this->createQueryBuilder('Product');
         $this->addJoinToValueTables($qb);
         $rootAlias = current($qb->getRootAliases());
-        $qb->select($rootAlias . '.swProductId');
+        $qb->select($rootAlias.'.swProductId');
         $qb->andWhere(
-            $qb->expr()->in($rootAlias . '.swProductId', ':swIds')
+            $qb->expr()->in($rootAlias.'.swProductId', ':swIds')
         );
-        $qb->addGroupBy($rootAlias . '.id');
+        $qb->addGroupBy($rootAlias.'.id');
         $qb->setParameter(':swIds', $swIds);
 
         return $qb->getQuery()->getResult(AbstractQuery::HYDRATE_ARRAY);
     }
 
+    /**
+     * @param array $mediaIds
+     *
+     * @return array
+     */
     public function findProductMediaWithSwId(array $mediaIds)
     {
         $qb = $this->createQueryBuilder('Product');

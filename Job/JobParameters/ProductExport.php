@@ -22,6 +22,8 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Url;
 
 /**
+ * @author Amir El Sayed <elsayed@basecom.de>
+ *
  * Class ProductExport
  * @package Basecom\Bundle\ShopwareConnectorBundle\Job\JobParameters
  */
@@ -64,12 +66,13 @@ class ProductExport implements ConstraintCollectionProviderInterface, DefaultVal
 
     /**
      * ProductExport constructor.
-     * @param UserContext $userContext
-     * @param CategoryRepositoryInterface $categoryRepository
-     * @param ChannelRepositoryInterface $channelRepository
-     * @param LocaleRepositoryInterface $localeRepository
-     * @param AttributeRepositoryInterface $attributeRepository
-     * @param CurrencyRepositoryInterface $currencyRepository
+     *
+     * @param UserContext                        $userContext
+     * @param CategoryRepositoryInterface        $categoryRepository
+     * @param ChannelRepositoryInterface         $channelRepository
+     * @param LocaleRepositoryInterface          $localeRepository
+     * @param AttributeRepositoryInterface       $attributeRepository
+     * @param CurrencyRepositoryInterface        $currencyRepository
      * @param AssociationTypeRepositoryInterface $associationTypeRepository
      */
     public function __construct(
@@ -82,12 +85,12 @@ class ProductExport implements ConstraintCollectionProviderInterface, DefaultVal
         AssociationTypeRepositoryInterface $associationTypeRepository
     )
     {
-        $this->categoryRepository = $categoryRepository;
-        $this->channelRepository = $channelRepository;
-        $this->localeRepository = $localeRepository;
-        $this->attributeRepository = $attributeRepository;
-        $this->currencyRepository = $currencyRepository;
-        $this->userContext = $userContext;
+        $this->categoryRepository        = $categoryRepository;
+        $this->channelRepository         = $channelRepository;
+        $this->localeRepository          = $localeRepository;
+        $this->attributeRepository       = $attributeRepository;
+        $this->currencyRepository        = $currencyRepository;
+        $this->userContext               = $userContext;
         $this->associationTypeRepository = $associationTypeRepository;
     }
 
@@ -98,74 +101,77 @@ class ProductExport implements ConstraintCollectionProviderInterface, DefaultVal
     {
         return new Collection([
             'fields' => [
-                'apiKey' => [
-                    new NotBlank(['groups' => 'Execution'])
-                ],
-                'userName' => [
-                    new NotBlank(['groups' => 'Execution'])
-                ],
-                'url' => [
+                'apiKey'           => [
                     new NotBlank(['groups' => 'Execution']),
-                    new Url(['groups' => 'Execution'])
                 ],
-                'rootCategory' => [
-                    new NotBlank(['groups' => 'Execution'])
+                'userName'         => [
+                    new NotBlank(['groups' => 'Execution']),
                 ],
-                'channel' => [
-                    new NotBlank(['groups' => 'Execution'])
+                'url'              => [
+                    new NotBlank(['groups' => 'Execution']),
+                    new Url(['groups' => 'Execution']),
                 ],
-                'locale' => [
-                    new NotBlank(['groups' => 'Execution'])
+                'rootCategory'     => [
+                    new NotBlank(['groups' => 'Execution']),
                 ],
-                'currency' => [],
-                'similar' => [],
-                'related' => [],
+                'channel'          => [
+                    new NotBlank(['groups' => 'Execution']),
+                ],
+                'locale'           => [
+                    new NotBlank(['groups' => 'Execution']),
+                ],
+                'shop'             => [
+                    new NotBlank(['groups' => 'Execution']),
+                ],
+                'currency'         => [],
+                'similar'          => [],
+                'related'          => [],
                 'filterAttributes' => [],
-                'supplier' => [
-                    new NotBlank(['groups' => 'Execution'])
+                'supplier'         => [
+                    new NotBlank(['groups' => 'Execution']),
                 ],
-                'name' => [
-                    new NotBlank(['groups' => 'Execution'])
+                'name'             => [
+                    new NotBlank(['groups' => 'Execution']),
                 ],
-                'articleNumber' => [
-                    new NotBlank(['groups' => 'Execution'])
+                'articleNumber'    => [
+                    new NotBlank(['groups' => 'Execution']),
                 ],
-//                'tax' => [
-//                    new NotBlank(['groups' => 'Execution'])
-//                ],
-                'template' => [],
+                //                'tax' => [
+                //                    new NotBlank(['groups' => 'Execution'])
+                //                ],
+                'template'         => [],
                 'priceGroupActive' => [],
-                'price' => [
-                    new NotBlank(['groups' => 'Execution'])
+                'price'            => [
+                    new NotBlank(['groups' => 'Execution']),
                 ],
-                'descriptionLong'   => [],
-                'metaTitle'         => [],
-                'description'       => [],
-                'keywords'          => [],
-                'purchaseUnit'      => [],
-                'referenceUnit'     => [],
-                'packUnit'          => [],
-                'notification'      => [],
-                'shippingTime'      => [],
-                'inStock'           => [],
-                'stockMin'          => [],
-                'releaseDate'       => [],
-                'pseudoSales'       => [],
-                'pseudoPrice'       => [],
-                'basePrice'         => [],
-                'minPurchase'       => [],
-                'purchaseSteps'     => [],
-                'maxPurchase'       => [],
-                'weight'            => [],
-                'shippingFree'      => [],
-                'highlight'         => [],
-                'lastStock'         => [],
-                'ean'               => [],
-                'width'             => [],
-                'height'            => [],
-                'len'               => [],
-                'attr'              => []
-            ]
+                'descriptionLong'  => [],
+                'metaTitle'        => [],
+                'description'      => [],
+                'keywords'         => [],
+                'purchaseUnit'     => [],
+                'referenceUnit'    => [],
+                'packUnit'         => [],
+                'notification'     => [],
+                'shippingTime'     => [],
+                'inStock'          => [],
+                'stockMin'         => [],
+                'releaseDate'      => [],
+                'pseudoSales'      => [],
+                'pseudoPrice'      => [],
+                'basePrice'        => [],
+                'minPurchase'      => [],
+                'purchaseSteps'    => [],
+                'maxPurchase'      => [],
+                'weight'           => [],
+                'shippingFree'     => [],
+                'highlight'        => [],
+                'lastStock'        => [],
+                'ean'              => [],
+                'width'            => [],
+                'height'           => [],
+                'len'              => [],
+                'attr'             => [],
+            ],
         ]);
     }
 
@@ -175,50 +181,51 @@ class ProductExport implements ConstraintCollectionProviderInterface, DefaultVal
     public function getDefaultValues()
     {
         return [
-            'apiKey'            => '',
-            'userName'          => '',
-            'url'               => '',
-            'rootCategory'      => '',
-            'channel'           => '',
-            'locale'            => '',
-            'currency'          => '',
-            'filterAttributes'  => '',
-            'supplier'          => '',
-            'name'              => '',
-            'articleNumber'     => '',
-//            'tax'               => '',
-            'template'          => '',
-            'priceGroupActive'  => '',
-            'price'             => '',
-            'descriptionLong'   => '',
-            'metaTitle'         => '',
-            'description'       => '',
-            'keywords'          => '',
-            'purchaseUnit'      => '',
-            'referenceUnit'     => '',
-            'packUnit'          => '',
-            'notification'      => '',
-            'shippingTime'      => '',
-            'inStock'           => '',
-            'stockMin'          => '',
-            'releaseDate'       => '',
-            'pseudoSales'       => '',
-            'pseudoPrice'       => '',
-            'basePrice'         => '',
-            'minPurchase'       => '',
-            'purchaseSteps'     => '',
-            'maxPurchase'       => '',
-            'weight'            => '',
-            'shippingFree'      => '',
-            'highlight'         => '',
-            'lastStock'         => '',
-            'ean'               => '',
-            'width'             => '',
-            'height'            => '',
-            'related'           => '',
-            'similar'           => '',
-            'len'               => '',
-            'attr'              => ''
+            'apiKey'           => '',
+            'userName'         => '',
+            'url'              => '',
+            'rootCategory'     => '',
+            'channel'          => '',
+            'locale'           => '',
+            'currency'         => '',
+            'filterAttributes' => '',
+            'supplier'         => '',
+            'name'             => '',
+            'articleNumber'    => '',
+            //            'tax'               => '',
+            'template'         => '',
+            'priceGroupActive' => '',
+            'price'            => '',
+            'descriptionLong'  => '',
+            'metaTitle'        => '',
+            'description'      => '',
+            'keywords'         => '',
+            'purchaseUnit'     => '',
+            'referenceUnit'    => '',
+            'packUnit'         => '',
+            'notification'     => '',
+            'shippingTime'     => '',
+            'inStock'          => '',
+            'stockMin'         => '',
+            'releaseDate'      => '',
+            'pseudoSales'      => '',
+            'pseudoPrice'      => '',
+            'basePrice'        => '',
+            'minPurchase'      => '',
+            'purchaseSteps'    => '',
+            'maxPurchase'      => '',
+            'weight'           => '',
+            'shippingFree'     => '',
+            'highlight'        => '',
+            'lastStock'        => '',
+            'ean'              => '',
+            'width'            => '',
+            'height'           => '',
+            'related'          => '',
+            'similar'          => '',
+            'len'              => '',
+            'attr'             => '',
+            'shop'             => '1',
         ];
     }
 
@@ -228,354 +235,365 @@ class ProductExport implements ConstraintCollectionProviderInterface, DefaultVal
     public function getFormConfiguration()
     {
         return [
-            'url'      => [
-                'type' => 'url',
+            'url'              => [
+                'type'    => 'url',
                 'options' => [
-                    'label' => 'basecom_shopware_connector.export.url.label',
-                    'help'  => 'basecom_shopware_connector.export.url.help',
-                    'required' => true
-                ]
+                    'label'    => 'basecom_shopware_connector.export.url.label',
+                    'help'     => 'basecom_shopware_connector.export.url.help',
+                    'required' => true,
+                ],
             ],
-            'userName' => [
+            'userName'         => [
                 'options' => [
-                    'label' => 'basecom_shopware_connector.export.userName.label',
-                    'help'  => 'basecom_shopware_connector.export.userName.help',
-                    'required' => true
-                ]
+                    'label'    => 'basecom_shopware_connector.export.userName.label',
+                    'help'     => 'basecom_shopware_connector.export.userName.help',
+                    'required' => true,
+                ],
             ],
-            'apiKey'   => [
+            'apiKey'           => [
                 'options' => [
-                    'label' => 'basecom_shopware_connector.export.apiKey.label',
-                    'help'  => 'basecom_shopware_connector.export.apiKey.help',
-                    'required' => true
-                ]
+                    'label'    => 'basecom_shopware_connector.export.apiKey.label',
+                    'help'     => 'basecom_shopware_connector.export.apiKey.help',
+                    'required' => true,
+                ],
             ],
-            'rootCategory' => [
-                'type' => 'choice',
+            'rootCategory'     => [
+                'type'    => 'choice',
                 'options' => [
-                    'choices' => $this->getCategoryChoices(),
+                    'choices'  => $this->getCategoryChoices(),
                     'select2'  => true,
-                    'label' => 'basecom_shopware_connector.export.rootCategory.label',
-                    'help'  => 'basecom_shopware_connector.export.rootCategory.help',
-                    'required' => true
-                ]
+                    'label'    => 'basecom_shopware_connector.export.rootCategory.label',
+                    'help'     => 'basecom_shopware_connector.export.rootCategory.help',
+                    'required' => true,
+                ],
             ],
-            'channel' => [
+            'channel'          => [
                 'type'    => 'choice',
                 'options' => [
                     'choices'  => array_combine($this->channelRepository->getChannelCodes(), $this->channelRepository->getChannelCodes()),
                     'required' => true,
                     'select2'  => true,
                     'label'    => 'basecom_shopware_connector.export.channel.label',
-                    'help'     => 'basecom_shopware_connector.export.channel.label'
-                ]
+                    'help'     => 'basecom_shopware_connector.export.channel.label',
+                ],
             ],
-            'locale' => [
+            'locale'           => [
                 'type'    => 'choice',
                 'options' => [
                     'choices'  => $this->parseActivatedLocaleCodes(),
                     'required' => true,
                     'select2'  => true,
                     'label'    => 'basecom_shopware_connector.export.locale.label',
-                    'help'     => 'basecom_shopware_connector.export.locale.help'
-                ]
+                    'help'     => 'basecom_shopware_connector.export.locale.help',
+                ],
             ],
-            'currency' => [
-                'type' => 'choice',
+            'shop'             => [
+                'type'    => 'choice',
+                'options' => [
+                    'choices'  => $this->parseShops(),
+                    'select2'  => true,
+                    'required' => true,
+                    'label'    => 'basecom_shopware_connector.export.shop.label',
+                    'help'     => 'basecom_shopware_connector.export.shop.help',
+                ],
+            ],
+            'currency'         => [
+                'type'    => 'choice',
                 'options' => [
                     'required' => true,
                     'select2'  => true,
-                    'choices' => $this->parseActivatedCurrencyCodes(),
-                    'label' => 'basecom_shopware_connector.export.currency.label',
-                    'help'  => 'basecom_shopware_connector.export.currency.label'
-                ]
+                    'choices'  => $this->parseActivatedCurrencyCodes(),
+                    'label'    => 'basecom_shopware_connector.export.currency.label',
+                    'help'     => 'basecom_shopware_connector.export.currency.label',
+                ],
             ],
             'similar'          => [
-                'type' => 'choice',
+                'type'    => 'choice',
                 'options' => [
                     'required' => true,
                     'select2'  => true,
-                    'choices' => $this->getAssociationTypes(),
-                    'label' => 'basecom_shopware_connector.export.similar.label',
-                    'help'  => 'basecom_shopware_connector.export.similar.help'
-                ]
+                    'choices'  => $this->getAssociationTypes(),
+                    'label'    => 'basecom_shopware_connector.export.similar.label',
+                    'help'     => 'basecom_shopware_connector.export.similar.help',
+                ],
             ],
             'related'          => [
-                'type' => 'choice',
+                'type'    => 'choice',
                 'options' => [
                     'required' => true,
                     'select2'  => true,
-                    'choices' => $this->getAssociationTypes(),
-                    'label' => 'basecom_shopware_connector.export.related.label',
-                    'help'  => 'basecom_shopware_connector.export.related.help'
-                ]
+                    'choices'  => $this->getAssociationTypes(),
+                    'label'    => 'basecom_shopware_connector.export.related.label',
+                    'help'     => 'basecom_shopware_connector.export.related.help',
+                ],
             ],
             'filterAttributes' => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.filterAttributes.label',
-                    'help'  => 'basecom_shopware_connector.export.filterAttributes.help'
-                ]
+                    'help'  => 'basecom_shopware_connector.export.filterAttributes.help',
+                ],
             ],
             'supplier'         => [
-                'type' => 'choice',
+                'type'    => 'choice',
                 'options' => [
                     'select2'  => true,
-                    'choices' => $this->getAttributeChoices(),
-                    'label' => 'basecom_shopware_connector.export.supplier.label',
-                    'help'  => 'basecom_shopware_connector.export.supplier.help',
-                    'required' => true
-                ]
+                    'choices'  => $this->getAttributeChoices(),
+                    'label'    => 'basecom_shopware_connector.export.supplier.label',
+                    'help'     => 'basecom_shopware_connector.export.supplier.help',
+                    'required' => true,
+                ],
             ],
             'name'             => [
-                'type' => 'choice',
+                'type'    => 'choice',
                 'options' => [
-                    'label' => 'basecom_shopware_connector.export.name.label',
-                    'help'  => 'basecom_shopware_connector.export.name.help',
+                    'label'    => 'basecom_shopware_connector.export.name.label',
+                    'help'     => 'basecom_shopware_connector.export.name.help',
                     'required' => true,
                     'select2'  => true,
-                    'choices' => $this->getAttributeChoices()
-                ]
+                    'choices'  => $this->getAttributeChoices(),
+                ],
             ],
             'articleNumber'    => [
-                'type' => 'choice',
+                'type'    => 'choice',
                 'options' => [
-                    'label' => 'basecom_shopware_connector.export.articleNumber.label',
-                    'help'  => 'basecom_shopware_connector.export.articleNumber.help',
+                    'label'    => 'basecom_shopware_connector.export.articleNumber.label',
+                    'help'     => 'basecom_shopware_connector.export.articleNumber.help',
                     'required' => true,
                     'select2'  => true,
-                    'choices' => $this->getAttributeChoices()
-                ]
+                    'choices'  => $this->getAttributeChoices(),
+                ],
             ],
             'template'         => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.template.label',
-                    'help'  => 'basecom_shopware_connector.export.template.help'
-                ]
+                    'help'  => 'basecom_shopware_connector.export.template.help',
+                ],
             ],
             'priceGroupActive' => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.priceGroupActive.label',
-                    'help'  => 'basecom_shopware_connector.export.priceGroupActive.help'
-                ]
+                    'help'  => 'basecom_shopware_connector.export.priceGroupActive.help',
+                ],
             ],
             'price'            => [
-                'type' => 'choice',
+                'type'    => 'choice',
                 'options' => [
-                    'label' => 'basecom_shopware_connector.export.price.label',
-                    'help'  => 'basecom_shopware_connector.export.price.help',
+                    'label'    => 'basecom_shopware_connector.export.price.label',
+                    'help'     => 'basecom_shopware_connector.export.price.help',
                     'required' => true,
                     'select2'  => true,
-                    'choices' => $this->getAttributeChoices()
-                ]
+                    'choices'  => $this->getAttributeChoices(),
+                ],
             ],
             'descriptionLong'  => [
-                'type' => 'choice',
+                'type'    => 'choice',
                 'options' => [
-                    'label' => 'basecom_shopware_connector.export.descriptionLong.label',
-                    'help'  => 'basecom_shopware_connector.export.descriptionLong.help',
-                    'select2'  => true,
-                    'choices' => $this->getAttributeChoices()
-                ]
+                    'label'   => 'basecom_shopware_connector.export.descriptionLong.label',
+                    'help'    => 'basecom_shopware_connector.export.descriptionLong.help',
+                    'select2' => true,
+                    'choices' => $this->getAttributeChoices(),
+                ],
             ],
             'metaTitle'        => [
-                'type' => 'choice',
+                'type'    => 'choice',
                 'options' => [
-                    'label' => 'basecom_shopware_connector.export.metaTitle.label',
-                    'help'  => 'basecom_shopware_connector.export.metaTitle.help',
-                    'select2'  => true,
-                    'choices' => $this->getAttributeChoices()
-                ]
+                    'label'   => 'basecom_shopware_connector.export.metaTitle.label',
+                    'help'    => 'basecom_shopware_connector.export.metaTitle.help',
+                    'select2' => true,
+                    'choices' => $this->getAttributeChoices(),
+                ],
             ],
             'description'      => [
-                'type' => 'choice',
+                'type'    => 'choice',
                 'options' => [
-                    'label' => 'basecom_shopware_connector.export.description.label',
-                    'help'  => 'basecom_shopware_connector.export.description.help',
-                    'select2'  => true,
-                    'choices' => $this->getAttributeChoices()
-                ]
+                    'label'   => 'basecom_shopware_connector.export.description.label',
+                    'help'    => 'basecom_shopware_connector.export.description.help',
+                    'select2' => true,
+                    'choices' => $this->getAttributeChoices(),
+                ],
             ],
             'keywords'         => [
-                'type' => 'choice',
+                'type'    => 'choice',
                 'options' => [
-                    'label' => 'basecom_shopware_connector.export.keywords.label',
-                    'help'  => 'basecom_shopware_connector.export.keywords.help',
-                    'select2'  => true,
-                    'choices' => $this->getAttributeChoices()
-                ]
+                    'label'   => 'basecom_shopware_connector.export.keywords.label',
+                    'help'    => 'basecom_shopware_connector.export.keywords.help',
+                    'select2' => true,
+                    'choices' => $this->getAttributeChoices(),
+                ],
             ],
             'purchaseUnit'     => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.purchaseUnit.label',
-                    'help'  => 'basecom_shopware_connector.export.purchaseUnit.help'
-                ]
+                    'help'  => 'basecom_shopware_connector.export.purchaseUnit.help',
+                ],
             ],
             'referenceUnit'    => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.referenceUnit.label',
-                    'help'  => 'basecom_shopware_connector.export.referenceUnit.help'
-                ]
+                    'help'  => 'basecom_shopware_connector.export.referenceUnit.help',
+                ],
             ],
             'packUnit'         => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.packUnit.label',
-                    'help'  => 'basecom_shopware_connector.export.packUnit.help'
-                ]
+                    'help'  => 'basecom_shopware_connector.export.packUnit.help',
+                ],
             ],
             'notification'     => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.notification.label',
-                    'help'  => 'basecom_shopware_connector.export.notification.help'
-                ]
+                    'help'  => 'basecom_shopware_connector.export.notification.help',
+                ],
             ],
             'shippingTime'     => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.shippingTime.label',
-                    'help'  => 'basecom_shopware_connector.export.shippingTime.help'
-                ]
+                    'help'  => 'basecom_shopware_connector.export.shippingTime.help',
+                ],
             ],
             'inStock'          => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.inStock.label',
-                    'help'  => 'basecom_shopware_connector.export.inStock.help'
-                ]
+                    'help'  => 'basecom_shopware_connector.export.inStock.help',
+                ],
             ],
             'stockMin'         => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.stockMin.label',
-                    'help'  => 'basecom_shopware_connector.export.stockMin.help'
-                ]
+                    'help'  => 'basecom_shopware_connector.export.stockMin.help',
+                ],
             ],
             'releaseDate'      => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.releaseDate.label',
-                    'help'  => 'basecom_shopware_connector.export.releaseDate.help'
-                ]
+                    'help'  => 'basecom_shopware_connector.export.releaseDate.help',
+                ],
             ],
             'pseudoSales'      => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.pseudoSales.label',
-                    'help'  => 'basecom_shopware_connector.export.pseudoSales.help'
-                ]
+                    'help'  => 'basecom_shopware_connector.export.pseudoSales.help',
+                ],
             ],
             'pseudoPrice'      => [
-                'type' => 'choice',
+                'type'    => 'choice',
                 'options' => [
-                    'label' => 'basecom_shopware_connector.export.pseudoPrice.label',
-                    'help'  => 'basecom_shopware_connector.export.pseudoPrice.help',
-                    'select2'  => true,
-                    'choices' => $this->getAttributeChoices()
-                ]
+                    'label'   => 'basecom_shopware_connector.export.pseudoPrice.label',
+                    'help'    => 'basecom_shopware_connector.export.pseudoPrice.help',
+                    'select2' => true,
+                    'choices' => $this->getAttributeChoices(),
+                ],
             ],
-            'basePrice'      => [
-                'type' => 'choice',
+            'basePrice'        => [
+                'type'    => 'choice',
                 'options' => [
-                    'label' => 'basecom_shopware_connector.export.basePrice.label',
-                    'help'  => 'basecom_shopware_connector.export.basePrice.help',
-                    'select2'  => true,
-                    'choices' => $this->getAttributeChoices()
-                ]
+                    'label'   => 'basecom_shopware_connector.export.basePrice.label',
+                    'help'    => 'basecom_shopware_connector.export.basePrice.help',
+                    'select2' => true,
+                    'choices' => $this->getAttributeChoices(),
+                ],
             ],
             'minPurchase'      => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.minPurchase.label',
-                    'help'  => 'basecom_shopware_connector.export.minPurchase.help'
-                ]
+                    'help'  => 'basecom_shopware_connector.export.minPurchase.help',
+                ],
             ],
             'purchaseSteps'    => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.purchaseSteps.label',
-                    'help'  => 'basecom_shopware_connector.export.purchaseSteps.help'
-                ]
+                    'help'  => 'basecom_shopware_connector.export.purchaseSteps.help',
+                ],
             ],
             'maxPurchase'      => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.maxPurchase.label',
-                    'help'  => 'basecom_shopware_connector.export.maxPurchase.help'
-                ]
+                    'help'  => 'basecom_shopware_connector.export.maxPurchase.help',
+                ],
             ],
             'weight'           => [
-                'type' => 'choice',
+                'type'    => 'choice',
                 'options' => [
-                    'label' => 'basecom_shopware_connector.export.weight.label',
-                    'help'  => 'basecom_shopware_connector.export.weight.help',
-                    'select2'  => true,
-                    'choices' => $this->getAttributeChoices()
-                ]
+                    'label'   => 'basecom_shopware_connector.export.weight.label',
+                    'help'    => 'basecom_shopware_connector.export.weight.help',
+                    'select2' => true,
+                    'choices' => $this->getAttributeChoices(),
+                ],
             ],
             'shippingFree'     => [
-                'type' => 'choice',
+                'type'    => 'choice',
                 'options' => [
-                    'label' => 'basecom_shopware_connector.export.shippingFree.label',
-                    'help'  => 'basecom_shopware_connector.export.shippingFree.help',
-                    'select2'  => true,
-                    'choices' => $this->getAttributeChoices()
-                ]
+                    'label'   => 'basecom_shopware_connector.export.shippingFree.label',
+                    'help'    => 'basecom_shopware_connector.export.shippingFree.help',
+                    'select2' => true,
+                    'choices' => $this->getAttributeChoices(),
+                ],
             ],
             'highlight'        => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.highlight.label',
-                    'help'  => 'basecom_shopware_connector.export.highlight.help'
-                ]
+                    'help'  => 'basecom_shopware_connector.export.highlight.help',
+                ],
             ],
             'lastStock'        => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.lastStock.label',
-                    'help'  => 'basecom_shopware_connector.export.lastStock.help'
-                ]
+                    'help'  => 'basecom_shopware_connector.export.lastStock.help',
+                ],
             ],
             'ean'              => [
-                'type' => 'choice',
+                'type'    => 'choice',
                 'options' => [
-                    'label' => 'basecom_shopware_connector.export.ean.label',
-                    'help'  => 'basecom_shopware_connector.export.ean.help',
-                    'select2'  => true,
-                    'choices' => $this->getAttributeChoices()
-                ]
+                    'label'   => 'basecom_shopware_connector.export.ean.label',
+                    'help'    => 'basecom_shopware_connector.export.ean.help',
+                    'select2' => true,
+                    'choices' => $this->getAttributeChoices(),
+                ],
             ],
             'width'            => [
-                'type' => 'choice',
+                'type'    => 'choice',
                 'options' => [
-                    'label' => 'basecom_shopware_connector.export.width.label',
-                    'help'  => 'basecom_shopware_connector.export.width.help',
-                    'select2'  => true,
-                    'choices' => $this->getAttributeChoices()
-                ]
+                    'label'   => 'basecom_shopware_connector.export.width.label',
+                    'help'    => 'basecom_shopware_connector.export.width.help',
+                    'select2' => true,
+                    'choices' => $this->getAttributeChoices(),
+                ],
             ],
             'height'           => [
-                'type' => 'choice',
+                'type'    => 'choice',
                 'options' => [
-                    'label' => 'basecom_shopware_connector.export.height.label',
-                    'help'  => 'basecom_shopware_connector.export.height.help',
-                    'select2'  => true,
-                    'choices' => $this->getAttributeChoices()
-                ]
+                    'label'   => 'basecom_shopware_connector.export.height.label',
+                    'help'    => 'basecom_shopware_connector.export.height.help',
+                    'select2' => true,
+                    'choices' => $this->getAttributeChoices(),
+                ],
             ],
             'len'              => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.len.label',
-                    'help'  => 'basecom_shopware_connector.export.len.help'
-                ]
+                    'help'  => 'basecom_shopware_connector.export.len.help',
+                ],
             ],
             'attr'             => [
                 'type'    => 'hidden',
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.attr.label',
                     'help'  => 'basecom_shopware_connector.export.attr.help',
-                ]
-            ]
+                ],
+            ],
         ];
     }
 
     /**
      * @return array
      */
-    protected function getCategoryChoices() {
+    protected function getCategoryChoices()
+    {
         $categoryChoices = [];
-        $trees = $this->categoryRepository->getTrees();
+        $trees           = $this->categoryRepository->getTrees();
 
         /** @var Category $tree */
-        foreach($trees as $tree) {
+        foreach ($trees as $tree) {
             $tree->setLocale('en_US');
             $categoryChoices[$tree->getCode()] = $tree->getLabel();
         }
@@ -583,6 +601,9 @@ class ProductExport implements ConstraintCollectionProviderInterface, DefaultVal
         return $categoryChoices;
     }
 
+    /**
+     * @return array
+     */
     protected function parseActivatedLocaleCodes()
     {
         $localeArray = $this->localeRepository->getActivatedLocaleCodes();
@@ -590,6 +611,9 @@ class ProductExport implements ConstraintCollectionProviderInterface, DefaultVal
         return array_combine($localeArray, $localeArray);
     }
 
+    /**
+     * @return array
+     */
     protected function parseActivatedCurrencyCodes()
     {
         $currencyArray = $this->currencyRepository->getActivatedCurrencyCodes();
@@ -597,6 +621,9 @@ class ProductExport implements ConstraintCollectionProviderInterface, DefaultVal
         return array_combine($currencyArray, $currencyArray);
     }
 
+    /**
+     * @return array
+     */
     protected function getAssociationTypes()
     {
         $assocArray = [];
@@ -605,17 +632,20 @@ class ProductExport implements ConstraintCollectionProviderInterface, DefaultVal
         /**
          * @var $assocType AssociationType
          */
-        foreach($allAssocTypes as $assocType) {
+        foreach ($allAssocTypes as $assocType) {
             $assocArray[$assocType->getCode()] = $assocType->setLocale($this->userContext->getCurrentLocaleCode())->getLabel();
         }
 
         return $assocArray;
     }
 
+    /**
+     * @return array
+     */
     protected function getAttributeChoices()
     {
-        if(0 === count($this->attributeChoices)) {
-            $translatedLabels = $this->attributeRepository->getAttributesAsArray(true, $this->userContext->getCurrentLocaleCode());
+        if (0 === count($this->attributeChoices)) {
+            $translatedLabels       = $this->attributeRepository->getAttributesAsArray(true, $this->userContext->getCurrentLocaleCode());
             $this->attributeChoices = array_column($translatedLabels, 'label', 'code');
         }
 
@@ -623,7 +653,22 @@ class ProductExport implements ConstraintCollectionProviderInterface, DefaultVal
     }
 
     /**
+     * @return array
+     */
+    protected function parseShops()
+    {
+        $shopArray = [];
+        $pointer   = fopen(__DIR__.'/../../Resources/config/shops.csv', 'r');
+        while ($row = fgetcsv($pointer, null, ';')) {
+            $shopArray[$row[0]] = $row[3];
+        }
+
+        return $shopArray;
+    }
+
+    /**
      * @param JobInterface $job
+     *
      * @return bool
      */
     public function supports(JobInterface $job)

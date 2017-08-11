@@ -11,6 +11,8 @@ use Doctrine\ORM\EntityManager;
 use Pim\Component\Catalog\Repository\LocaleRepositoryInterface;
 
 /**
+ * @author Amir El Sayed <elsayed@basecom.de>
+ *
  * Posts all provided families to shopware via Rest API
  *
  * Class ShopwareFamilyWriter
@@ -65,29 +67,29 @@ class ShopwareFamilyWriter implements ItemWriterInterface, StepExecutionAwareInt
             $jobParameters->get('apiKey')
         );
 
+        $shop = $jobParameters->get('shop');
+
         /** @var Family $item */
         foreach ($items as $item) {
             $item->setLocale($locale);
-            $set = [
-                'name'       => $item->getLabel(),
-                'position'   => 0,
-                'comparable' => true,
-                'sortMode'   => 0
-            ];
+
             if (null !== $item->getSwId()) {
-                if (null == $apiClient->put('propertyGroups/' . $item->getSwId(), $set)) {
-                    $family = $apiClient->post('propertyGroups/', $set);
-                    $item->setSwId($family['data']['id']);
-                    $this->stepExecution->incrementSummaryInfo('write');
-                } else {
-                    $item->setSwId(null);
-                }
-                $this->entityManager->persist($item);
+                $this->createTranslation($item, $apiClient, $shop);
+                $this->stepExecution->incrementSummaryInfo('update');
             } else {
+                $set = [
+                    'name'       => $item->getLabel(),
+                    'position'   => 0,
+                    'comparable' => true,
+                    'sortMode'   => 0
+                ];
+
                 $family = $apiClient->post('propertyGroups/', $set);
                 $item->setSwId($family['data']['id']);
                 $this->entityManager->persist($item);
+                $this->createTranslation($item, $apiClient, $shop);
                 $this->stepExecution->incrementSummaryInfo('write');
+
             }
         }
         $this->entityManager->flush();
@@ -99,5 +101,27 @@ class ShopwareFamilyWriter implements ItemWriterInterface, StepExecutionAwareInt
     public function setStepExecution(StepExecution $stepExecution)
     {
         $this->stepExecution = $stepExecution;
+    }
+
+    /**
+     * @param $item Family
+     * @param $apiClient ApiClient
+     * @param $shop int
+     *
+     * @return mixed
+     *
+     */
+    protected function createTranslation($item, $apiClient, $shop)
+    {
+        $dataArray = [
+            'key' => $item->getSwId(),
+            'type' => 'propertygroup',
+            'shopId' => $shop,
+            'data' => [
+                'groupName' => $item->getLabel()
+            ]
+        ];
+
+        return $apiClient->post('translations/' . $item->getSwId(), $dataArray);
     }
 }

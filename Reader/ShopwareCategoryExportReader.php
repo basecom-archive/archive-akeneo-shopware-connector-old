@@ -9,6 +9,8 @@ use Akeneo\Component\Classification\Repository\CategoryRepositoryInterface;
 use Basecom\Bundle\ShopwareConnectorBundle\Entity\Category;
 
 /**
+ * @author Amir El Sayed <elsayed@basecom.de>
+ *
  * Fetches all categories of a tree and hands them over to the processor
  *
  * Class ShopwareCategoryExportReader

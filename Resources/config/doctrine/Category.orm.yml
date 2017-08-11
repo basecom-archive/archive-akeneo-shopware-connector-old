@@ -4,6 +4,6 @@ Basecom\Bundle\ShopwareConnectorBundle\Entity\Category:
     repositoryClass: Akeneo\Bundle\ClassificationBundle\Doctrine\ORM\Repository\CategoryRepository
     fields:
         swId:
-            type: integer
+            type: array
             nullable: true
-            unique: true
+            length: 150

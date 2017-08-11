@@ -5,6 +5,8 @@ namespace Basecom\Bundle\ShopwareConnectorBundle\Entity;
 use Pim\Bundle\CatalogBundle\Entity\Family as PimFamily;
 
 /**
+ * @author  Amir El Sayed <elsayed@basecom.de>
+ *
  * Overrides original Family entity to add
  * the Shopware propertyGroup ID.
  *

@@ -12,6 +12,8 @@ use Doctrine\ORM\EntityManager;
 use Pim\Component\Catalog\Repository\LocaleRepositoryInterface;
 
 /**
+ * @author Amir El Sayed <elsayed@basecom.de>
+ *
  * Posts all provided categories to shopware via Rest API
  *
  * Class ShopwareCategoryWriter
@@ -76,6 +78,7 @@ class ShopwareCategoryWriter implements ItemWriterInterface, StepExecutionAwareI
             $jobParameters->get('apiKey')
         );
 
+        $shop = $jobParameters->get('shop');
 
         /**
          * @var Category $item
@@ -83,8 +86,9 @@ class ShopwareCategoryWriter implements ItemWriterInterface, StepExecutionAwareI
         foreach ($items as $item) {
             $item->setLocale($locale);
             $parent = 1;
-            if (null !== $item->getParent() && null !== $item->getParent()->getSwId()) {
-                $parent = $item->getParent()->getSwId();
+
+            if (null !== $item->getParent() && null !== $item->getParent()->getSwId($locale)) {
+                $parent = $item->getParent()->getSwId($locale);
             }
             $swCategory = [
                 'name'             => $item->getLabel(),
@@ -93,24 +97,27 @@ class ShopwareCategoryWriter implements ItemWriterInterface, StepExecutionAwareI
                 'blog'             => false,
                 'showFilterGroups' => true,
             ];
-            if (null !== $item->getSwId()) {
-                if (null == $apiClient->put('categories/' . $item->getSwId(), $swCategory)) {
+
+            if (null !== $item->getSwId($locale)) {
+                if (null == $apiClient->put('categories/' . $item->getSwId($locale), $swCategory)) {
                     $category = $apiClient->post('categories', $swCategory);
-                    $item->setSwId($category['data']['id']);
-                    $this->stepExecution->incrementSummaryInfo('write');
-                } else {
-                    $item->setSwId(null);
+                    $item->addSwId($category['data']['id'], $locale);
+                    $this->stepExecution->incrementSummaryInfo('update');
                 }
 
                 $this->entityManager->persist($item);
             } else {
                 $category = $apiClient->post('categories', $swCategory);
-                $item->setSwId($category['data']['id']);
+                $item->addSwId($category['data']['id'], $locale);
                 $this->entityManager->persist($item);
                 $this->stepExecution->incrementSummaryInfo('write');
             }
+
+            $this->entityManager->flush();
         }
-        $this->entityManager->flush();
+
+        $rootCategory = $this->categoryRepository->findOneByIdentifier($jobParameters->get('rootCategory'));
+        $apiClient->put('shops/'.$shop, ['categoryId' => $rootCategory->getSwId($locale)]);
     }
 
     /**

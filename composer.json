@@ -1,5 +1,5 @@
 {
-    "name": "basecom/shopware-connector",
+    "name": "basecom/akeneo-shopware-connector",
     "type": "symfony-bundle",
     "description": "Akeneo to Shopware Connector - Export only",
     "license": "MIT",

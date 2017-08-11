@@ -12,6 +12,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
+ * @author  Amir El Sayed <elsayed@basecom.de>
+ *
  * Overrides the original ExportProfileController class to provide the JobProfile
  * edit-template with an additional argument
  *
@@ -30,8 +32,8 @@ class ExportProfileController extends BaseController
         return $this->templating->renderResponse(
             'PimImportExportBundle:ExportProfile:index.html.twig',
             [
-                'jobType'       => $this->getJobType(),
-                'connectors'    => $this->jobRegistry->allByType($this->getJobType())
+                'jobType'    => $this->getJobType(),
+                'connectors' => $this->jobRegistry->allByType($this->getJobType()),
             ]
         );
     }
@@ -42,7 +44,7 @@ class ExportProfileController extends BaseController
      * @AclAncestor("pim_importexport_export_profile_edit")
      *
      * @param Request $request
-     * @param int $id
+     * @param int     $id
      *
      * @return Response
      */
@@ -60,7 +62,7 @@ class ExportProfileController extends BaseController
         $this->eventDispatcher->dispatch(JobProfileEvents::PRE_EDIT, new GenericEvent($jobInstance));
 
         $form = $this->formFactory->create($this->jobInstanceFormType, $jobInstance);
-        $job = $this->jobRegistry->get($jobInstance->getJobName());
+        $job  = $this->jobRegistry->get($jobInstance->getJobName());
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
@@ -71,7 +73,7 @@ class ExportProfileController extends BaseController
                 $this->eventDispatcher->dispatch(JobProfileEvents::POST_EDIT, new GenericEvent($jobInstance));
 
                 $this->request->getSession()->getFlashBag()
-                    ->add('success', new Message(sprintf('flash.%s.updated', $this->getJobType())));
+                              ->add('success', new Message(sprintf('flash.%s.updated', $this->getJobType())));
 
                 return $this->redirectToShowView($jobInstance->getId());
             }
@@ -79,17 +81,17 @@ class ExportProfileController extends BaseController
 
         $template = $this->jobTemplateProvider->getEditTemplate($jobInstance);
 
-        $attributes = array_column(array_map('str_getcsv', file(__DIR__ . '/../Resources/config/additional_attributes.csv')), 0);
+        $attributes = array_column(array_map('str_getcsv', file(__DIR__.'/../Resources/config/additional_attributes.csv')), 0);
 
         $attributes = $this->mapValuesToAttributes($attributes, $jobInstance->getRawParameters());
 
         return $this->templating->renderResponse(
             $template,
             [
-                'jobInstance'   => $jobInstance,
-                'form'          => $form->createView(),
-                'attributes'    => $attributes,
-                'job'           => $job
+                'jobInstance' => $jobInstance,
+                'form'        => $form->createView(),
+                'attributes'  => $attributes,
+                'job'         => $job,
             ]
         );
     }
@@ -97,6 +99,7 @@ class ExportProfileController extends BaseController
     /**
      * @param $attributes
      * @param $values
+     *
      * @return mixed
      */
     protected function mapValuesToAttributes($attributes, $values)
@@ -114,7 +117,7 @@ class ExportProfileController extends BaseController
                 $value = explode(':', $singleValue);
 
                 if ($value[0] == $attributeArray[0]) {
-                    $attributes[$key] .= ';' . $value[1];
+                    $attributes[$key] .= ';'.$value[1];
                 }
             }
         }
