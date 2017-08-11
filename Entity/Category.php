@@ -20,15 +20,15 @@ class Category extends PimCategory
      *
      * @var array
      */
-    protected $swId;
+    protected $swIds;
 
     /**
      * @return array
      */
     public function getSwId($locale)
     {
-        if (isset($this->swId[$locale])) {
-            return $this->swId[$locale];
+        if (isset($this->swIds[$locale])) {
+            return $this->swIds[$locale];
         }
 
         return null;
@@ -40,15 +40,15 @@ class Category extends PimCategory
      */
     public function addSwId($swId, $locale)
     {
-        $this->swId[$locale] = $swId;
+        $this->swIds[$locale] = $swId;
     }
 
     /**
-     * @param array $swId
+     * @param array $swIds
      */
-    public function setSwId($swId)
+    public function setSwIds($swIds)
     {
-        $this->swId = $swId;
+        $this->swIds = $swIds;
     }
 
     /**
@@ -56,6 +56,6 @@ class Category extends PimCategory
      */
     public function getSwIds()
     {
-        return $this->swId;
+        return $this->swIds;
     }
 }

@@ -98,8 +98,8 @@ class ShopwareCategoryWriter implements ItemWriterInterface, StepExecutionAwareI
                 'showFilterGroups' => true,
             ];
 
-            if (null !== $item->getSwId($locale)) {
-                if (null == $apiClient->put('categories/' . $item->getSwId($locale), $swCategory)) {
+            if (null !== $item->getSwIds($locale)) {
+                if (null == $apiClient->put('categories/' . $item->getSwIds($locale), $swCategory)) {
                     $category = $apiClient->post('categories', $swCategory);
                     $item->addSwId($category['data']['id'], $locale);
                     $this->stepExecution->incrementSummaryInfo('update');

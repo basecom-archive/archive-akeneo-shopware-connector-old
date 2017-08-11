@@ -22,7 +22,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Url;
 
 /**
- * @author Amir El Sayed <elsayed@basecom.de>
+ * @author  Amir El Sayed <elsayed@basecom.de>
  *
  * Class ProductExport
  * @package Basecom\Bundle\ShopwareConnectorBundle\Job\JobParameters
@@ -136,9 +136,13 @@ class ProductExport implements ConstraintCollectionProviderInterface, DefaultVal
                 'articleNumber'    => [
                     new NotBlank(['groups' => 'Execution']),
                 ],
-                //                'tax' => [
-                //                    new NotBlank(['groups' => 'Execution'])
-                //                ],
+                /**
+                 * Tax Attribute must be specified per product, but nobody uses a tax attribute in Akeneo therefore this
+                 * will be forced to be "19"
+                 *                'tax' => [
+                 *                    new NotBlank(['groups' => 'Execution'])
+                 *                ],
+                 **/
                 'template'         => [],
                 'priceGroupActive' => [],
                 'price'            => [
@@ -192,6 +196,7 @@ class ProductExport implements ConstraintCollectionProviderInterface, DefaultVal
             'supplier'         => '',
             'name'             => '',
             'articleNumber'    => '',
+            //Look at line 139 for explanation
             //            'tax'               => '',
             'template'         => '',
             'priceGroupActive' => '',

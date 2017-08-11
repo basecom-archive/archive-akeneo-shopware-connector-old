@@ -477,7 +477,6 @@ class ShopwareProductSerializer
             return $related;
         }
         foreach ($association->getProducts() as $associationProduct) {
-            echo (string)$associationProduct->getIdentifier()."\n\n";
             array_push($related, [
                 'number' => (string)$associationProduct->getIdentifier(),
             ]);
