@@ -5,6 +5,8 @@ namespace Basecom\Bundle\ShopwareConnectorBundle\Entity\Repository;
 use Akeneo\Bundle\FileStorageBundle\Doctrine\ORM\Repository\FileInfoRepository as BaseRepository;
 
 /**
+ * @author  Amir El Sayed <elsayed@basecom.de>
+ *
  * Class FileInfoRepository
  * @package Basecom\Bundle\ShopwareConnectorBundle\Entity\Repository
  */

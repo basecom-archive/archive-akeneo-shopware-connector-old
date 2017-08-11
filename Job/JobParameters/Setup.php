@@ -11,10 +11,12 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Url;
 
 /**
+ * @author  Amir El Sayed <elsayed@basecom.de>
+ *
  * Class AttributeSetup
  * @package Basecom\Bundle\ShopwareConnectorBundle\Job\JobParameters
  */
-class AttributeSetup implements ConstraintCollectionProviderInterface, DefaultValuesProviderInterface, FormConfigurationProviderInterface
+class Setup implements ConstraintCollectionProviderInterface, DefaultValuesProviderInterface, FormConfigurationProviderInterface
 {
     /**
      * @return Collection
@@ -23,27 +25,28 @@ class AttributeSetup implements ConstraintCollectionProviderInterface, DefaultVa
     {
         return new Collection([
             'fields' => [
-                'apiKey' => [
-                    new NotBlank(['groups' => 'Execution'])
+                'apiKey'   => [
+                    new NotBlank(['groups' => 'Execution']),
                 ],
                 'userName' => [
-                    new NotBlank(['groups' => 'Execution'])
-                ],
-                'url' => [
                     new NotBlank(['groups' => 'Execution']),
-                    new Url(['groups' => 'Execution'])
-                ]
-            ]
+                ],
+                'url'      => [
+                    new NotBlank(['groups' => 'Execution']),
+                    new Url(['groups' => 'Execution']),
+                ],
+            ],
         ]);
     }
 
     /**
      * @param JobInterface $job
+     *
      * @return bool
      */
     public function supports(JobInterface $job)
     {
-        return $job->getName() == 'shopware_attribute_setup';
+        return $job->getName() == 'shopware_setup';
     }
 
     /**
@@ -52,9 +55,9 @@ class AttributeSetup implements ConstraintCollectionProviderInterface, DefaultVa
     public function getDefaultValues()
     {
         return [
-            'apiKey'    => '',
-            'userName'  => '',
-            'url'       => ''
+            'apiKey'   => '',
+            'userName' => '',
+            'url'      => '',
         ];
     }
 
@@ -64,25 +67,25 @@ class AttributeSetup implements ConstraintCollectionProviderInterface, DefaultVa
     public function getFormConfiguration()
     {
         return [
-            'url' => [
-                'type' => 'url',
+            'url'      => [
+                'type'    => 'url',
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.url.label',
-                    'help' => 'basecom_shopware_connector.export.url.help'
-                ]
+                    'help'  => 'basecom_shopware_connector.export.url.help',
+                ],
             ],
             'userName' => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.userName.label',
-                    'help' => 'basecom_shopware_connector.export.userName.help'
-                ]
+                    'help'  => 'basecom_shopware_connector.export.userName.help',
+                ],
             ],
-            'apiKey' => [
+            'apiKey'   => [
                 'options' => [
                     'label' => 'basecom_shopware_connector.export.apiKey.label',
-                    'help' => 'basecom_shopware_connector.export.apiKey.help'
-                ]
-            ]
+                    'help'  => 'basecom_shopware_connector.export.apiKey.help',
+                ],
+            ],
         ];
     }
 }

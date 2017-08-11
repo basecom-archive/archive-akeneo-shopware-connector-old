@@ -8,6 +8,8 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
+ * @author  Amir El Sayed <elsayed@basecom.de>
+ *
  * Class BasecomShopwareConnectorExtension.
  * @package Basecom\Bundle\ShopwareConnectorBundle\DependencyInjection
  */
@@ -15,7 +17,7 @@ class BasecomShopwareConnectorExtension extends Extension
 {
     public function load(array $config, ContainerBuilder $container)
     {
-        $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+        $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('jobs.yml');
         $loader->load('job_parameters.yml');
         $loader->load('steps.yml');

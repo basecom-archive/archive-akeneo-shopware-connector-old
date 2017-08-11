@@ -7,6 +7,12 @@ use Basecom\Bundle\ShopwareConnectorBundle\Api\ApiClient;
 use Doctrine\ORM\EntityManagerInterface;
 use Pim\Component\Catalog\Model\ProductValueInterface;
 
+/**
+ * @author  Amir El Sayed <aes@basecom.de>
+ *
+ * Class CommunityMediaWriter
+ * @package Basecom\Bundle\ShopwareConnectorBundle\Api\Media
+ */
 class CommunityMediaWriter
 {
     /**
@@ -22,43 +28,46 @@ class CommunityMediaWriter
 
     /**
      * CommunityMediaWriter constructor.
-     * @param EntityManagerInterface $entityManager
+     *
+     * @param EntityManagerInterface      $entityManager
      * @param FileInfoRepositoryInterface $fileInfoRepository
-     * @param $rootDir
+     * @param                             $rootDir
      */
     public function __construct(EntityManagerInterface $entityManager, FileInfoRepositoryInterface $fileInfoRepository, $rootDir)
     {
 
-        $this->entityManager = $entityManager;
+        $this->entityManager      = $entityManager;
         $this->fileInfoRepository = $fileInfoRepository;
-        $this->rootDir = $rootDir;
+        $this->rootDir            = $rootDir;
     }
 
     /**
-     * @param $value ProductValueInterface
+     * @param $value     ProductValueInterface
      * @param $apiClient ApiClient
+     *
      * @return array|bool
      * @internal param string $rootDir
      */
     public function sendMedia($value, $apiClient, $item)
     {
-        if(!$value->getMedia()) {
-            if(!isset($item['images'])) {
+        if (!$value->getMedia()) {
+            if (!isset($item['images'])) {
                 $item['images'] = [];
             }
+
             return $item;
         }
         $fileInfo = $this->fileInfoRepository->find($value->getMedia());
         if ($fileInfo) {
-            $path = $this->rootDir . "/file_storage/catalog/" . $value->getMedia()->getKey();
-            $type = pathinfo($path, PATHINFO_EXTENSION);
-            $data = file_get_contents($path);
-            $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+            $path    = $this->rootDir."/file_storage/catalog/".$value->getMedia()->getKey();
+            $type    = pathinfo($path, PATHINFO_EXTENSION);
+            $data    = file_get_contents($path);
+            $base64  = 'data:image/'.$type.';base64,'.base64_encode($data);
             $mediaId = $fileInfo->getSwMediaId();
-            if(!$mediaId) {
+            if (!$mediaId) {
                 $mediaArray = [
-                    'album' => -1,
-                    'file' => $base64,
+                    'album'       => -1,
+                    'file'        => $base64,
                     'description' => $value->getMedia()->getOriginalFilename(),
                 ];
 

@@ -1,8 +1,8 @@
 {
-    "name": "basecom/shopware-connector",
+    "name": "basecom/akeneo-shopware-connector",
     "type": "symfony-bundle",
     "description": "Akeneo to Shopware Connector - Export only",
-    "license": "OSL-3.0",
+    "license": "MIT",
     "authors": [
         {
             "name": "Amir El Sayed <elsayed@basecom.de>"
@@ -16,7 +16,7 @@
         }
     ],
     "require": {
-        "akeneo/pim-community-dev": "~1.6.2"
+        "akeneo/pim-community-dev": "1.6.*"
     },
     "autoload": {
         "psr-4": {
@@ -25,10 +25,5 @@
     },
     "config": {
         "bin-dir": "bin"
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-ee": "akeneo-1.6_enterprise"
-        }
     }
 }

@@ -1,5 +1,9 @@
 job_templates:
-    shopware_export:
+    shopware_categories_export:
+        templates:
+            edit: "BasecomShopwareConnectorBundle:BasecomExportProfile:edit.html.twig"
+
+    shopware_families_export:
         templates:
             edit: "BasecomShopwareConnectorBundle:BasecomExportProfile:edit.html.twig"
 

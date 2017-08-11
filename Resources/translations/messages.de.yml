@@ -3,11 +3,13 @@ basecom_shopware_connector:
     shopware_products_export:
       title: Produkt-Export zu Shopware
       export_products.title: Produkt-Export
-    shopware_export:
-      title: Kategorie- und Familien-Export zu Shopware
+    shopware_categories_export:
+      title: Kategorie-Export zu Shopware
       export_categories.title: Kategorie-Export
+    shopware_families_export:
+      title: Familien-Export zu Shopware
       export_families.title: Familien-Export
-    shopware_attribute_setup:
+    shopware_setup:
       title: Update der Shopware-Produkt-Export-Konfiguration
       import.title: Attribut Update
   export:
@@ -20,6 +22,9 @@ basecom_shopware_connector:
     locale:
       label: Locale
       help:  Wählen Sie die Sprache aus
+    shop:
+      label: Shop
+      help:  Wählen Sie den Shop aus
     currency:
       label: Währung
       help:  Geben Sie die Währung ein
@@ -101,6 +106,12 @@ basecom_shopware_connector:
     pseudoSales:
       label: Pseudo Verkäufe
       help:  Geben Sie hier den code des Akeneo-Pseudo-Verkäufe-Attributs ein
+    pseudoPrice:
+      label: Pseudo Preis
+      help:  Geben Sie hier den code des Akeneo-Pseudo-Preis-Attributs ein
+    basePrice:
+      label: Basis Preis
+      help:  Geben Sie hier den code des Akeneo-Basis-Preis-Attributs ein
     minPurchase:
       label: Mindestabnahme
       help:  Geben Sie hier den code des Akeneo-Mindestabnahme-Attributs ein
@@ -137,3 +148,17 @@ basecom_shopware_connector:
     attr:
       label: Zusätzliche Attribute
       help:  Geben Sie hier den code des Akeneo-Attributs ein
+batch_jobs.shopware_categories_export:
+    label: Shopware Kategorie Export
+    shopware_export_categories_step:
+        label: Export Akeneo Kategorien
+batch_jobs.shopware_families_export:
+    label: Shopware Familien Export
+    shopware_export_families_step:
+        label: Export Akeneo Familien
+batch_jobs.shopware_product_export:
+    label: Shopware Produkt Export
+    shopware_clean:
+        label: Shopware Aufräumen
+    shopware_export_products_step:
+        label: Export Akeneo Produkte

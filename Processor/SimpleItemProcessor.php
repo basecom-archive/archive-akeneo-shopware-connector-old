@@ -6,6 +6,12 @@ use Akeneo\Component\Batch\Item\ItemProcessorInterface;
 use Akeneo\Component\Batch\Model\StepExecution;
 use Akeneo\Component\Batch\Step\StepExecutionAwareInterface;
 
+/**
+ * @author  Amir El Sayed <aes@basecom.de>
+ *
+ * Class SimpleItemProcessor
+ * @package Basecom\Bundle\ShopwareConnectorBundle\Processor
+ */
 class SimpleItemProcessor implements ItemProcessorInterface, StepExecutionAwareInterface
 {
     /** @var StepExecution */

@@ -8,6 +8,8 @@ use Akeneo\Component\Batch\Step\StepExecutionAwareInterface;
 use Pim\Component\Catalog\Repository\FamilyRepositoryInterface;
 
 /**
+ * @author Amir El Sayed <elsayed@basecom.de>
+ *
  * Fetches all Families and hands them over to the processor.
  *
  * Class ShopwareFamilyExportReader

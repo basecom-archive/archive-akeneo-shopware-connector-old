@@ -3,15 +3,17 @@
 namespace Basecom\Bundle\ShopwareConnectorBundle\Api;
 
 /**
+ * @author Amir El Sayed <elsayed@basecom.de>
+ *
  * Shopware ApiClient. Provides the functions for API calls.
  *
  * Class ApiClient
  */
 class ApiClient
 {
-    const METHOD_GET = 'GET';
-    const METHOD_PUT = 'PUT';
-    const METHOD_POST = 'POST';
+    const METHOD_GET    = 'GET';
+    const METHOD_PUT    = 'PUT';
+    const METHOD_POST   = 'POST';
     const METHOD_DELETE = 'DELETE';
     /**
      * Holds all valid methodes for API calls.
@@ -22,7 +24,7 @@ class ApiClient
         self::METHOD_GET,
         self::METHOD_PUT,
         self::METHOD_POST,
-        self::METHOD_DELETE
+        self::METHOD_DELETE,
     ];
     protected $apiUrl;
     protected $cURL;
@@ -36,22 +38,19 @@ class ApiClient
      */
     public function __construct($apiUrl, $username, $apiKey)
     {
-        $this->apiUrl = rtrim($apiUrl, '/') . '/';
+        $this->apiUrl = rtrim($apiUrl, '/').'/';
         //Initializes the cURL instance
         $this->cURL = curl_init();
         curl_setopt($this->cURL, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($this->cURL, CURLOPT_FOLLOWLOCATION, false);
         curl_setopt($this->cURL, CURLOPT_USERAGENT, 'Shopware ApiClient');
         curl_setopt($this->cURL, CURLOPT_HTTPAUTH, CURLAUTH_DIGEST);
-        curl_setopt($this->cURL, CURLOPT_USERPWD, $username . ':' . $apiKey);
-        curl_setopt($this->cURL, CURLOPT_HTTPHEADER, array(
-            'Content-Type: application/json; 
-         charset=utf-8;
-         qop=auth;
-         cnonce="17289d3348dfc6f2";
-         opaque="d75db7b160fe72d1346d2bd1f67bfd10";
-         nonce="73dd363a242fcd9db88e54f86c1ae089"',
-        ));
+        curl_setopt($this->cURL, CURLOPT_USERPWD, $username.':'.$apiKey);
+        curl_setopt(
+            $this->cURL,
+            CURLOPT_HTTPHEADER,
+            ['Content-Type: application/json; charset=utf-8']
+        );
     }
 
     /**
@@ -59,32 +58,32 @@ class ApiClient
      *
      * @param        $url
      * @param string $method
-     * @param array $data
-     * @param array $params
+     * @param array  $data
+     * @param array  $params
      *
      * @throws \Exception
      *
      * @return mixed
      */
-    public function call($url, $method = self::METHOD_GET, $data = array(), $params = array())
+    public function call($url, $method = self::METHOD_GET, $data = [], $params = [])
     {
         if (!in_array($method, $this->validMethods)) {
-            throw new \Exception('Invalid HTTP-Methode: ' . $method);
+            throw new \Exception('Invalid HTTP-Methode: '.$method);
         }
         $queryString = '';
         if (!empty($params)) {
             $queryString = http_build_query($params);
         }
-        $url = rtrim($url, '?') . '?';
-        $url = $this->apiUrl . $url . $queryString;
+        $url        = rtrim($url, '?').'?';
+        $url        = $this->apiUrl.$url.$queryString;
         $dataString = json_encode($data);
+
         curl_setopt($this->cURL, CURLOPT_URL, $url);
         curl_setopt($this->cURL, CURLOPT_CUSTOMREQUEST, $method);
         curl_setopt($this->cURL, CURLOPT_POSTFIELDS, $dataString);
         curl_setopt($this->cURL, CURLINFO_HEADER_OUT, true);
 
         $result = curl_exec($this->cURL);
-
 
         return $this->prepareResponse($result);
     }
