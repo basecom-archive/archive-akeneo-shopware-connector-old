@@ -41,7 +41,7 @@ class ShopwareProductSerializer
     /** @var EntityManagerInterface */
     protected $entityManager;
 
-    private   $mediaWriter;
+    private $mediaWriter;
 
     /**
      * ShopwareProductSerializer constructor.
@@ -99,7 +99,7 @@ class ShopwareProductSerializer
             $item['filterGroupId'] = $propertyGroup['id'];
         }
 
-        $item            = $this->createVariantGroups($product, $item, $attributeMapping, $currency, $locale, $jobParameters->get('channel'));
+        $item            = $this->createVariantGroups($product, $item, $attributeMapping, $currency, $locale, $jobParameters->get('channel'), $apiClient, $filterAttributes);
         $item['hasSwId'] = null !== $product->getSwProductId();
         $item['swId']    = $product->getSwProductId();
 
@@ -244,6 +244,7 @@ class ShopwareProductSerializer
                 }
             }
 
+
             if ($shopwareAttribute = array_search($attribute->getCode(), $attributeMapping)) {
                 $attributeValue = $this->getAttributeValue($attribute, $value, $locale, $currency);
                 switch ($shopwareAttribute) {
@@ -342,11 +343,9 @@ class ShopwareProductSerializer
                         ];
                         break;
                     default:
-                        if (strpos($shopwareAttribute, 'attr') !== false) {
-                            if ($attributeValue != "" && $attributeValue != null
-                            ) {
-                                $item['mainDetail']['attribute'][$shopwareAttribute] = $attributeValue;
-                            }
+                        if ($attributeValue != "" && $attributeValue != null
+                        ) {
+                            $item['mainDetail']['attribute'][$shopwareAttribute] = $attributeValue;
                         }
                         break;
                 }
@@ -392,25 +391,25 @@ class ShopwareProductSerializer
                 $option = $value->getOption();
                 $option->setLocale($locale);
 
-                return $option->getOptionValue()->getValue();
+                $value = $option->getOptionValue()->getValue();
                 break;
             case 'varchar':
-                return $value->getVarchar();
+                $value = $value->getVarchar();
                 break;
             case 'text':
-                return $value->getText();
+                $value = $value->getText();
                 break;
             case 'metric':
-                return $value->getMetric();
+                $value = $value->getMetric()->getValue();
                 break;
             case 'boolean':
-                return $value->getBoolean();
+                $value = $value->getBoolean();
                 break;
             case 'decimal':
-                return $value->getDecimal();
+                $value = $value->getDecimal();
                 break;
             case 'date':
-                return $value->getDatetime();
+                $value = $value->getDatetime();
                 break;
             case 'prices':
                 if ($price = $value->getPrice($currency)) {
@@ -493,7 +492,7 @@ class ShopwareProductSerializer
      *
      * @return mixed
      */
-    private function createVariantGroups($product, $item, $attributeMapping, $currency, $locale, $channel)
+    private function createVariantGroups($product, $item, $attributeMapping, $currency, $locale, $channel, $apiClient, $filterAttributes)
     {
         /** @var GroupInterface $variantGroup */
         $variantGroup = $product->getVariantGroup();
@@ -524,6 +523,7 @@ class ShopwareProductSerializer
                     $this->entityManager->persist($product);
                 }
                 $product->setScope($channel);
+                $variantItem = $this->serializeValues($product, $product->getAttributes(), $attributeMapping, $locale, $apiClient, $filterAttributes, $currency, $channel);
 
                 $item['variants'][$key] = [
                     'isMain'         => !$isMain,
@@ -537,6 +537,7 @@ class ShopwareProductSerializer
                             'customerGroupKey' => 'EK',
                         ],
                     ],
+                    'attribute'      => $variantItem['mainDetail']['attribute']
                 ];
 
                 foreach ($item['configuratorSet']['groups'] as $groupKey => $group) {
