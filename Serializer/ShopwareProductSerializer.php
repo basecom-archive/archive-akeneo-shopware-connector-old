@@ -220,7 +220,6 @@ class ShopwareProductSerializer
             ) {
                 $item['__options_images']['replace'] = true;
 
-                /** @var FileInfo $media */
                 $item = $this->mediaWriter->sendMedia($value, $apiClient, $item);
             }
 
@@ -545,6 +544,14 @@ class ShopwareProductSerializer
                         'group'  => $group['name'],
                         'option' => (string)$product->getValue($groupKey),
                     ];
+                }
+
+                foreach($variantItem['images'] as $singleVariantImage) {
+                    foreach ($item['variants'][$key]['configuratorOptions'] as $singleOption) {
+                        $singleVariantImage['options'][$key][] = ['name' => $singleOption['option']];
+
+                        $item['images'][] = $singleVariantImage;
+                    }
                 }
             }
 
