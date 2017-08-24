@@ -1,5 +1,5 @@
 parameters:
-    basecom_shopware_connector.handler.attribute_setup.class: Basecom\Bundle\ShopwareConnectorBundle\Step\AttributeSetup
+    basecom_shopware_connector.handler.setup.class: Basecom\Bundle\ShopwareConnectorBundle\Step\Setup
 
 services:
     basecom_shopware_connector.step.export_categories:
@@ -32,9 +32,9 @@ services:
             - '@basecom_shopware_connector.processor.shopware_product'
             - '@basecom_shopware_connector.writer.shopware_product'
 
-    basecom_shopware_connector.handler.attribute_setup:
-        class: '%basecom_shopware_connector.handler.attribute_setup.class%'
+    basecom_shopware_connector.handler.setup:
+        class: '%basecom_shopware_connector.handler.setup.class%'
         arguments:
-            - 'shopware_attribute_setup_step'
+            - 'shopware_setup_step'
             - '@event_dispatcher'
             - '@akeneo_batch.job_repository'

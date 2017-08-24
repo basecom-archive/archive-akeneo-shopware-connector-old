@@ -2,7 +2,7 @@ parameters:
     basecom_shopware_connector.job.job_parameters.default_values_provider.shopware_export.class:        Basecom\Bundle\ShopwareConnectorBundle\Job\JobParameters\DefaultValuesProvider\ShopwareExport
     basecom_shopware_connector.job.job_parameters.constraint_collection_provider.shopware_export.class: Basecom\Bundle\ShopwareConnectorBundle\Job\JobParameters\ConstraintCollectionProvider\ShopwareExport
     basecom_shopware_connector.job.job_parameters.form_configuration_provider.shopware_export.class: Basecom\Bundle\ShopwareConnectorBundle\Job\JobParameters\FormConfigurationProvider\ShopwareExport
-    basecom_shopware_connector.job.job_parameters.constraint_collection_provider.attribute_setup.class: Basecom\Bundle\ShopwareConnectorBundle\Job\JobParameters\AttributeSetup
+    basecom_shopware_connector.job.job_parameters.constraint_collection_provider.setup.class: Basecom\Bundle\ShopwareConnectorBundle\Job\JobParameters\Setup
     basecom_shopware_connector.job.job_parameters.constraint_collection_provider.product_export.class: Basecom\Bundle\ShopwareConnectorBundle\Job\JobParameters\ProductExport
 
 services:
@@ -10,7 +10,8 @@ services:
         class: '%basecom_shopware_connector.job.job_parameters.default_values_provider.shopware_export.class%'
         arguments:
             -
-                - 'shopware_export'
+                - 'shopware_categories_export'
+                - 'shopware_families_export'
         tags:
             - { name: akeneo_batch.job.job_parameters.default_values_provider }
 
@@ -18,7 +19,8 @@ services:
         class: '%basecom_shopware_connector.job.job_parameters.constraint_collection_provider.shopware_export.class%'
         arguments:
             -
-                - 'shopware_export'
+                - 'shopware_categories_export'
+                - 'shopware_families_export'
         tags:
             - { name: akeneo_batch.job.job_parameters.constraint_collection_provider }
 
@@ -26,14 +28,15 @@ services:
         class: '%basecom_shopware_connector.job.job_parameters.form_configuration_provider.shopware_export.class%'
         arguments:
             -
-                - 'shopware_export'
+                - 'shopware_categories_export'
+                - 'shopware_families_export'
             - '@pim_catalog.repository.locale'
             - '@pim_catalog.repository.category'
         tags:
             - { name: pim_import_export.job_parameters.form_configuration_provider }
 
-    basecom_shopware_connector.job.job_parameters.constraint_collection_provider.attribute_setup:
-        class: '%basecom_shopware_connector.job.job_parameters.constraint_collection_provider.attribute_setup.class%'
+    basecom_shopware_connector.job.job_parameters.constraint_collection_provider.setup:
+        class: '%basecom_shopware_connector.job.job_parameters.constraint_collection_provider.setup.class%'
         tags:
             - { name: akeneo_batch.job.job_parameters.constraint_collection_provider }
             - { name: akeneo_batch.job.job_parameters.default_values_provider }

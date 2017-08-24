@@ -10,6 +10,8 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Url;
 
 /**
+ * @author  Amir El Sayed <elsayed@basecom.de>
+ *
  * Class ShopwareExport
  * @package Basecom\Bundle\ShopwareConnectorBundle\Job\JobParameters\ConstraintCollectionProvider
  */
@@ -17,6 +19,11 @@ class ShopwareExport implements ConstraintCollectionProviderInterface
 {
     protected $supportedJobNames;
 
+    /**
+     * ShopwareExport constructor.
+     *
+     * @param $supportedJobNames
+     */
     public function __construct($supportedJobNames)
     {
         $this->supportedJobNames = $supportedJobNames;
@@ -30,27 +37,31 @@ class ShopwareExport implements ConstraintCollectionProviderInterface
         return new Collection([
             'fields' => [
                 'rootCategory' => [
-                    new NotBlank(['groups' => 'Execution'])
-                ],
-                'apiKey' => [
-                    new NotBlank(['groups' => 'Execution'])
-                ],
-                'userName' => [
-                    new NotBlank(['groups' => 'Execution'])
-                ],
-                'url' => [
                     new NotBlank(['groups' => 'Execution']),
-                    new Url(['groups' => 'Execution'])
                 ],
-                'locale' => [
-                    new Locale(['groups' => 'Execution'])
+                'apiKey'       => [
+                    new NotBlank(['groups' => 'Execution']),
                 ],
-            ]
+                'userName'     => [
+                    new NotBlank(['groups' => 'Execution']),
+                ],
+                'url'          => [
+                    new NotBlank(['groups' => 'Execution']),
+                    new Url(['groups' => 'Execution']),
+                ],
+                'shop'         => [
+                    new NotBlank(['groups' => 'Execution']),
+                ],
+                'locale'       => [
+                    new NotBlank(['groups' => 'Execution']),
+                ],
+            ],
         ]);
     }
 
     /**
      * @param JobInterface $job
+     *
      * @return bool
      */
     public function supports(JobInterface $job)

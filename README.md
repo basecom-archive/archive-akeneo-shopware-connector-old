@@ -44,10 +44,9 @@ Clear you cache and update your database:
 
 ## Documentation
 
-### Attribute Setup
+### General Exporter Setup
 To use the exporter to its full extend you are required to install a Shopware extension which allows you to import all 
-custom attributes into Akeneo.
-After installing the extension on the Shopware side, you need to create the import job in Akeneo and run it once.
+custom attributes and shops into Akeneo. After installing the extension on the Shopware side, you need to create the import job in Akeneo and run it once.
 
 ### Export Job
 Be sure to fill the correct API details which Shopware is displaying in its user management tab. After the general API

@@ -7,7 +7,7 @@ basecom_shopware_connector:
       title: Category and Family export to Shopware
       export_categories.title: category export
       export_families.title: Family export
-    shopware_attribute_setup:
+    shopware_setup:
       title: Update of the Shopware product export configuration
       import.title: Attribute update
   export:
@@ -16,10 +16,13 @@ basecom_shopware_connector:
       help:  Enter the code of the root category
     channel:
       label: Channel
-      help:  Choose the Channel
+      help:  Choose the channel
     locale:
       label: Locale
       help:  Choose the locale
+    shop:
+      label: Shop
+      help:  Choose the shop
     currency:
       label: Currency
       help:  Enter the currency
@@ -101,6 +104,12 @@ basecom_shopware_connector:
     pseudoSales:
       label: Pseudo Sales
       help:  Enter the code of the Akeneo Pseudo Sales attribute
+    pseudoPrice:
+      label: Pseudo Price
+      help:  Enter the code of the Akeneo Pseudo Price attribute
+    basePrice:
+      label: Base Price
+      help:  Enter the code of the Akeneo Base Price attribute
     minPurchase:
       label: Minimum Order
       help:  Enter the code of the Akeneo Minimum Order attribute
@@ -137,14 +146,16 @@ basecom_shopware_connector:
     attr:
       label: Additional fields
       help:  Enter the code of the Akeneo attribute
-batch_jobs.shopware_attribute_setup:
-    label: Shopware Attribute Setup
-    shopware_attribute_setup_step:
-        label: Setup Attributes
-batch_jobs.shopware_export:
-    label: Shopware Export
+batch_jobs.shopware_setup:
+    label: Shopware Setup
+    shopware_setup_step:
+        label: Setup
+batch_jobs.shopware_categories_export:
+    label: Shopware Category Export
     shopware_export_categories_step:
         label: Export Akeneo Categories
+batch_jobs.shopware_families_export:
+    label: Shopware Family Export
     shopware_export_families_step:
         label: Export Akeneo Families
 batch_jobs.shopware_product_export:
