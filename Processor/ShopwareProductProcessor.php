@@ -107,7 +107,7 @@ class ShopwareProductProcessor implements ItemProcessorInterface, StepExecutionA
         foreach ($attributes as $attribute) {
             $attr = explode(":", $attribute);
             if (isset($attr[1])) {
-                $configArray[$attr[0]] = $attr[1];
+                $configArray[$this->toCamelCase($attr[0])] = $attr[1];
             }
         }
 
@@ -122,4 +122,7 @@ class ShopwareProductProcessor implements ItemProcessorInterface, StepExecutionA
         $this->stepExecution = $stepExecution;
     }
 
+    protected function toCamelCase($string) {
+        return preg_replace('/_(.?)/e',"strtoupper('$1')",$string);
+    }
 }
