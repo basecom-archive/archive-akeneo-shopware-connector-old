@@ -405,7 +405,11 @@ class ShopwareProductSerializer
                 $value = $value->getBoolean();
                 break;
             case 'decimal':
-                $value = $value->getDecimal();
+                if (!$attribute->isDecimalsAllowed()) {
+                    $value = (int)$value->getDecimal();
+                } else {
+                    $value = $value->getDecimal();
+                }
                 break;
             case 'date':
                 $value = $value->getDatetime();
@@ -500,21 +504,19 @@ class ShopwareProductSerializer
         if ($variantGroup) {
             $item['configuratorSet'] = ['groups' => []];
             $axisAttributes          = $variantGroup->getAxisAttributes();
+            $products                = $variantGroup->getProducts();
             /** @var AttributeInterface $axis */
-            foreach ($axisAttributes as $key => $axis) {
+            foreach ($axisAttributes as $axis) {
+                $axis->setLocale($locale);
                 $item['configuratorSet']['groups'][$axis->getCode()] = [
                     'name' => $axis->getLabel(),
                 ];
 
-                foreach ($axis->getOptions() as $optionKey => $option) {
-                    $option->setLocale($locale);
-                    $item['configuratorSet']['groups'][$axis->getCode()]['options'][$optionKey] = [
-                        'name' => (string)$option,
-                    ];
+                foreach ($products as $product) {
+                    $productValue = $product->getValue($axis->getCode());
+                    $item['configuratorSet']['groups'][$axis->getCode()]['options'][] = ['name' => (string)$productValue->getOption()];
                 }
             }
-
-            $products         = $variantGroup->getProducts();
             $item['variants'] = [];
             foreach ($products as $key => $product) {
                 if ($isMain = $sku != $product->getIdentifier()) {
@@ -536,7 +538,7 @@ class ShopwareProductSerializer
                             'customerGroupKey' => 'EK',
                         ],
                     ],
-                    'attribute'      => $variantItem['mainDetail']['attribute']
+                    'attribute'      => $variantItem['mainDetail']['attribute'],
                 ];
 
                 foreach ($item['configuratorSet']['groups'] as $groupKey => $group) {
@@ -546,7 +548,7 @@ class ShopwareProductSerializer
                     ];
                 }
 
-                foreach($variantItem['images'] as $singleVariantImage) {
+                foreach ($variantItem['images'] as $singleVariantImage) {
                     foreach ($item['variants'][$key]['configuratorOptions'] as $singleOption) {
                         $singleVariantImage['options'][$key][] = ['name' => $singleOption['option']];
 
