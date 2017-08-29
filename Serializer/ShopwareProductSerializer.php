@@ -525,13 +525,13 @@ class ShopwareProductSerializer
                 }
                 $product->setScope($channel);
                 $variantItem = $this->serializeValues($product, $product->getAttributes(), $attributeMapping, $locale, $apiClient, $filterAttributes, $currency, $channel);
-
                 $item['variants'][$key] = [
                     'isMain'         => !$isMain,
                     'number'         => (string)$product->getValue($attributeMapping['articleNumber']),
                     'inStock'        => isset($attributeMapping['stock']) ? $attributeMapping['stock'] : 0,
                     'additionalText' => (string)$product->getValue($attributeMapping['name']),
                     'tax'            => 19,
+                    'ean'            => (string)$product->getValue($attributeMapping['ean']),
                     'prices'         => [
                         [
                             'price'            => $product->getValue($attributeMapping['price']) ? (float)$product->getValue($attributeMapping['price'])->getPrice($currency)->getData() : 0,
