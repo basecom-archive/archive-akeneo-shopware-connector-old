@@ -514,7 +514,9 @@ class ShopwareProductSerializer
 
                 foreach ($products as $product) {
                     $productValue = $product->getValue($axis->getCode());
-                    $item['configuratorSet']['groups'][$axis->getCode()]['options'][] = ['name' => (string)$productValue->getOption()];
+                    $option = $productValue->getOption();
+                    $option->setLocale($locale);
+                    $item['configuratorSet']['groups'][$axis->getCode()]['options'][] = ['name' => (string)$option];
                 }
             }
             $item['variants'] = [];
