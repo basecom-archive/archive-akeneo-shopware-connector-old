@@ -525,6 +525,7 @@ class ShopwareProductSerializer
                 $variantItem = $this->serializeValues($product, $product->getAttributes(), $attributeMapping, $locale, $apiClient, $filterAttributes, $currency, $channel);
 
                 $item['variants'][$key] = [
+                    'active'         => $product->isEnabled(),
                     'isMain'         => !$isMain,
                     'number'         => (string)$product->getValue($attributeMapping['articleNumber']),
                     'inStock'        => isset($attributeMapping['stock']) ? $attributeMapping['stock'] : 0,
