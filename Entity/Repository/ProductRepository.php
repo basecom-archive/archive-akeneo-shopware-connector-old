@@ -48,6 +48,9 @@ class ProductRepository extends BaseRepository
         $qb->andWhere(
             $qb->expr()->isNotNull('Product.swProductId')
         );
+        $qb->orWhere(
+            $qb->expr()->eq('Product.isVariant', '1')
+        );
         $qb->andWhere(
             $qb->expr()->in('FileInfo.swMediaId', ':swIds')
         );
