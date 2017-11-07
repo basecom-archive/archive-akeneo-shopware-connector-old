@@ -74,7 +74,15 @@ class ShopwareFamilyWriter implements ItemWriterInterface, StepExecutionAwareInt
             $item->setLocale($locale);
 
             if (null !== $item->getSwId()) {
-                $this->createTranslation($item, $apiClient, $shop);
+                $this->createTranslation($item, $apiClient, $shop, true);
+                $set = [
+                    'name'       => $item->getLabel(),
+                    'position'   => 0,
+                    'comparable' => true,
+                    'sortMode'   => 0
+                ];
+
+                $apiClient->put('propertyGroups/' . $item->getSwId(), $set);
                 $this->stepExecution->incrementSummaryInfo('update');
             } else {
                 $set = [
@@ -104,14 +112,14 @@ class ShopwareFamilyWriter implements ItemWriterInterface, StepExecutionAwareInt
     }
 
     /**
-     * @param $item Family
-     * @param $apiClient ApiClient
-     * @param $shop int
+     * @param      $item      Family
+     * @param      $apiClient ApiClient
+     * @param      $shop      int
+     * @param bool $update
      *
      * @return mixed
-     *
      */
-    protected function createTranslation($item, $apiClient, $shop)
+    protected function createTranslation($item, $apiClient, $shop, $update = false)
     {
         $dataArray = [
             'key' => $item->getSwId(),
@@ -121,7 +129,10 @@ class ShopwareFamilyWriter implements ItemWriterInterface, StepExecutionAwareInt
                 'groupName' => $item->getLabel()
             ]
         ];
-
-        return $apiClient->post('translations/' . $item->getSwId(), $dataArray);
+        if(!$update) {
+            return $apiClient->post('translations', $dataArray);
+        } else {
+            return $apiClient->put('translations/' . $item->getSwId(), $dataArray);
+        }
     }
 }

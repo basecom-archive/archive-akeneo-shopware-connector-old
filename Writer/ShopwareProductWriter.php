@@ -10,6 +10,7 @@ use Basecom\Bundle\ShopwareConnectorBundle\Entity\Product;
 use Basecom\Bundle\ShopwareConnectorBundle\Entity\Repository\ProductRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
+use Akeneo\Component\Batch\Item\DataInvalidItem;
 
 
 /**
@@ -100,6 +101,8 @@ class ShopwareProductWriter implements ItemWriterInterface, StepExecutionAwareIn
                     $product->setSwProductId($response['data']['id']);
                     $this->entityManager->persist($product);
                 }
+            } else {
+                $this->stepExecution->addWarning(print_r($response), [], new DataInvalidItem($item));
             }
         }
 
